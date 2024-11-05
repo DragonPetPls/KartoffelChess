@@ -1,0 +1,18 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug",
+	"dir-cur-src" : "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src",
+	"dir-top-bld" : "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug",
+	"dir-top-src" : "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "CXX",
+	"linked-target-dirs" : [],
+	"module-dir" : "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug/CMakeFiles/src.dir"
+}
