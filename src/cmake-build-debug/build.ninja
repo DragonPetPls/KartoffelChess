@@ -79,7 +79,22 @@ build CMakeFiles/src.dir/Game.cpp.o: CXX_COMPILER__src_scanned_Debug /home/fabia
   OBJECT_FILE_DIR = CMakeFiles/src.dir
   dyndep = CMakeFiles/src.dir/CXX.dd
 
-build CMakeFiles/src.dir/CXX.dd | /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug/CMakeFiles/src.dir/CXXModules.json CMakeFiles/src.dir/main.cpp.o.modmap CMakeFiles/src.dir/Game.cpp.o.modmap: CXX_DYNDEP__src_Debug CMakeFiles/src.dir/main.cpp.o.ddi CMakeFiles/src.dir/Game.cpp.o.ddi | /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug/CMakeFiles/src.dir/CXXDependInfo.json
+build CMakeFiles/src.dir/Test.cpp.o.ddi: CXX_SCAN__src_Debug /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Test.cpp.o.ddi.d
+  DYNDEP_INTERMEDIATE_FILE = CMakeFiles/src.dir/Test.cpp.o.ddi
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJ_FILE = CMakeFiles/src.dir/Test.cpp.o
+  PREPROCESSED_OUTPUT_FILE = CMakeFiles/src.dir/Test.cpp.o.ddi.i
+
+build CMakeFiles/src.dir/Test.cpp.o: CXX_COMPILER__src_scanned_Debug /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp | CMakeFiles/src.dir/Test.cpp.o.modmap || cmake_object_order_depends_target_src CMakeFiles/src.dir/CXX.dd
+  DEP_FILE = CMakeFiles/src.dir/Test.cpp.o.d
+  DYNDEP_MODULE_MAP_FILE = CMakeFiles/src.dir/Test.cpp.o.modmap
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir
+  dyndep = CMakeFiles/src.dir/CXX.dd
+
+build CMakeFiles/src.dir/CXX.dd | /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug/CMakeFiles/src.dir/CXXModules.json CMakeFiles/src.dir/main.cpp.o.modmap CMakeFiles/src.dir/Game.cpp.o.modmap CMakeFiles/src.dir/Test.cpp.o.modmap: CXX_DYNDEP__src_Debug CMakeFiles/src.dir/main.cpp.o.ddi CMakeFiles/src.dir/Game.cpp.o.ddi CMakeFiles/src.dir/Test.cpp.o.ddi | /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug/CMakeFiles/src.dir/CXXDependInfo.json
 
 
 # =============================================================================
@@ -89,7 +104,7 @@ build CMakeFiles/src.dir/CXX.dd | /home/fabian/CLionProjects/KartoffelChess/Kart
 #############################################
 # Link the executable src
 
-build src: CXX_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game.cpp.o
+build src: CXX_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game.cpp.o CMakeFiles/src.dir/Test.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/src.dir
   POST_BUILD = :

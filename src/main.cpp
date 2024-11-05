@@ -1,9 +1,16 @@
 #include <iostream>
 #include "Game.h"
+#include "Test.h"
+
+#define TEST
 
 int main() {
-    Game g;
-    g.loadStartingPosition();
-    g.printGame();
+
+
+#ifdef TEST
+    Test::testPrintGame();
+    std::cout << "print test completed" << std::endl;
+    Test::testDoMove();
+#endif
     return 0;
 }

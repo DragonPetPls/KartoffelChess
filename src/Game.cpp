@@ -33,7 +33,15 @@ void Game::loadStartingPosition() {
  */
 void Game::printGame() {
 
-    std::cout << " --------------- " << std::endl;
+    std::string currentPlayerStr;
+    if(currentPlayer == WHITE){
+        currentPlayerStr = "white";
+    } else {
+        currentPlayerStr = "black";
+    }
+
+    std::cout << "------------------------" << std::endl;
+    std::cout << currentPlayerStr << " to move" << std::endl;
     bitboard iterator = 1;
     iterator = iterator << 56;
     int counter = 0;
@@ -86,6 +94,8 @@ void Game::printGame() {
             iterator = iterator << 1;
         }
     }
+    std::cout << "En passant " << (int) enPassant << std::endl;
+    std::cout << "Castle Rights " << (int) castleRights << std::endl;
 }
 
 /*
@@ -94,7 +104,6 @@ void Game::printGame() {
  */
 piece Game::getPiece(bitboard square) {
     int p = -1;
-    bool pieceThere = false;
 
     for(int i = 0; i < 6; i++){
         p += (i + 1) * ((pieceBoards[i + WHITE_PIECE] & square) != 0);
@@ -104,4 +113,61 @@ piece Game::getPiece(bitboard square) {
     p += (NO_PIECE + 1) * (p == -1);
 
     return p;
+}
+
+/*
+ * This function executes the move
+ */
+void Game::doMove(Move move) {
+
+    //En passant
+    bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
+    pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]] &= ~(enPassantCaptureSquare * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE)));
+
+    //Transfering the piece
+    pieceBoards[move.startingPiece | COLOR_TO_PIECE[currentPlayer]] &= ~move.fromSquare;
+    pieceBoards[move.endingPiece | COLOR_TO_PIECE[currentPlayer]] |= move.toSquare;
+
+    //Removing captured pieces
+    for(int i = 0; i < 6; i++){
+        pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] &= ~move.toSquare;
+    }
+
+    //Castling
+    //short castle
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    //Long castle
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+
+    //Changing who to move
+    currentPlayer = BLACK * (currentPlayer == WHITE);
+}
+
+/*
+ * Takes in an input such as "e2e4" and executes it
+ */
+void Game::doMoveAsString(std::string moveStr) {
+    Move move;
+    int fromX = moveStr[0] - 'a';
+    int toX = moveStr[2] - 'a';
+    int fromY = moveStr[1] - '0' - 1;
+    int toY = moveStr[3] - '0' - 1;
+
+    move.fromSquare = 1;
+    move.fromSquare = move.fromSquare << (fromX + 8 * fromY);
+    move.toSquare = 1;
+    move.toSquare = move.toSquare << (toX + 8 * toY);
+
+    move.startingPiece = getPiece(move.fromSquare) - BLACK_PIECE * (currentPlayer == BLACK);
+    if(moveStr.size() == 4){
+        move.endingPiece = move.startingPiece;
+    } else {
+        for(int i = 0; i < 6; i++){
+            if(INT_TO_CHAR[i] == moveStr[4]){
+                move.endingPiece = i;
+            }
+        }
+    }
+
+    doMove(move);
 }

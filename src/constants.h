@@ -67,5 +67,13 @@ const bitboard BLACK_KING_STARTING_POSITION = 1152921504606846976;
 const bitboard NO_EN_PASSANT = 0;
 
 const piece COLOR_TO_PIECE[2] = {WHITE_PIECE, BLACK_PIECE};
+const int NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+const int INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
+
+const bitboard SHORT_CASTLE_ROOK[2] = {160, 11529215046068469760};
+const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
+
+const bitboard SHORT_CASTLE_KING = 5764607523034234960;
+const bitboard LONG_CASTLE_KING = 1441151880758558740;
 
 #endif //SRC_CONSTANTS_H

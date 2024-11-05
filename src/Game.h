@@ -6,12 +6,22 @@
 #define SRC_GAME_H
 
 
+#include <vector>
 #include "constants.h"
+
+/*
+ * This struct encodes everything necessary to represent a move
+ */
+struct Move{
+    bitboard fromSquare;
+    bitboard toSquare;
+    piece startingPiece;
+    piece endingPiece; //ending piece is the same as starting piece unless promotion
+};
 
 class Game {
 private:
     //Attributes
-
 
 public:
     //Attributes
@@ -30,6 +40,8 @@ public:
     void loadStartingPosition();
     void printGame();
     piece getPiece(bitboard square);
+    void doMove(Move move);
+    void doMoveAsString(std::string moveStr);
 };
 
 
