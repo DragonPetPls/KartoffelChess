@@ -19,9 +19,26 @@ struct Move{
     piece endingPiece; //ending piece is the same as starting piece unless promotion
 };
 
+/*
+ * This struct stores everything necessary to undo the move later.
+ * capturedPiece has to remain NO_PIECE if a capture was done using en passant
+ */
+struct LastMove{
+    Move move;
+    int eval;
+    int enPassant;
+    int castleRights;
+    piece capturedPiece;
+};
+
 class Game {
 private:
     //Attributes
+
+    //The game history array keeps track of last moves in order to be able to undo them, the game historyCounter points to the last move.
+    //If the gameHistoryCounter = -1 no move can be undone
+    LastMove gameHistory[MAX_GAME_LENGTH];
+    int gameHistoryCounter;
 
 public:
     //Attributes
@@ -41,7 +58,10 @@ public:
     void printGame();
     piece getPiece(bitboard square);
     void doMove(Move move);
+    void undoMove();
     void doMoveAsString(std::string moveStr);
+
+    int getGameHistoryCounter() const;
 };
 
 

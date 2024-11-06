@@ -48410,6 +48410,8 @@ const bitboard BLACK_LONG_CASTLE_RIGHTS_MASK = 1224979098644774912;
 
 const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
 const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
+
+const int MAX_GAME_LENGTH = 1000;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -48422,9 +48424,26 @@ struct Move{
     piece endingPiece;
 };
 
+
+
+
+
+struct LastMove{
+    Move move;
+    int eval;
+    int enPassant;
+    int castleRights;
+    piece capturedPiece;
+};
+
 class Game {
 private:
 
+
+
+
+    LastMove gameHistory[MAX_GAME_LENGTH];
+    int gameHistoryCounter;
 
 public:
 
@@ -48444,7 +48463,10 @@ public:
     void printGame();
     piece getPiece(bitboard square);
     void doMove(Move move);
+    void undoMove();
     void doMoveAsString(std::string moveStr);
+
+    int getGameHistoryCounter() const;
 };
 # 7 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.cpp" 2
 
@@ -48469,6 +48491,8 @@ void Game::loadStartingPosition() {
     castleRights = WHITE_SHORT_CASTLE_RIGHT | WHITE_LONG_CASTLE_RIGHT | BLACK_SHORT_CASTLE_RIGHT | BLACK_LONG_CASTLE_RIGHT;
     enPassant = NO_EN_PASSANT;
     currentPlayer = WHITE;
+
+    gameHistoryCounter = -1;
 }
 
 
@@ -48577,6 +48601,13 @@ piece Game::getPiece(bitboard square) {
 void Game::doMove(Move move) {
 
 
+    gameHistoryCounter++;
+    gameHistory[gameHistoryCounter].enPassant = this->enPassant;
+    gameHistory[gameHistoryCounter].castleRights = this->castleRights;
+    gameHistory[gameHistoryCounter].eval = this->evaluation;
+    gameHistory[gameHistoryCounter].move = move;
+
+
     bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
     pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]] &= ~(enPassantCaptureSquare * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE)));
 
@@ -48585,9 +48616,12 @@ void Game::doMove(Move move) {
     pieceBoards[move.endingPiece | COLOR_TO_PIECE[currentPlayer]] |= move.toSquare;
 
 
+    piece capturedPiece = NO_PIECE;
     for(int i = 0; i < 6; i++){
+        capturedPiece = capturedPiece * !(pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) + i * ((pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) != 0);
         pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] &= ~move.toSquare;
     }
+    gameHistory[gameHistoryCounter].capturedPiece = capturedPiece;
 
 
 
@@ -48637,4 +48671,42 @@ void Game::doMoveAsString(std::string moveStr) {
     }
 
     doMove(move);
+}
+
+
+
+
+void Game::undoMove() {
+
+    this->evaluation = gameHistory[gameHistoryCounter].eval;
+    this->castleRights = gameHistory[gameHistoryCounter].castleRights;
+    this->enPassant = gameHistory[gameHistoryCounter].enPassant;
+    piece &capturedPiece = gameHistory[gameHistoryCounter].capturedPiece;
+    Move &move = gameHistory[gameHistoryCounter].move;
+
+
+    bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
+    pieceBoards[PAWN | COLOR_TO_PIECE[currentPlayer]] |= (enPassantCaptureSquare * ((move.startingPiece == PAWN) && (capturedPiece == NO_PIECE) && (enPassantCaptureSquare != move.fromSquare)));
+
+
+    pieceBoards[move.startingPiece | COLOR_TO_PIECE[1 - currentPlayer]] |= move.fromSquare;
+    pieceBoards[move.endingPiece | COLOR_TO_PIECE[1 - currentPlayer]] &= ~move.toSquare;
+
+
+    pieceBoards[capturedPiece | COLOR_TO_PIECE[currentPlayer]] |= move.toSquare * (capturedPiece != NO_PIECE);
+
+
+    currentPlayer = BLACK * (currentPlayer == WHITE);
+
+
+
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+
+    gameHistoryCounter--;
+}
+
+int Game::getGameHistoryCounter() const {
+    return gameHistoryCounter;
 }

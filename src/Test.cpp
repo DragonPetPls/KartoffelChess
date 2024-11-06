@@ -31,25 +31,13 @@ void Test::testDoMove() {
     }
 
     for(int i = 0; i < moveStr.size(); i++){
-        g.doMoveAsString(moveStr[i]);
         std::cout << moveStr[i] << std::endl;
+        g.doMoveAsString(moveStr[i]);
         g.printGame();
     }
-
-    //Lot of en passant cases here
-    g.loadStartingPosition();
-    gameStr = "d2d4 h7h5 d4d5 e7e5 d5e6 h5h4 g2g4 h4g3 e6d7 e8e7 b2b4 c7c5 b4b5 b8c6 b5c6";
-
-    ss.str(gameStr);
-
-    while(ss >> ms){
-        moveStr.push_back(ms);
-    }
-
-    for(int i = 0; i < moveStr.size(); i++){
-        g.doMoveAsString(moveStr[i]);
-        std::cout << moveStr[i] << std::endl;
+    while(g.getGameHistoryCounter() != -1){
+        std::cout << moveStr[g.getGameHistoryCounter()] <<std::endl;
+        g.undoMove();
         g.printGame();
     }
-
 }

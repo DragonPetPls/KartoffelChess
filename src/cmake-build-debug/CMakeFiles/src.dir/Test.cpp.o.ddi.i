@@ -49612,6 +49612,8 @@ const bitboard BLACK_LONG_CASTLE_RIGHTS_MASK = 1224979098644774912;
 
 const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
 const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
+
+const int MAX_GAME_LENGTH = 1000;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -49624,9 +49626,26 @@ struct Move{
     piece endingPiece;
 };
 
+
+
+
+
+struct LastMove{
+    Move move;
+    int eval;
+    int enPassant;
+    int castleRights;
+    piece capturedPiece;
+};
+
 class Game {
 private:
 
+
+
+
+    LastMove gameHistory[MAX_GAME_LENGTH];
+    int gameHistoryCounter;
 
 public:
 
@@ -49646,7 +49665,10 @@ public:
     void printGame();
     piece getPiece(bitboard square);
     void doMove(Move move);
+    void undoMove();
     void doMoveAsString(std::string moveStr);
+
+    int getGameHistoryCounter() const;
 };
 # 10 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp" 2
 
@@ -49673,25 +49695,13 @@ void Test::testDoMove() {
     }
 
     for(int i = 0; i < moveStr.size(); i++){
-        g.doMoveAsString(moveStr[i]);
         std::cout << moveStr[i] << std::endl;
+        g.doMoveAsString(moveStr[i]);
         g.printGame();
     }
-
-
-    g.loadStartingPosition();
-    gameStr = "d2d4 h7h5 d4d5 e7e5 d5e6 h5h4 g2g4 h4g3 e6d7 e8e7 b2b4 c7c5 b4b5 b8c6 b5c6";
-
-    ss.str(gameStr);
-
-    while(ss >> ms){
-        moveStr.push_back(ms);
-    }
-
-    for(int i = 0; i < moveStr.size(); i++){
-        g.doMoveAsString(moveStr[i]);
-        std::cout << moveStr[i] << std::endl;
+    while(g.getGameHistoryCounter() != -1){
+        std::cout << moveStr[g.getGameHistoryCounter()] <<std::endl;
+        g.undoMove();
         g.printGame();
     }
-
 }

@@ -48406,6 +48406,8 @@ const bitboard BLACK_LONG_CASTLE_RIGHTS_MASK = 1224979098644774912;
 
 const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
 const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
+
+const int MAX_GAME_LENGTH = 1000;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -48418,9 +48420,26 @@ struct Move{
     piece endingPiece;
 };
 
+
+
+
+
+struct LastMove{
+    Move move;
+    int eval;
+    int enPassant;
+    int castleRights;
+    piece capturedPiece;
+};
+
 class Game {
 private:
 
+
+
+
+    LastMove gameHistory[MAX_GAME_LENGTH];
+    int gameHistoryCounter;
 
 public:
 
@@ -48440,7 +48459,10 @@ public:
     void printGame();
     piece getPiece(bitboard square);
     void doMove(Move move);
+    void undoMove();
     void doMoveAsString(std::string moveStr);
+
+    int getGameHistoryCounter() const;
 };
 # 3 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/main.cpp" 2
 # 1 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h" 1

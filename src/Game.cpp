@@ -26,6 +26,8 @@ void Game::loadStartingPosition() {
     castleRights = WHITE_SHORT_CASTLE_RIGHT | WHITE_LONG_CASTLE_RIGHT | BLACK_SHORT_CASTLE_RIGHT | BLACK_LONG_CASTLE_RIGHT;
     enPassant = NO_EN_PASSANT;
     currentPlayer = WHITE;
+
+    gameHistoryCounter = -1;
 }
 
 /*
@@ -133,6 +135,13 @@ piece Game::getPiece(bitboard square) {
  */
 void Game::doMove(Move move) {
 
+    //Storing everything to undo this move later
+    gameHistoryCounter++;
+    gameHistory[gameHistoryCounter].enPassant = this->enPassant;
+    gameHistory[gameHistoryCounter].castleRights = this->castleRights;
+    gameHistory[gameHistoryCounter].eval = this->evaluation;
+    gameHistory[gameHistoryCounter].move = move;
+
     //En passant
     bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
     pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]] &= ~(enPassantCaptureSquare * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE)));
@@ -142,9 +151,12 @@ void Game::doMove(Move move) {
     pieceBoards[move.endingPiece | COLOR_TO_PIECE[currentPlayer]] |= move.toSquare;
 
     //Removing captured pieces
+    piece capturedPiece = NO_PIECE;
     for(int i = 0; i < 6; i++){
+        capturedPiece = capturedPiece * !(pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) + i * ((pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) != 0);
         pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] &= ~move.toSquare;
     }
+    gameHistory[gameHistoryCounter].capturedPiece = capturedPiece;
 
     //Castling
     //short castle
@@ -194,4 +206,42 @@ void Game::doMoveAsString(std::string moveStr) {
     }
 
     doMove(move);
+}
+
+/*
+ * This function undoes the last move restoring the previous position
+ */
+void Game::undoMove() {
+    //Restoring saved data
+    this->evaluation = gameHistory[gameHistoryCounter].eval;
+    this->castleRights = gameHistory[gameHistoryCounter].castleRights;
+    this->enPassant = gameHistory[gameHistoryCounter].enPassant;
+    piece &capturedPiece = gameHistory[gameHistoryCounter].capturedPiece;
+    Move &move = gameHistory[gameHistoryCounter].move;
+
+    //En passant
+    bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
+    pieceBoards[PAWN | COLOR_TO_PIECE[currentPlayer]] |= (enPassantCaptureSquare * ((move.startingPiece == PAWN) && (capturedPiece == NO_PIECE) && (enPassantCaptureSquare != move.fromSquare)));
+
+    //Transfering the piece
+    pieceBoards[move.startingPiece | COLOR_TO_PIECE[1 - currentPlayer]] |= move.fromSquare;
+    pieceBoards[move.endingPiece | COLOR_TO_PIECE[1 - currentPlayer]] &= ~move.toSquare;
+
+    //Restoring captured pieces
+    pieceBoards[capturedPiece | COLOR_TO_PIECE[currentPlayer]] |= move.toSquare * (capturedPiece != NO_PIECE);
+
+    //Changing who to move
+    currentPlayer = BLACK * (currentPlayer == WHITE);
+
+    //Castling
+    //short castle
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    //Long castle
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+
+    gameHistoryCounter--;
+}
+
+int Game::getGameHistoryCounter() const {
+    return gameHistoryCounter;
 }
