@@ -48372,10 +48372,10 @@ enum Color{
     BLACK
 };
 
-const uint8_t WHITE_SHORT_CASTLE = 1;
-const uint8_t WHITE_LONG_CASTLE = 2;
-const uint8_t BLACK_SHORT_CASTLE = 4;
-const uint8_t BLACK_LONG_CASTLE = 8;
+const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
+const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
+const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
+const uint8_t BLACK_LONG_CASTLE_RIGHT = 8;
 
 const bitboard WHITE_PAWN_STARTING_POSITION = 65280;
 const bitboard WHITE_KNIGHT_STARTING_POSITION = 66;
@@ -48402,6 +48402,14 @@ const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
 
 const bitboard SHORT_CASTLE_KING = 5764607523034234960;
 const bitboard LONG_CASTLE_KING = 1441151880758558740;
+
+const bitboard WHITE_SHORT_CASTLE_RIGHTS_MASK = 144;
+const bitboard WHITE_LONG_CASTLE_RIGHTS_MASK = 17;
+const bitboard BLACK_SHORT_CASTLE_RIGHTS_MASK = 10376293541461622784;
+const bitboard BLACK_LONG_CASTLE_RIGHTS_MASK = 1224979098644774912;
+
+const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
+const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -48458,7 +48466,7 @@ void Game::loadStartingPosition() {
     pieceBoards[BLACK_QUEEN] = BLACK_QUEEN_STARTING_POSITION;
     pieceBoards[BLACK_KING] = BLACK_KING_STARTING_POSITION;
 
-    castleRights = WHITE_SHORT_CASTLE | WHITE_LONG_CASTLE | BLACK_SHORT_CASTLE | BLACK_LONG_CASTLE;
+    castleRights = WHITE_SHORT_CASTLE_RIGHT | WHITE_LONG_CASTLE_RIGHT | BLACK_SHORT_CASTLE_RIGHT | BLACK_LONG_CASTLE_RIGHT;
     enPassant = NO_EN_PASSANT;
     currentPlayer = WHITE;
 }
@@ -48530,7 +48538,20 @@ void Game::printGame() {
         }
     }
     std::cout << "En passant " << (int) enPassant << std::endl;
-    std::cout << "Castle Rights " << (int) castleRights << std::endl;
+    std::cout << "Castle Rights: ";
+    if(castleRights & WHITE_SHORT_CASTLE_RIGHT){
+        std::cout << "ws ";
+    }
+    if(castleRights & WHITE_LONG_CASTLE_RIGHT){
+        std::cout << "wl ";
+    }
+    if(castleRights & BLACK_SHORT_CASTLE_RIGHT){
+        std::cout << "bs ";
+    }
+    if(castleRights & BLACK_LONG_CASTLE_RIGHT){
+        std::cout << "bl ";
+    }
+    std::cout << std::endl;
 }
 
 
@@ -48573,6 +48594,17 @@ void Game::doMove(Move move) {
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
 
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+
+
+    bitboard fromTo = move.fromSquare | move.toSquare;
+    castleRights &= ~(WHITE_SHORT_CASTLE_RIGHT * ((fromTo & WHITE_SHORT_CASTLE_RIGHTS_MASK) != 0));
+    castleRights &= ~(WHITE_LONG_CASTLE_RIGHT * ((fromTo & WHITE_LONG_CASTLE_RIGHTS_MASK) != 0));
+    castleRights &= ~(BLACK_SHORT_CASTLE_RIGHT * ((fromTo & BLACK_SHORT_CASTLE_RIGHTS_MASK) != 0));
+    castleRights &= ~(BLACK_LONG_CASTLE_RIGHT * ((fromTo & BLACK_LONG_CASTLE_RIGHTS_MASK) != 0));
+
+
+    enPassant = ((move.fromSquare >> 8) * ((move.startingPiece == PAWN) && (move.fromSquare & WHITE_EN_PASSANT_ROWS) && (move.toSquare & WHITE_EN_PASSANT_ROWS)));
+    enPassant |= ((move.fromSquare >> 48) * ((move.startingPiece == PAWN) && (move.fromSquare & BLACK_EN_PASSANT_ROWS) && (move.toSquare & BLACK_EN_PASSANT_ROWS)));
 
 
     currentPlayer = BLACK * (currentPlayer == WHITE);

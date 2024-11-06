@@ -23,7 +23,7 @@ void Game::loadStartingPosition() {
     pieceBoards[BLACK_QUEEN] = BLACK_QUEEN_STARTING_POSITION;
     pieceBoards[BLACK_KING] = BLACK_KING_STARTING_POSITION;
 
-    castleRights = WHITE_SHORT_CASTLE | WHITE_LONG_CASTLE | BLACK_SHORT_CASTLE | BLACK_LONG_CASTLE;
+    castleRights = WHITE_SHORT_CASTLE_RIGHT | WHITE_LONG_CASTLE_RIGHT | BLACK_SHORT_CASTLE_RIGHT | BLACK_LONG_CASTLE_RIGHT;
     enPassant = NO_EN_PASSANT;
     currentPlayer = WHITE;
 }
@@ -95,7 +95,20 @@ void Game::printGame() {
         }
     }
     std::cout << "En passant " << (int) enPassant << std::endl;
-    std::cout << "Castle Rights " << (int) castleRights << std::endl;
+    std::cout << "Castle Rights: ";
+    if(castleRights & WHITE_SHORT_CASTLE_RIGHT){
+        std::cout << "ws ";
+    }
+    if(castleRights & WHITE_LONG_CASTLE_RIGHT){
+        std::cout << "wl ";
+    }
+    if(castleRights & BLACK_SHORT_CASTLE_RIGHT){
+        std::cout << "bs ";
+    }
+    if(castleRights & BLACK_LONG_CASTLE_RIGHT){
+        std::cout << "bl ";
+    }
+    std::cout << std::endl;
 }
 
 /*
@@ -138,6 +151,17 @@ void Game::doMove(Move move) {
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
     //Long castle
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+
+    //Setting castle rights.
+    bitboard fromTo = move.fromSquare | move.toSquare;
+    castleRights &= ~(WHITE_SHORT_CASTLE_RIGHT * ((fromTo & WHITE_SHORT_CASTLE_RIGHTS_MASK) != 0));
+    castleRights &= ~(WHITE_LONG_CASTLE_RIGHT * ((fromTo & WHITE_LONG_CASTLE_RIGHTS_MASK) != 0));
+    castleRights &= ~(BLACK_SHORT_CASTLE_RIGHT * ((fromTo & BLACK_SHORT_CASTLE_RIGHTS_MASK) != 0));
+    castleRights &= ~(BLACK_LONG_CASTLE_RIGHT * ((fromTo & BLACK_LONG_CASTLE_RIGHTS_MASK) != 0));
+
+    //Setting en passant rights
+    enPassant = ((move.fromSquare >> 8) * ((move.startingPiece == PAWN) && (move.fromSquare & WHITE_EN_PASSANT_ROWS) &&  (move.toSquare & WHITE_EN_PASSANT_ROWS)));
+    enPassant |= ((move.fromSquare >> 48) * ((move.startingPiece == PAWN) && (move.fromSquare & BLACK_EN_PASSANT_ROWS) &&  (move.toSquare & BLACK_EN_PASSANT_ROWS)));
 
     //Changing who to move
     currentPlayer = BLACK * (currentPlayer == WHITE);

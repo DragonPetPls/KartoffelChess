@@ -48368,10 +48368,10 @@ enum Color{
     BLACK
 };
 
-const uint8_t WHITE_SHORT_CASTLE = 1;
-const uint8_t WHITE_LONG_CASTLE = 2;
-const uint8_t BLACK_SHORT_CASTLE = 4;
-const uint8_t BLACK_LONG_CASTLE = 8;
+const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
+const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
+const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
+const uint8_t BLACK_LONG_CASTLE_RIGHT = 8;
 
 const bitboard WHITE_PAWN_STARTING_POSITION = 65280;
 const bitboard WHITE_KNIGHT_STARTING_POSITION = 66;
@@ -48398,6 +48398,14 @@ const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
 
 const bitboard SHORT_CASTLE_KING = 5764607523034234960;
 const bitboard LONG_CASTLE_KING = 1441151880758558740;
+
+const bitboard WHITE_SHORT_CASTLE_RIGHTS_MASK = 144;
+const bitboard WHITE_LONG_CASTLE_RIGHTS_MASK = 17;
+const bitboard BLACK_SHORT_CASTLE_RIGHTS_MASK = 10376293541461622784;
+const bitboard BLACK_LONG_CASTLE_RIGHTS_MASK = 1224979098644774912;
+
+const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
+const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -48450,8 +48458,6 @@ int main() {
 
 
 
-    Test::testPrintGame();
-    std::cout << "print test completed" << std::endl;
     Test::testDoMove();
 
     return 0;
