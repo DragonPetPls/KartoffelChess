@@ -48368,6 +48368,14 @@ enum Color{
     BLACK
 };
 
+enum Results {
+    WHITE_WON,
+    BLACK_WON,
+    DRAW,
+    ON_GOING,
+    UNKNOWN
+};
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
@@ -48390,14 +48398,17 @@ const bitboard BLACK_KING_STARTING_POSITION = 1152921504606846976;
 const bitboard NO_EN_PASSANT = 0;
 
 const piece COLOR_TO_PIECE[2] = {WHITE_PIECE, BLACK_PIECE};
-const int NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-const int INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
+const char NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+const char INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
 
 const bitboard SHORT_CASTLE_ROOK[2] = {160, 11529215046068469760};
 const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
 
 const bitboard SHORT_CASTLE_KING = 5764607523034234960;
 const bitboard LONG_CASTLE_KING = 1441151880758558740;
+
+const bitboard BOTTOM_ROW = 255;
+const bitboard TOP_ROW = 18374686479671623680;
 
 const bitboard WHITE_SHORT_CASTLE_RIGHTS_MASK = 144;
 const bitboard WHITE_LONG_CASTLE_RIGHTS_MASK = 17;
@@ -48408,6 +48419,8 @@ const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
 const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
 
 const int MAX_GAME_LENGTH = 1000;
+
+const bitboard BACK_ROWS = 18374686479671623935;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -48440,6 +48453,7 @@ private:
 
     LastMove gameHistory[MAX_GAME_LENGTH];
     int gameHistoryCounter;
+    char status;
 
 public:
 
@@ -48451,26 +48465,47 @@ public:
 
 private:
 
+    static int getIndex(const bitboard& board);
+
+    [[nodiscard]] std::vector<Move> getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
+    [[nodiscard]] std::vector<Move> getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
 
 public:
 
     Game() = default;
     void loadStartingPosition();
     void printGame();
-    piece getPiece(bitboard square);
     void doMove(Move move);
     void undoMove();
     void doMoveAsString(std::string moveStr);
+    std::vector<Move> getAllPseudoLegalMoves();
+    bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
+    bool isPositionLegal();
+    void loadFen(const std::string& fen);
+    static std::string moveToString(Move move);
+    char getStatus();
 
-    int getGameHistoryCounter() const;
+
+    [[nodiscard]] int getGameHistoryCounter() const;
+    piece getPiece(bitboard square);
 };
 # 3 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/main.cpp" 2
 # 1 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h" 1
-# 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h"
+# 12 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h"
 class Test {
+private:
+    static int perft(Game &g, int depth, bool printInfo = false);
 public:
     static void testPrintGame();
     static void testDoMove();
+    static void testMoveGen();
+    static void testFen();
+    static void perft();
+    static void consolPerft();
 };
 # 4 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/main.cpp" 2
 
@@ -48480,7 +48515,11 @@ int main() {
 
 
 
-    Test::testDoMove();
+
+
+
+    Test::perft();
+
 
     return 0;
 }

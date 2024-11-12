@@ -44489,15 +44489,12 @@ namespace std __attribute__ ((__visibility__ ("default")))
 }
 # 8 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp" 2
 # 1 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h" 1
-# 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h"
 
-# 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h"
-class Test {
-public:
-    static void testPrintGame();
-    static void testDoMove();
-};
-# 9 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp" 2
+
+
+
+
+
 # 1 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 1
 # 9 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h"
 # 1 "/usr/include/c++/14.2.0/vector" 1 3
@@ -44511,8 +44508,6 @@ public:
 
 
 # 1 "/usr/include/c++/14.2.0/bits/stl_uninitialized.h" 1 3
-# 70 "/usr/include/c++/14.2.0/bits/stl_uninitialized.h" 3
-
 # 70 "/usr/include/c++/14.2.0/bits/stl_uninitialized.h" 3
 namespace std __attribute__ ((__visibility__ ("default")))
 {
@@ -49574,6 +49569,14 @@ enum Color{
     BLACK
 };
 
+enum Results {
+    WHITE_WON,
+    BLACK_WON,
+    DRAW,
+    ON_GOING,
+    UNKNOWN
+};
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
@@ -49596,14 +49599,17 @@ const bitboard BLACK_KING_STARTING_POSITION = 1152921504606846976;
 const bitboard NO_EN_PASSANT = 0;
 
 const piece COLOR_TO_PIECE[2] = {WHITE_PIECE, BLACK_PIECE};
-const int NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-const int INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
+const char NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+const char INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
 
 const bitboard SHORT_CASTLE_ROOK[2] = {160, 11529215046068469760};
 const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
 
 const bitboard SHORT_CASTLE_KING = 5764607523034234960;
 const bitboard LONG_CASTLE_KING = 1441151880758558740;
+
+const bitboard BOTTOM_ROW = 255;
+const bitboard TOP_ROW = 18374686479671623680;
 
 const bitboard WHITE_SHORT_CASTLE_RIGHTS_MASK = 144;
 const bitboard WHITE_LONG_CASTLE_RIGHTS_MASK = 17;
@@ -49614,6 +49620,8 @@ const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
 const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
 
 const int MAX_GAME_LENGTH = 1000;
+
+const bitboard BACK_ROWS = 18374686479671623935;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -49646,6 +49654,7 @@ private:
 
     LastMove gameHistory[MAX_GAME_LENGTH];
     int gameHistoryCounter;
+    char status;
 
 public:
 
@@ -49657,20 +49666,52 @@ public:
 
 private:
 
+    static int getIndex(const bitboard& board);
+
+    [[nodiscard]] std::vector<Move> getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
+    [[nodiscard]] std::vector<Move> getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
 
 public:
 
     Game() = default;
     void loadStartingPosition();
     void printGame();
-    piece getPiece(bitboard square);
     void doMove(Move move);
     void undoMove();
     void doMoveAsString(std::string moveStr);
+    std::vector<Move> getAllPseudoLegalMoves();
+    bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
+    bool isPositionLegal();
+    void loadFen(const std::string& fen);
+    static std::string moveToString(Move move);
+    char getStatus();
 
-    int getGameHistoryCounter() const;
+
+    [[nodiscard]] int getGameHistoryCounter() const;
+    piece getPiece(bitboard square);
 };
-# 10 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp" 2
+# 8 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h" 2
+
+
+
+
+class Test {
+private:
+    static int perft(Game &g, int depth, bool printInfo = false);
+public:
+    static void testPrintGame();
+    static void testDoMove();
+    static void testMoveGen();
+    static void testFen();
+    static void perft();
+    static void consolPerft();
+};
+# 9 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp" 2
+
 
 void Test::testPrintGame() {
     Game g;
@@ -49703,5 +49744,111 @@ void Test::testDoMove() {
         std::cout << moveStr[g.getGameHistoryCounter()] <<std::endl;
         g.undoMove();
         g.printGame();
+    }
+}
+
+void Test::testMoveGen() {
+    Game g;
+    g.loadStartingPosition();
+    auto next = g.getAllPseudoLegalMoves();
+    for(Move m: next){
+        g.doMove(m);
+        g.printGame();
+        g.undoMove();
+    }
+}
+
+void Test::testFen() {
+    Game g;
+    std::string fen[4] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                        "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+                        "rnbq1bnr/pppkpppp/8/3p4/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3",
+                            "8/8/8/8/8/5k2/2K5/8 w - - 0 1"};
+    for(int i = 0; i < 4; i++) {
+        std::cout << "===========================" << std::endl;
+        std::cout << fen[i] << std::endl;
+        g.loadFen(fen[i]);
+        g.printGame();
+    }
+}
+
+void Test::perft() {
+    Game g;
+    std::string fen[10] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+        "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
+        "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1",
+        "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8 ",
+    "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10",
+    "4k3/1P6/8/8/8/8/K7/8 w - - 0 1",
+        "K1k5/8/P7/8/8/8/8/8 w - - 0 1",
+        "r3k2r/1b4bq/8/8/8/8/7B/R3K2R w KQkq - 0 1",
+        "8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"};
+
+    int depth[10] = {5, 4, 5, 4, 4, 4, 6, 6, 4, 6};
+    int results[10] = {4865609, 4085603, 674624, 422333, 2103487, 3894594, 217342, 2217, 1274206, 824064};
+    for(int i = 0; i < 10; i++) {
+        g.loadFen(fen[i]);
+        int n = perft(g, depth[i]);
+        if(n == results[i]) {
+            std::cout << "Test " << i << " successful" << std::endl;
+        } else {
+            std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << std::endl;
+        }
+    }
+}
+
+int Test::perft(Game &g, int depth, bool printInfo) {
+
+    if(depth == 0) {
+        return 1;
+    }
+
+    auto next = g.getAllPseudoLegalMoves();
+    int n = 0;
+    for(Move m: next) {
+        g.doMove(m);
+        if(!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+        int p = perft(g, depth - 1);
+        n += p;
+
+        if(printInfo) {
+            std::cout << Game::moveToString(m) << ": " << p << std::endl;
+        }
+        g.undoMove();
+    }
+    return n;
+}
+
+void Test::consolPerft() {
+
+    int depth = 0;
+    std::string input;
+    std::string fen;
+    while(true) {
+        Game g;
+        getline(std::cin, input);
+        if(input == "go" || input == "GO") {
+            g.loadFen(fen);
+            g.printGame();
+            std::cout << perft(g, depth, true) << std::endl;
+            continue;
+        }
+        if (input == "print") {
+            g.printGame();
+        }
+        if(input.size() > 3) {
+            fen = input;
+            std::cout << "fen: " << fen << std::endl;
+        } else {
+            try {
+                depth = stoi(input);
+            } catch(...) {
+                std::cout << "Invalid input." << std::endl;
+            }
+        }
     }
 }

@@ -8,7 +8,11 @@ int main() {
 
 
 #ifdef TEST
-    Test::testDoMove();
+    //Test::testDoMove();
+    //Test::testMoveGen();
+    //Test::testFen();
+    //Test::perft();
+    //Test::consolPerft();
 #endif
     return 0;
 }

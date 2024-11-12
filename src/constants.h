@@ -45,6 +45,14 @@ enum Color{
     BLACK
 };
 
+enum Results {
+    WHITE_WON,
+    BLACK_WON,
+    DRAW,
+    ON_GOING,
+    UNKNOWN
+};
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
@@ -67,14 +75,17 @@ const bitboard BLACK_KING_STARTING_POSITION = 1152921504606846976;
 const bitboard NO_EN_PASSANT = 0;
 
 const piece COLOR_TO_PIECE[2] = {WHITE_PIECE, BLACK_PIECE};
-const int NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-const int INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
+const char NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+const char INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
 
 const bitboard SHORT_CASTLE_ROOK[2] = {160, 11529215046068469760};
 const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
 
 const bitboard SHORT_CASTLE_KING = 5764607523034234960;
 const bitboard LONG_CASTLE_KING = 1441151880758558740;
+
+const bitboard BOTTOM_ROW = 255;
+const bitboard TOP_ROW = 18374686479671623680;
 
 const bitboard WHITE_SHORT_CASTLE_RIGHTS_MASK = 144;
 const bitboard WHITE_LONG_CASTLE_RIGHTS_MASK = 17;
@@ -85,5 +96,7 @@ const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
 const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
 
 const int MAX_GAME_LENGTH = 1000;
+
+const bitboard BACK_ROWS = 18374686479671623935;
 
 #endif //SRC_CONSTANTS_H

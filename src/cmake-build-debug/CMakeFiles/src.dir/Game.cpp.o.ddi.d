@@ -178,4 +178,4 @@ CMakeFiles/src.dir/Game.cpp.o.ddi: \
  /usr/include/c++/14.2.0/cstdint \
  /usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-least.h
+ /usr/include/x86_64-linux-gnu/bits/stdint-least.h /usr/include/strings.h

@@ -39,6 +39,7 @@ private:
     //If the gameHistoryCounter = -1 no move can be undone
     LastMove gameHistory[MAX_GAME_LENGTH];
     int gameHistoryCounter;
+    char status;
 
 public:
     //Attributes
@@ -50,18 +51,33 @@ public:
 
 private:
     //Functions
+    static int getIndex(const bitboard& board);
+
+    [[nodiscard]] std::vector<Move> getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
+    [[nodiscard]] std::vector<Move> getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
 
 public:
     //Functions
     Game() = default;
     void loadStartingPosition();
     void printGame();
-    piece getPiece(bitboard square);
     void doMove(Move move);
     void undoMove();
     void doMoveAsString(std::string moveStr);
+    std::vector<Move> getAllPseudoLegalMoves();
+    bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
+    bool isPositionLegal();
+    void loadFen(const std::string& fen);
+    static std::string moveToString(Move move);
+    char getStatus();
 
-    int getGameHistoryCounter() const;
+    //Getter and Setter functions
+    [[nodiscard]] int getGameHistoryCounter() const;
+    piece getPiece(bitboard square);
 };
 
 

@@ -48372,6 +48372,14 @@ enum Color{
     BLACK
 };
 
+enum Results {
+    WHITE_WON,
+    BLACK_WON,
+    DRAW,
+    ON_GOING,
+    UNKNOWN
+};
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
@@ -48394,14 +48402,17 @@ const bitboard BLACK_KING_STARTING_POSITION = 1152921504606846976;
 const bitboard NO_EN_PASSANT = 0;
 
 const piece COLOR_TO_PIECE[2] = {WHITE_PIECE, BLACK_PIECE};
-const int NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-const int INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
+const char NUMBER_TO_CHAR[8] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+const char INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
 
 const bitboard SHORT_CASTLE_ROOK[2] = {160, 11529215046068469760};
 const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
 
 const bitboard SHORT_CASTLE_KING = 5764607523034234960;
 const bitboard LONG_CASTLE_KING = 1441151880758558740;
+
+const bitboard BOTTOM_ROW = 255;
+const bitboard TOP_ROW = 18374686479671623680;
 
 const bitboard WHITE_SHORT_CASTLE_RIGHTS_MASK = 144;
 const bitboard WHITE_LONG_CASTLE_RIGHTS_MASK = 17;
@@ -48412,6 +48423,8 @@ const bitboard BLACK_EN_PASSANT_ROWS = 71777214277877760;
 const bitboard WHITE_EN_PASSANT_ROWS = 4278255360;
 
 const int MAX_GAME_LENGTH = 1000;
+
+const bitboard BACK_ROWS = 18374686479671623935;
 # 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.h" 2
 
 
@@ -48444,6 +48457,7 @@ private:
 
     LastMove gameHistory[MAX_GAME_LENGTH];
     int gameHistoryCounter;
+    char status;
 
 public:
 
@@ -48455,24 +48469,130 @@ public:
 
 private:
 
+    static int getIndex(const bitboard& board);
+
+    [[nodiscard]] std::vector<Move> getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
+    [[nodiscard]] std::vector<Move> getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] std::vector<Move> getKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
 
 public:
 
     Game() = default;
     void loadStartingPosition();
     void printGame();
-    piece getPiece(bitboard square);
     void doMove(Move move);
     void undoMove();
     void doMoveAsString(std::string moveStr);
+    std::vector<Move> getAllPseudoLegalMoves();
+    bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
+    bool isPositionLegal();
+    void loadFen(const std::string& fen);
+    static std::string moveToString(Move move);
+    char getStatus();
 
-    int getGameHistoryCounter() const;
+
+    [[nodiscard]] int getGameHistoryCounter() const;
+    piece getPiece(bitboard square);
 };
 # 7 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.cpp" 2
 
+# 1 "/usr/include/strings.h" 1 3 4
+# 23 "/usr/include/strings.h" 3 4
+# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
+# 24 "/usr/include/strings.h" 2 3 4
 
 
 
+
+
+
+
+# 30 "/usr/include/strings.h" 3 4
+extern "C" {
+
+
+
+extern int bcmp (const void *__s1, const void *__s2, size_t __n)
+     noexcept (true) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern void bcopy (const void *__src, void *__dest, size_t __n)
+  noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern void bzero (void *__s, size_t __n) noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern "C++"
+{
+extern char *index (char *__s, int __c)
+     noexcept (true) __asm ("index") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+extern const char *index (const char *__s, int __c)
+     noexcept (true) __asm ("index") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+# 66 "/usr/include/strings.h" 3 4
+}
+
+
+
+
+
+
+
+extern "C++"
+{
+extern char *rindex (char *__s, int __c)
+     noexcept (true) __asm ("rindex") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+extern const char *rindex (const char *__s, int __c)
+     noexcept (true) __asm ("rindex") __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+# 94 "/usr/include/strings.h" 3 4
+}
+# 104 "/usr/include/strings.h" 3 4
+extern int ffs (int __i) noexcept (true) __attribute__ ((__const__));
+
+
+
+
+
+extern int ffsl (long int __l) noexcept (true) __attribute__ ((__const__));
+__extension__ extern int ffsll (long long int __ll)
+     noexcept (true) __attribute__ ((__const__));
+
+
+
+extern int strcasecmp (const char *__s1, const char *__s2)
+     noexcept (true) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int strncasecmp (const char *__s1, const char *__s2, size_t __n)
+     noexcept (true) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+
+
+extern int strcasecmp_l (const char *__s1, const char *__s2, locale_t __loc)
+     noexcept (true) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2, 3)));
+
+
+
+extern int strncasecmp_l (const char *__s1, const char *__s2,
+     size_t __n, locale_t __loc)
+     noexcept (true) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2, 4)));
+
+
+}
+# 9 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.cpp" 2
+
+
+
+
+
+# 13 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.cpp"
 void Game::loadStartingPosition() {
     pieceBoards[WHITE_PAWN] = WHITE_PAWN_STARTING_POSITION;
     pieceBoards[WHITE_KNIGHT] = WHITE_KNIGHT_STARTING_POSITION;
@@ -48660,9 +48780,9 @@ void Game::doMoveAsString(std::string moveStr) {
     move.toSquare = move.toSquare << (toX + 8 * toY);
 
     move.startingPiece = getPiece(move.fromSquare) - BLACK_PIECE * (currentPlayer == BLACK);
-    if(moveStr.size() == 4){
-        move.endingPiece = move.startingPiece;
-    } else {
+    move.endingPiece = move.startingPiece;
+
+    if(moveStr.length() > 4) {
         for(int i = 0; i < 6; i++){
             if(INT_TO_CHAR[i] == moveStr[4]){
                 move.endingPiece = i;
@@ -48707,6 +48827,623 @@ void Game::undoMove() {
     gameHistoryCounter--;
 }
 
+
+
+
 int Game::getGameHistoryCounter() const {
     return gameHistoryCounter;
+}
+
+
+
+
+std::vector<Move> Game::getAllPseudoLegalMoves() {
+    std::vector<Move> pseudoLegalMoves;
+    pseudoLegalMoves.reserve(100);
+
+
+    bitboard ownHitmap = 0;
+    bitboard enemyHitmap = 0;
+    for(int i = 0; i < 6; i++){
+        ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[currentPlayer]];
+        enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]];
+    }
+    bitboard hitmap = ownHitmap | enemyHitmap;
+
+    bitboard squareMask = 1;
+    for(int i = 0; i < 64; i++){
+
+        if(!(ownHitmap & squareMask)){
+            squareMask = squareMask << 1;
+            continue;
+        }
+
+
+        piece p = getPiece(squareMask);
+        p &= ~BLACK_PIECE;
+
+        std::vector<Move> pm;
+        pm.reserve(50);
+        switch (p) {
+            case PAWN:
+                pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                break;
+            case KNIGHT:
+                pm = getKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                break;
+            case BISHOP:
+                pm = getBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                break;
+            case ROOK:
+                pm = getRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                break;
+            case QUEEN:
+                pm = getQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                break;
+            case KING:
+                pm = getKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                break;
+            default:
+                break;
+        }
+        pseudoLegalMoves.insert(pseudoLegalMoves.end(), pm.begin(), pm.end());
+        squareMask = squareMask << 1;
+    }
+
+    return pseudoLegalMoves;
+}
+
+
+
+
+
+std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    std::vector<Move> moves;
+    moves.reserve(20);
+
+    int verticalDirection = 1 * (currentPlayer == WHITE) - 1 * (currentPlayer == BLACK);
+
+
+    bitboard targetSquare = square >> 8;
+    targetSquare = targetSquare << (8 * (verticalDirection + 1));
+
+    if(targetSquare & ~hitmap){
+        Move m{};
+        m.fromSquare = square;
+        m.toSquare = targetSquare;
+        m.startingPiece = PAWN;
+
+        if(targetSquare & BACK_ROWS){
+
+            m.endingPiece = QUEEN;
+            moves.push_back(m);
+            m.endingPiece = ROOK;
+            moves.push_back(m);
+            m.endingPiece = BISHOP;
+            moves.push_back(m);
+            m.endingPiece = KNIGHT;
+            moves.push_back(m);
+        } else {
+            m.endingPiece = PAWN;
+            moves.push_back(m);
+        }
+    }
+
+
+    bitboard intermediateSquare = targetSquare;
+    targetSquare = intermediateSquare >> 8;
+    targetSquare = targetSquare << (8 * (verticalDirection + 1));
+    if(!((targetSquare | intermediateSquare) & hitmap)
+    && (((currentPlayer == WHITE) && (square & WHITE_PAWN_STARTING_POSITION)) || ((currentPlayer == BLACK) && (square & BLACK_PAWN_STARTING_POSITION))) ){
+        Move m{};
+        m.fromSquare = square;
+        m.toSquare = targetSquare;
+        m.startingPiece = PAWN;
+        m.endingPiece = PAWN;
+        moves.push_back(m);
+    }
+
+
+    targetSquare = 1;
+    targetSquare = targetSquare << (index + verticalDirection * 8 - 1);
+    if(((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
+        && (index % 8 != 0)){
+        Move m{};
+        m.fromSquare = square;
+        m.toSquare = targetSquare;
+        m.startingPiece = PAWN;
+        if(targetSquare & BACK_ROWS){
+
+            m.endingPiece = QUEEN;
+            moves.push_back(m);
+            m.endingPiece = ROOK;
+            moves.push_back(m);
+            m.endingPiece = BISHOP;
+            moves.push_back(m);
+            m.endingPiece = KNIGHT;
+            moves.push_back(m);
+        } else {
+            m.endingPiece = PAWN;
+            moves.push_back(m);
+        }
+    }
+
+
+    targetSquare = 1;
+    targetSquare = targetSquare << (index + verticalDirection * 8 + 1);
+    if(((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
+        && (index % 8 != 7)){
+        Move m{};
+        m.fromSquare = square;
+        m.toSquare = targetSquare;
+        m.startingPiece = PAWN;
+        if(targetSquare & BACK_ROWS){
+
+            m.endingPiece = QUEEN;
+            moves.push_back(m);
+            m.endingPiece = ROOK;
+            moves.push_back(m);
+            m.endingPiece = BISHOP;
+            moves.push_back(m);
+            m.endingPiece = KNIGHT;
+            moves.push_back(m);
+        } else {
+            m.endingPiece = PAWN;
+            moves.push_back(m);
+        }
+    }
+
+    return moves;
+}
+
+
+
+
+std::vector<Move> Game::getKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    std::vector<Move> moves;
+    moves.reserve(8);
+
+    int x = index % 8;
+    int y = index / 8;
+
+    for(int i = 0; i < 8; i++){
+
+        int vx = 2 * (i == 0 || i == 1) + 1 * (i == 2 || i == 3) - 1 * (i == 4 || i == 5) - 2 * (i == 6 || i == 7);
+        int vy = 2 * (i == 2 || i == 4) + 1 * (i == 0 || i == 6) - 1 * (i == 1 || i == 7) - 2 * (i == 3 || i == 5);
+
+
+        int tx = x + vx;
+        int ty = y + vy;
+        if(tx < 0 || tx > 7 || ty < 0 || ty > 7){
+            continue;
+        }
+
+        bitboard targetSquare = 1;
+        targetSquare = targetSquare << (tx + 8 * ty);
+        if(!(targetSquare & ownHitmap)){
+            Move m;
+            m.toSquare = targetSquare;
+            m.fromSquare = square;
+            m.startingPiece = KNIGHT;
+            m.endingPiece = KNIGHT;
+            moves.push_back(m);
+        }
+    }
+
+    return moves;
+}
+
+
+
+
+std::vector<Move> Game::getBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    std::vector<Move> moves;
+    moves.reserve(16);
+
+    int x = index % 8;
+    int y = index / 8;
+
+    for(int i = 0; i < 4; i++){
+        int vx = 1 * (i < 2) - 1 * (i >= 2);
+        int vy = 1 * (i == 0 || i == 2) - 1 * (i == 1 || i == 3);
+
+
+        for (int distance = 1; distance < 8; distance++){
+            int tx = x + vx * distance;
+            int ty = y + vy * distance;
+
+            bitboard targetSquare = 1;
+            targetSquare = targetSquare << (tx + 8 * ty);
+
+
+            if((targetSquare & ownHitmap) || tx < 0 || tx > 7 || ty < 0 || ty > 7){
+                break;
+            }
+
+
+            Move m;
+            m.toSquare = targetSquare;
+            m.fromSquare = square;
+            m.startingPiece = BISHOP;
+            m.endingPiece = BISHOP;
+            moves.push_back(m);
+
+
+            if(targetSquare & enemyHitmap){
+                break;
+            }
+        }
+    }
+
+    return moves;
+}
+
+
+
+
+std::vector<Move> Game::getRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    std::vector<Move> moves;
+    moves.reserve(16);
+
+    int x = index % 8;
+    int y = index / 8;
+
+    for(int i = 0; i < 4; i++){
+        int vx = 1 * (i == 0) - 1 * (i == 2);
+        int vy = 1 * (i == 1) - 1 * (i == 3);
+
+
+        for (int distance = 1; distance < 8; distance++){
+            int tx = x + vx * distance;
+            int ty = y + vy * distance;
+
+            bitboard targetSquare = 1;
+            targetSquare = targetSquare << (tx + 8 * ty);
+
+
+            if((targetSquare & ownHitmap) || tx < 0 || tx > 7 || ty < 0 || ty > 7){
+                break;
+            }
+
+
+            Move m;
+            m.toSquare = targetSquare;
+            m.fromSquare = square;
+            m.startingPiece = ROOK;
+            m.endingPiece = ROOK;
+            moves.push_back(m);
+
+
+            if(targetSquare & enemyHitmap){
+                break;
+            }
+        }
+    }
+
+    return moves;
+}
+
+
+
+
+std::vector<Move> Game::getQueenMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    std::vector<Move> moves;
+    moves.reserve(50);
+
+    auto diagonal = getBishopMoves(square, index, ownHitmap, enemyHitmap, hitmap);
+    for(Move &m: diagonal) {
+        m.startingPiece = QUEEN;
+        m.endingPiece = QUEEN;
+    }
+    moves.insert(moves.end(), diagonal.begin(), diagonal.end());
+
+    auto straight = getRookMoves(square, index, ownHitmap, enemyHitmap, hitmap);
+    for(Move &m: straight) {
+        m.startingPiece = QUEEN;
+        m.endingPiece = QUEEN;
+    }
+    moves.insert(moves.end(), straight.begin(), straight.end());
+
+    return moves;
+}
+
+
+
+
+std::vector<Move> Game::getKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    std::vector<Move> moves;
+    moves.reserve(8);
+
+    int x = index % 8;
+    int y = index / 8;
+
+
+    for(int i = 0; i < 8; i++){
+        int vx = 1 * (i <= 2) - 1 * ((i > 2) && (i <= 5));
+        int vy = 1 * (i == 0 || i == 3 || i == 6) - 1 * (i == 1|| i == 4 || i == 7);
+
+
+        int tx = x + vx;
+        int ty = y + vy;
+        bitboard targetSquare = 1;
+        targetSquare = targetSquare << (tx + 8 * ty);
+        if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & ~ownHitmap)){
+            Move m;
+            m.fromSquare = square;
+            m.toSquare = targetSquare;
+            m.startingPiece = KING;
+            m.endingPiece = KING;
+            moves.push_back(m);
+        }
+    }
+
+
+    uint8_t shortCastleRights[2] = {WHITE_SHORT_CASTLE_RIGHT, BLACK_SHORT_CASTLE_RIGHT};
+    uint8_t longCastleRights[2] = {WHITE_LONG_CASTLE_RIGHT, BLACK_LONG_CASTLE_RIGHT};
+
+
+    if((castleRights & shortCastleRights[currentPlayer])
+    && !isSquareUnderAttack(square, index, 1 - currentPlayer)
+    && !isSquareUnderAttack(square << 1, index + 1, 1 - currentPlayer)
+    && !(hitmap & (square << 1))
+    && !(hitmap & (square << 2))){
+        Move m;
+        m.fromSquare = square;
+        m.toSquare = square << 2;
+        m.startingPiece = KING;
+        m.endingPiece = KING;
+        moves.push_back(m);
+    }
+
+
+    if((castleRights & longCastleRights[currentPlayer])
+       && !isSquareUnderAttack(square, index, 1 - currentPlayer)
+       && !isSquareUnderAttack(square >> 1, index - 1, 1 - currentPlayer)
+       && !(hitmap & (square >> 1))
+       && !(hitmap & (square >> 2))
+       && !(hitmap & (square >> 3))){
+        Move m;
+        m.fromSquare = square;
+        m.toSquare = square >> 2;
+        m.startingPiece = KING;
+        m.endingPiece = KING;
+        moves.push_back(m);
+    }
+
+    return moves;
+}
+
+
+
+
+bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor) const {
+
+    bitboard ownHitmap = 0;
+    bitboard enemyHitmap = 0;
+    for(int i = 0; i < 6; i++){
+        ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - attackingColor]];
+        enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[attackingColor]];
+    }
+    bitboard hitmap = ownHitmap | enemyHitmap;
+
+
+    int x = index % 8;
+    int y = index / 8;
+
+    for(int i = 0; i < 8; i++){
+
+        int vx = 2 * (i == 0 || i == 1) + 1 * (i == 2 || i == 3) - 1 * (i == 4 || i == 5) - 2 * (i == 6 || i == 7);
+        int vy = 2 * (i == 2 || i == 4) + 1 * (i == 0 || i == 6) - 1 * (i == 1 || i == 7) - 2 * (i == 3 || i == 5);
+
+
+        int tx = x + vx;
+        int ty = y + vy;
+        if(tx < 0 || tx > 7 || ty < 0 || ty > 7){
+            continue;
+        }
+
+        bitboard targetSquare = 1;
+        targetSquare = targetSquare << (tx + 8 * ty);
+        if(targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor] | KNIGHT]){
+            return true;
+        }
+    }
+
+
+    bitboard diagonalPieces = pieceBoards[BISHOP | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
+    bitboard straightPieces = pieceBoards[ROOK | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
+    for(int i = 0; i < 8; i++){
+
+        int vx = 1 * (i <= 2) - 1 * ((i > 2) && (i <= 5));
+        int vy = 1 * (i == 0 || i == 3 || i == 6) - 1 * (i == 1|| i == 4 || i == 7);
+
+
+
+        int tx = x + vx;
+        int ty = y + vy;
+        bitboard targetSquare = 1;
+        targetSquare = targetSquare << (tx + 8 * ty);
+        if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & pieceBoards[KING | COLOR_TO_PIECE[attackingColor]])){
+            return true;
+        }
+
+
+        for(int distance = 1; distance < 8; distance++){
+            tx = x + vx * distance;
+            ty = y + vy * distance;
+            targetSquare = 1;
+            targetSquare = targetSquare << (tx + 8 * ty);
+            bool straight = (vx == 0) || ( vy == 0);
+            bool diagonal = !straight;
+            if (straight && tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & straightPieces)){
+                return true;
+            }
+            if (diagonal && tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & diagonalPieces)){
+                return true;
+            }
+            if(tx < 0 || ty < 0 || tx > 7 || ty > 7 || (targetSquare & hitmap)){
+                break;
+            }
+        }
+    }
+
+
+    int verticalDirection = -1 * (attackingColor == WHITE) + 1 * (attackingColor == BLACK);
+
+    bitboard targetSquare = 1;
+    targetSquare = targetSquare << (index + verticalDirection * 8 + 1);
+    if((targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor]]) && (index % 8 != 7)){
+        return true;
+    }
+
+
+    targetSquare = 1;
+    targetSquare = targetSquare << (index + verticalDirection * 8 - 1);
+    if((targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor]]) && (index % 8 != 0)){
+       return true;
+    }
+
+    return false;
+}
+
+
+
+
+
+bool Game::isPositionLegal() {
+    int kingPosition = getIndex(pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | KING]);
+    return !isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | KING], kingPosition, currentPlayer);
+}
+
+
+
+
+int Game::getIndex(const bitboard &board) {
+
+    int index = 0;
+    for(int i = 0; i < 64; i++) {
+        index += i * ((board >> i) & 1);
+    }
+
+    return index;
+}
+
+
+
+
+void Game::loadFen(const std::string &fen) {
+    gameHistoryCounter= 0;
+
+    for (int i = 0; i < 14; i++) {
+        pieceBoards[i] = 0;
+    }
+    castleRights = 0;
+    enPassant = 0;
+    currentPlayer = WHITE;
+
+
+    int pointer = 63;
+    int counter = 0;
+
+    while (pointer >= 0) {
+        piece p = NO_PIECE;
+        int skip = 0;
+        char c = fen[counter];
+
+        if(c > '0' && c <= '9') {
+            skip = c - '0';
+        } else {
+            switch(c) {
+                case 'P': p = PAWN | WHITE_PIECE; break;
+                case 'N': p = KNIGHT | WHITE_PIECE; break;
+                case 'B': p = BISHOP | WHITE_PIECE; break;
+                case 'R': p = ROOK | WHITE_PIECE; break;
+                case 'Q': p = QUEEN | WHITE_PIECE; break;
+                case 'K': p = KING | WHITE_PIECE; break;
+
+                case 'p': p = PAWN | BLACK_PIECE; break;
+                case 'n': p = KNIGHT | BLACK_PIECE; break;
+                case 'b': p = BISHOP | BLACK_PIECE; break;
+                case 'r': p = ROOK | BLACK_PIECE; break;
+                case 'q': p = QUEEN | BLACK_PIECE; break;
+                case 'k': p = KING | BLACK_PIECE; break;
+                default: p = NO_PIECE; break;
+            }
+        }
+
+
+        if (p == NO_PIECE) {
+            pointer -= skip;
+        } else {
+            bitboard b = 1;
+            pieceBoards[p] |= b << 8 * (pointer / 8) + 7 - (pointer % 8);
+            pointer--;
+        }
+
+        counter++;
+    }
+
+    bool castle = false;
+    castleRights = 0;
+    while (counter < fen.size()) {
+
+        if (fen[counter] == 'w') {
+            currentPlayer = WHITE;
+        } else if (fen[counter] == 'b') {
+            currentPlayer = BLACK;
+        } else if (fen[counter] == 'K') {
+            castleRights |= WHITE_SHORT_CASTLE_RIGHT;
+            castle = true;
+        } else if (fen[counter] == 'Q') {
+            castleRights |= WHITE_LONG_CASTLE_RIGHT;
+            castle = true;
+        } else if (fen[counter] == 'k') {
+            castleRights |= BLACK_SHORT_CASTLE_RIGHT;
+            castle = true;
+        } else if (fen[counter] == 'q') {
+            castleRights |= BLACK_LONG_CASTLE_RIGHT;
+            castle = true;
+        } else if (fen[counter] == ' ' && castle) {
+            break;
+        }
+        counter++;
+    }
+    while (counter < fen.size()) {
+        char c = fen[counter];
+        if (c >= 'a' && c <= 'h') {
+            enPassant = 1 << (c - 'a');
+        }
+        counter++;
+    }
+}
+
+
+
+
+std::string Game::moveToString(Move move) {
+
+    bitboard moveTo = move.toSquare;
+    bitboard movedFrom = move.fromSquare;
+
+    bitboard mb[2] = {movedFrom, moveTo};
+
+    std::string str;
+    for (int i = 0; i < 2; i++) {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+
+                if (mb[i] >> (7 - x + 8 * y) == 1) {
+
+                    char c = 'a' + 7 - x;
+                    str.push_back(c);
+                    str.push_back(y + 1 + '0');
+                }
+            }
+        }
+    }
+    return str;
+}
+
+char Game::getStatus() {
+
 }
