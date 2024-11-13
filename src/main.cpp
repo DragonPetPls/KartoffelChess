@@ -6,7 +6,6 @@
 
 int main() {
 
-
 #ifdef TEST
     //Test::testDoMove();
     //Test::testMoveGen();

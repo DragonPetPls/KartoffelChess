@@ -897,8 +897,8 @@ char Game::getStatus() {
     }
 
     //Checking if draw or checkmate
-    int index = getIndex(COLOR_TO_PIECE[currentPlayer] | KING);
-    bool isCheck = isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING], index, COLOR_TO_PIECE[1 - currentPlayer]);
+    int index = getIndex(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING]);
+    bool isCheck = isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING], index, 1 - currentPlayer);
 
     if (isCheck == true && currentPlayer == WHITE) status = BLACK_WON;
     else if (isCheck == true && currentPlayer == BLACK) status = WHITE_WON;

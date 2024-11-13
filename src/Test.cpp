@@ -153,10 +153,9 @@ void Test::consolPerft() {
             fen = input;
             std::cout << "fen: " << fen << std::endl;
         } else {
-            try {
-                depth = stoi(input);
-            } catch(...) {
-                std::cout << "Invalid input." << std::endl;
+            if(input.size() == 1) {
+                depth = input[0] - '0';
+                std::cout << "depth: " << depth << std::endl;
             }
         }
     }

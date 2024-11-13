@@ -43,15 +43,6 @@ namespace std
   }
 #pragma GCC visibility pop
 }
-# 341 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/c++config.h" 3
-namespace std
-{
-  inline namespace __cxx11 __attribute__((__abi_tag__ ("cxx11"))) { }
-}
-namespace __gnu_cxx
-{
-  inline namespace __cxx11 __attribute__((__abi_tag__ ("cxx11"))) { }
-}
 # 534 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/c++config.h" 3
 namespace std
 {
@@ -208,13 +199,13 @@ namespace std __attribute__ ((__visibility__ ("default")))
   template<> struct char_traits<char32_t>;
 
 
-namespace __cxx11 {
+
 
   template<typename _CharT, typename _Traits = char_traits<_CharT>,
            typename _Alloc = allocator<_CharT> >
     class basic_string;
 
-}
+
 
 
   typedef basic_string<char> string;
@@ -7972,24 +7963,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
       return __last - __first;
     }
-
-
-
-  template<typename _Tp>
-    ptrdiff_t
-    __distance(std::_List_iterator<_Tp>,
-        std::_List_iterator<_Tp>,
-        input_iterator_tag);
-
-  template<typename _Tp>
-    ptrdiff_t
-    __distance(std::_List_const_iterator<_Tp>,
-        std::_List_const_iterator<_Tp>,
-        input_iterator_tag);
-
-
-
-
+# 126 "/usr/include/c++/14.2.0/bits/stl_iterator_base_funcs.h" 3
   template<typename _OutputIterator>
     void
     __distance(_OutputIterator, _OutputIterator, output_iterator_tag) = delete;
@@ -10257,7 +10231,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     class basic_iostream;
 
 
-namespace __cxx11 {
+
 
   template<typename _CharT, typename _Traits = char_traits<_CharT>,
      typename _Alloc = allocator<_CharT> >
@@ -10275,7 +10249,7 @@ namespace __cxx11 {
     typename _Alloc = allocator<_CharT> >
     class basic_stringstream;
 
-}
+
 
   template<typename _CharT, typename _Traits = char_traits<_CharT> >
     class basic_filebuf;
@@ -10374,22 +10348,6 @@ namespace __cxx11 {
 
 
   typedef basic_fstream<wchar_t> wfstream;
-
-
-
-  template<typename _CharT, typename _Traits = char_traits<_CharT>,
-           typename _Allocator = allocator<_CharT>>
-    class basic_syncbuf;
-  template<typename _CharT, typename _Traits = char_traits<_CharT>,
-           typename _Allocator = allocator<_CharT>>
-    class basic_osyncstream;
-
-  using syncbuf = basic_syncbuf<char>;
-  using osyncstream = basic_osyncstream<char>;
-
-
-  using wsyncbuf = basic_syncbuf<wchar_t>;
-  using wosyncstream = basic_osyncstream<wchar_t>;
 # 255 "/usr/include/c++/14.2.0/iosfwd" 3
 
 }
@@ -10782,27 +10740,27 @@ namespace std __attribute__ ((__visibility__ ("default")))
   template<typename _CharT, typename _OutIter = ostreambuf_iterator<_CharT> >
     class num_put;
 
-namespace __cxx11 {
+
   template<typename _CharT> class numpunct;
   template<typename _CharT> class numpunct_byname;
-}
 
-namespace __cxx11 {
+
+
 
   template<typename _CharT>
     class collate;
   template<typename _CharT>
     class collate_byname;
-}
+
 
 
   class time_base;
-namespace __cxx11 {
+
   template<typename _CharT, typename _InIter = istreambuf_iterator<_CharT> >
     class time_get;
   template<typename _CharT, typename _InIter = istreambuf_iterator<_CharT> >
     class time_get_byname;
-}
+
   template<typename _CharT, typename _OutIter = ostreambuf_iterator<_CharT> >
     class time_put;
   template<typename _CharT, typename _OutIter = ostreambuf_iterator<_CharT> >
@@ -10810,27 +10768,27 @@ namespace __cxx11 {
 
 
   class money_base;
-namespace __cxx11 {
+
   template<typename _CharT, typename _InIter = istreambuf_iterator<_CharT> >
     class money_get;
   template<typename _CharT, typename _OutIter = ostreambuf_iterator<_CharT> >
     class money_put;
-}
-namespace __cxx11 {
+
+
   template<typename _CharT, bool _Intl = false>
     class moneypunct;
   template<typename _CharT, bool _Intl = false>
     class moneypunct_byname;
-}
+
 
 
   struct messages_base;
-namespace __cxx11 {
+
   template<typename _CharT>
     class messages;
   template<typename _CharT>
     class messages_byname;
-}
+
 
 
 }
@@ -22379,280 +22337,2116 @@ namespace std __attribute__ ((__visibility__ ("default")))
 # 55 "/usr/include/c++/14.2.0/bits/basic_string.h" 2 3
 
 
+# 1 "/usr/include/c++/14.2.0/bits/cow_string.h" 1 3
+# 37 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+# 1 "/usr/include/c++/14.2.0/ext/atomicity.h" 1 3
+# 32 "/usr/include/c++/14.2.0/ext/atomicity.h" 3
+       
+# 33 "/usr/include/c++/14.2.0/ext/atomicity.h" 3
 
 
+# 1 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 1 3
+# 30 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 3
+#pragma GCC visibility push(default)
+# 157 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 3
+# 1 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 1 3
+# 35 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
+# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 1 3 4
+# 31 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+# 1 "/usr/include/sched.h" 1 3 4
+# 29 "/usr/include/sched.h" 3 4
+# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
+# 30 "/usr/include/sched.h" 2 3 4
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/time_t.h" 1 3 4
+# 10 "/usr/include/x86_64-linux-gnu/bits/types/time_t.h" 3 4
+typedef __time_t time_t;
+# 32 "/usr/include/sched.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h" 1 3 4
+# 11 "/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h" 3 4
+struct timespec
+{
+
+
+
+  __time_t tv_sec;
+
+
+
+
+  __syscall_slong_t tv_nsec;
+# 31 "/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h" 3 4
+};
+# 33 "/usr/include/sched.h" 2 3 4
+
+
+
+
+
+typedef __pid_t pid_t;
+
+
+
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/sched.h" 1 3 4
+# 80 "/usr/include/x86_64-linux-gnu/bits/sched.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h" 1 3 4
+# 23 "/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h" 3 4
+struct sched_param
+{
+  int sched_priority;
+};
+# 81 "/usr/include/x86_64-linux-gnu/bits/sched.h" 2 3 4
+
+extern "C" {
+
+
+
+extern int clone (int (*__fn) (void *__arg), void *__child_stack,
+    int __flags, void *__arg, ...) noexcept (true);
+
+
+extern int unshare (int __flags) noexcept (true);
+
+
+extern int sched_getcpu (void) noexcept (true);
+
+
+extern int getcpu (unsigned int *, unsigned int *) noexcept (true);
+
+
+extern int setns (int __fd, int __nstype) noexcept (true);
+
+
+}
+# 44 "/usr/include/sched.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/cpu-set.h" 1 3 4
+# 32 "/usr/include/x86_64-linux-gnu/bits/cpu-set.h" 3 4
+typedef unsigned long int __cpu_mask;
+
+
+
+
+
+
+typedef struct
+{
+  __cpu_mask __bits[1024 / (8 * sizeof (__cpu_mask))];
+} cpu_set_t;
+# 115 "/usr/include/x86_64-linux-gnu/bits/cpu-set.h" 3 4
+extern "C" {
+
+extern int __sched_cpucount (size_t __setsize, const cpu_set_t *__setp)
+     noexcept (true);
+extern cpu_set_t *__sched_cpualloc (size_t __count) noexcept (true) ;
+extern void __sched_cpufree (cpu_set_t *__set) noexcept (true);
+
+}
+# 45 "/usr/include/sched.h" 2 3 4
+
+
+
+
+
+
+extern "C" {
+
+
+extern int sched_setparam (__pid_t __pid, const struct sched_param *__param)
+     noexcept (true);
+
+
+extern int sched_getparam (__pid_t __pid, struct sched_param *__param) noexcept (true);
+
+
+extern int sched_setscheduler (__pid_t __pid, int __policy,
+          const struct sched_param *__param) noexcept (true);
+
+
+extern int sched_getscheduler (__pid_t __pid) noexcept (true);
+
+
+extern int sched_yield (void) noexcept (true);
+
+
+extern int sched_get_priority_max (int __algorithm) noexcept (true);
+
+
+extern int sched_get_priority_min (int __algorithm) noexcept (true);
+
+
+
+extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) noexcept (true);
+# 130 "/usr/include/sched.h" 3 4
+extern int sched_setaffinity (__pid_t __pid, size_t __cpusetsize,
+         const cpu_set_t *__cpuset) noexcept (true);
+
+
+extern int sched_getaffinity (__pid_t __pid, size_t __cpusetsize,
+         cpu_set_t *__cpuset) noexcept (true);
+
+
+}
+# 32 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+# 1 "/usr/include/time.h" 1 3 4
+# 29 "/usr/include/time.h" 3 4
+# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
+# 30 "/usr/include/time.h" 2 3 4
+
+
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/time.h" 1 3 4
+# 73 "/usr/include/x86_64-linux-gnu/bits/time.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/timex.h" 1 3 4
+# 22 "/usr/include/x86_64-linux-gnu/bits/timex.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h" 1 3 4
+
+
+
+
+
+
+
+struct timeval
+{
+
+
+
+
+  __time_t tv_sec;
+  __suseconds_t tv_usec;
+
+};
+# 23 "/usr/include/x86_64-linux-gnu/bits/timex.h" 2 3 4
+
+
+
+struct timex
+{
+# 58 "/usr/include/x86_64-linux-gnu/bits/timex.h" 3 4
+  unsigned int modes;
+  __syscall_slong_t offset;
+  __syscall_slong_t freq;
+  __syscall_slong_t maxerror;
+  __syscall_slong_t esterror;
+  int status;
+  __syscall_slong_t constant;
+  __syscall_slong_t precision;
+  __syscall_slong_t tolerance;
+  struct timeval time;
+  __syscall_slong_t tick;
+  __syscall_slong_t ppsfreq;
+  __syscall_slong_t jitter;
+  int shift;
+  __syscall_slong_t stabil;
+  __syscall_slong_t jitcnt;
+  __syscall_slong_t calcnt;
+  __syscall_slong_t errcnt;
+  __syscall_slong_t stbcnt;
+
+  int tai;
+
+
+  int :32; int :32; int :32; int :32;
+  int :32; int :32; int :32; int :32;
+  int :32; int :32; int :32;
+
+};
+# 74 "/usr/include/x86_64-linux-gnu/bits/time.h" 2 3 4
+
+extern "C" {
+
+
+extern int clock_adjtime (__clockid_t __clock_id, struct timex *__utx) noexcept (true) __attribute__ ((__nonnull__ (2)));
+# 90 "/usr/include/x86_64-linux-gnu/bits/time.h" 3 4
+}
+# 34 "/usr/include/time.h" 2 3 4
+
+
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/clock_t.h" 1 3 4
+
+
+
+
+
+
+typedef __clock_t clock_t;
+# 38 "/usr/include/time.h" 2 3 4
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h" 1 3 4
+
+
+
+
+
+
+struct tm
+{
+  int tm_sec;
+  int tm_min;
+  int tm_hour;
+  int tm_mday;
+  int tm_mon;
+  int tm_year;
+  int tm_wday;
+  int tm_yday;
+  int tm_isdst;
+
+
+  long int tm_gmtoff;
+  const char *tm_zone;
+
+
+
+
+};
+# 40 "/usr/include/time.h" 2 3 4
+
+
+
+
+
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h" 1 3 4
+
+
+
+
+
+
+typedef __clockid_t clockid_t;
+# 47 "/usr/include/time.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/timer_t.h" 1 3 4
+
+
+
+
+
+
+typedef __timer_t timer_t;
+# 48 "/usr/include/time.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h" 1 3 4
+
+
+
+
+
+
+
+struct itimerspec
+  {
+    struct timespec it_interval;
+    struct timespec it_value;
+  };
+# 49 "/usr/include/time.h" 2 3 4
+struct sigevent;
+# 68 "/usr/include/time.h" 3 4
+extern "C" {
+
+
+
+extern clock_t clock (void) noexcept (true);
+
+
+
+extern time_t time (time_t *__timer) noexcept (true);
+
+
+extern double difftime (time_t __time1, time_t __time0);
+
+
+extern time_t mktime (struct tm *__tp) noexcept (true);
+# 99 "/usr/include/time.h" 3 4
+extern size_t strftime (char *__restrict __s, size_t __maxsize,
+   const char *__restrict __format,
+   const struct tm *__restrict __tp)
+   noexcept (true) __attribute__ ((__nonnull__ (1, 3, 4)));
+
+
+
+
+extern char *strptime (const char *__restrict __s,
+         const char *__restrict __fmt, struct tm *__tp)
+     noexcept (true);
+
+
+
+
+
+
+extern size_t strftime_l (char *__restrict __s, size_t __maxsize,
+     const char *__restrict __format,
+     const struct tm *__restrict __tp,
+     locale_t __loc) noexcept (true);
+
+
+
+extern char *strptime_l (const char *__restrict __s,
+    const char *__restrict __fmt, struct tm *__tp,
+    locale_t __loc) noexcept (true);
+
+
+
+
+
+
+extern struct tm *gmtime (const time_t *__timer) noexcept (true);
+
+
+
+extern struct tm *localtime (const time_t *__timer) noexcept (true);
+# 154 "/usr/include/time.h" 3 4
+extern struct tm *gmtime_r (const time_t *__restrict __timer,
+       struct tm *__restrict __tp) noexcept (true);
+
+
+
+extern struct tm *localtime_r (const time_t *__restrict __timer,
+          struct tm *__restrict __tp) noexcept (true);
+# 179 "/usr/include/time.h" 3 4
+extern char *asctime (const struct tm *__tp) noexcept (true);
+
+
+
+extern char *ctime (const time_t *__timer) noexcept (true);
+# 197 "/usr/include/time.h" 3 4
+extern char *asctime_r (const struct tm *__restrict __tp,
+   char *__restrict __buf) noexcept (true);
+
+
+
+extern char *ctime_r (const time_t *__restrict __timer,
+        char *__restrict __buf) noexcept (true);
+# 217 "/usr/include/time.h" 3 4
+extern char *__tzname[2];
+extern int __daylight;
+extern long int __timezone;
+
+
+
+
+extern char *tzname[2];
+
+
+
+extern void tzset (void) noexcept (true);
+
+
+
+extern int daylight;
+extern long int timezone;
+# 246 "/usr/include/time.h" 3 4
+extern time_t timegm (struct tm *__tp) noexcept (true);
+# 263 "/usr/include/time.h" 3 4
+extern time_t timelocal (struct tm *__tp) noexcept (true);
+
+
+
+
+
+
+
+extern int dysize (int __year) noexcept (true) __attribute__ ((__const__));
+# 281 "/usr/include/time.h" 3 4
+extern int nanosleep (const struct timespec *__requested_time,
+        struct timespec *__remaining);
+
+
+extern int clock_getres (clockid_t __clock_id, struct timespec *__res) noexcept (true);
+
+
+extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp)
+     noexcept (true) __attribute__ ((__nonnull__ (2)));
+
+
+extern int clock_settime (clockid_t __clock_id, const struct timespec *__tp)
+     noexcept (true) __attribute__ ((__nonnull__ (2)));
+# 323 "/usr/include/time.h" 3 4
+extern int clock_nanosleep (clockid_t __clock_id, int __flags,
+       const struct timespec *__req,
+       struct timespec *__rem);
+# 338 "/usr/include/time.h" 3 4
+extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) noexcept (true);
+
+
+
+
+extern int timer_create (clockid_t __clock_id,
+    struct sigevent *__restrict __evp,
+    timer_t *__restrict __timerid) noexcept (true);
+
+
+extern int timer_delete (timer_t __timerid) noexcept (true);
+
+
+
+extern int timer_settime (timer_t __timerid, int __flags,
+     const struct itimerspec *__restrict __value,
+     struct itimerspec *__restrict __ovalue) noexcept (true);
+
+
+extern int timer_gettime (timer_t __timerid, struct itimerspec *__value)
+     noexcept (true);
+# 376 "/usr/include/time.h" 3 4
+extern int timer_getoverrun (timer_t __timerid) noexcept (true);
+
+
+
+
+
+
+extern int timespec_get (struct timespec *__ts, int __base)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+# 399 "/usr/include/time.h" 3 4
+extern int timespec_getres (struct timespec *__ts, int __base)
+     noexcept (true);
+# 425 "/usr/include/time.h" 3 4
+extern int getdate_err;
+# 434 "/usr/include/time.h" 3 4
+extern struct tm *getdate (const char *__string);
+# 448 "/usr/include/time.h" 3 4
+extern int getdate_r (const char *__restrict __string,
+        struct tm *__restrict __resbufp);
+
+
+}
+# 33 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h" 1 3 4
+# 23 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 1 3 4
+# 44 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h" 1 3 4
+# 21 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 22 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h" 2 3 4
+# 45 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h" 1 3 4
+# 25 "/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h" 3 4
+typedef union
+{
+  __extension__ unsigned long long int __value64;
+  struct
+  {
+    unsigned int __low;
+    unsigned int __high;
+  } __value32;
+} __atomic_wide_counter;
+# 47 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
+
+
+
+
+typedef struct __pthread_internal_list
+{
+  struct __pthread_internal_list *__prev;
+  struct __pthread_internal_list *__next;
+} __pthread_list_t;
+
+typedef struct __pthread_internal_slist
+{
+  struct __pthread_internal_slist *__next;
+} __pthread_slist_t;
+# 76 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/struct_mutex.h" 1 3 4
+# 22 "/usr/include/x86_64-linux-gnu/bits/struct_mutex.h" 3 4
+struct __pthread_mutex_s
+{
+  int __lock;
+  unsigned int __count;
+  int __owner;
+
+  unsigned int __nusers;
+
+
+
+  int __kind;
+
+  short __spins;
+  short __elision;
+  __pthread_list_t __list;
+# 53 "/usr/include/x86_64-linux-gnu/bits/struct_mutex.h" 3 4
+};
+# 77 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
+# 89 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h" 1 3 4
+# 23 "/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h" 3 4
+struct __pthread_rwlock_arch_t
+{
+  unsigned int __readers;
+  unsigned int __writers;
+  unsigned int __wrphase_futex;
+  unsigned int __writers_futex;
+  unsigned int __pad3;
+  unsigned int __pad4;
+
+  int __cur_writer;
+  int __shared;
+  signed char __rwelision;
+
+
+
+
+  unsigned char __pad1[7];
+
+
+  unsigned long int __pad2;
+
+
+  unsigned int __flags;
+# 55 "/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h" 3 4
+};
+# 90 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
+
+
+
+
+struct __pthread_cond_s
+{
+  __atomic_wide_counter __wseq;
+  __atomic_wide_counter __g1_start;
+  unsigned int __g_refs[2] ;
+  unsigned int __g_size[2];
+  unsigned int __g1_orig_size;
+  unsigned int __wrefs;
+  unsigned int __g_signals[2];
+};
+
+typedef unsigned int __tss_t;
+typedef unsigned long int __thrd_t;
+
+typedef struct
+{
+  int __data ;
+} __once_flag;
+# 24 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h" 2 3 4
+
+
+
+typedef unsigned long int pthread_t;
+
+
+
+
+typedef union
+{
+  char __size[4];
+  int __align;
+} pthread_mutexattr_t;
+
+
+
+
+typedef union
+{
+  char __size[4];
+  int __align;
+} pthread_condattr_t;
+
+
+
+typedef unsigned int pthread_key_t;
+
+
+
+typedef int pthread_once_t;
+
+
+union pthread_attr_t
+{
+  char __size[56];
+  long int __align;
+};
+
+typedef union pthread_attr_t pthread_attr_t;
+
+
+
+
+typedef union
+{
+  struct __pthread_mutex_s __data;
+  char __size[40];
+  long int __align;
+} pthread_mutex_t;
+
+
+typedef union
+{
+  struct __pthread_cond_s __data;
+  char __size[48];
+  __extension__ long long int __align;
+} pthread_cond_t;
+
+
+
+
+
+typedef union
+{
+  struct __pthread_rwlock_arch_t __data;
+  char __size[56];
+  long int __align;
+} pthread_rwlock_t;
+
+typedef union
+{
+  char __size[8];
+  long int __align;
+} pthread_rwlockattr_t;
+
+
+
+
+
+typedef volatile int pthread_spinlock_t;
+
+
+
+
+typedef union
+{
+  char __size[32];
+  long int __align;
+} pthread_barrier_t;
+
+typedef union
+{
+  char __size[4];
+  int __align;
+} pthread_barrierattr_t;
+# 36 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 1 3 4
+# 26 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 27 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 2 3 4
+
+
+
+
+typedef long int __jmp_buf[8];
+# 37 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 38 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h" 1 3 4
+
+
+
+
+typedef struct
+{
+  unsigned long int __val[(1024 / (8 * sizeof (unsigned long int)))];
+} __sigset_t;
+# 40 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 1 3 4
+# 26 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 3 4
+struct __jmp_buf_tag
+  {
+
+
+
+
+    __jmp_buf __jmpbuf;
+    int __mask_was_saved;
+    __sigset_t __saved_mask;
+  };
+# 41 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+
+# 1 "/usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h" 1 3 4
+# 23 "/usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h" 3 4
+extern "C" {
+extern long int __sysconf (int __name) noexcept (true);
+}
+# 43 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
+
+
+
+enum
+{
+  PTHREAD_CREATE_JOINABLE,
+
+  PTHREAD_CREATE_DETACHED
+
+};
+
+
+
+enum
+{
+  PTHREAD_MUTEX_TIMED_NP,
+  PTHREAD_MUTEX_RECURSIVE_NP,
+  PTHREAD_MUTEX_ERRORCHECK_NP,
+  PTHREAD_MUTEX_ADAPTIVE_NP
+
+  ,
+  PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_TIMED_NP,
+  PTHREAD_MUTEX_RECURSIVE = PTHREAD_MUTEX_RECURSIVE_NP,
+  PTHREAD_MUTEX_ERRORCHECK = PTHREAD_MUTEX_ERRORCHECK_NP,
+  PTHREAD_MUTEX_DEFAULT = PTHREAD_MUTEX_NORMAL
+
+
+
+  , PTHREAD_MUTEX_FAST_NP = PTHREAD_MUTEX_TIMED_NP
+
+};
+
+
+
+
+enum
+{
+  PTHREAD_MUTEX_STALLED,
+  PTHREAD_MUTEX_STALLED_NP = PTHREAD_MUTEX_STALLED,
+  PTHREAD_MUTEX_ROBUST,
+  PTHREAD_MUTEX_ROBUST_NP = PTHREAD_MUTEX_ROBUST
+};
+
+
+
+
+
+enum
+{
+  PTHREAD_PRIO_NONE,
+  PTHREAD_PRIO_INHERIT,
+  PTHREAD_PRIO_PROTECT
+};
+# 113 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+enum
+{
+  PTHREAD_RWLOCK_PREFER_READER_NP,
+  PTHREAD_RWLOCK_PREFER_WRITER_NP,
+  PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,
+  PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_READER_NP
+};
+# 133 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+enum
+{
+  PTHREAD_INHERIT_SCHED,
+
+  PTHREAD_EXPLICIT_SCHED
+
+};
+
+
+
+enum
+{
+  PTHREAD_SCOPE_SYSTEM,
+
+  PTHREAD_SCOPE_PROCESS
+
+};
+
+
+
+enum
+{
+  PTHREAD_PROCESS_PRIVATE,
+
+  PTHREAD_PROCESS_SHARED
+
+};
+# 168 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+struct _pthread_cleanup_buffer
+{
+  void (*__routine) (void *);
+  void *__arg;
+  int __canceltype;
+  struct _pthread_cleanup_buffer *__prev;
+};
+
+
+enum
+{
+  PTHREAD_CANCEL_ENABLE,
+
+  PTHREAD_CANCEL_DISABLE
+
+};
+enum
+{
+  PTHREAD_CANCEL_DEFERRED,
+
+  PTHREAD_CANCEL_ASYNCHRONOUS
+
+};
+# 206 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern "C" {
+
+
+
+
+extern int pthread_create (pthread_t *__restrict __newthread,
+      const pthread_attr_t *__restrict __attr,
+      void *(*__start_routine) (void *),
+      void *__restrict __arg) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
+
+
+
+
+
+extern void pthread_exit (void *__retval) __attribute__ ((__noreturn__));
+
+
+
+
+
+
+
+extern int pthread_join (pthread_t __th, void **__thread_return);
+
+
+
+
+extern int pthread_tryjoin_np (pthread_t __th, void **__thread_return) noexcept (true);
+# 242 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_timedjoin_np (pthread_t __th, void **__thread_return,
+     const struct timespec *__abstime);
+# 252 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_clockjoin_np (pthread_t __th, void **__thread_return,
+                                 clockid_t __clockid,
+     const struct timespec *__abstime);
+# 278 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_detach (pthread_t __th) noexcept (true);
+
+
+
+extern pthread_t pthread_self (void) noexcept (true) __attribute__ ((__const__));
+
+
+extern int pthread_equal (pthread_t __thread1, pthread_t __thread2)
+  noexcept (true) __attribute__ ((__const__));
+
+
+
+
+
+
+
+extern int pthread_attr_init (pthread_attr_t *__attr) noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_attr_destroy (pthread_attr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_attr_getdetachstate (const pthread_attr_t *__attr,
+     int *__detachstate)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_attr_setdetachstate (pthread_attr_t *__attr,
+     int __detachstate)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_attr_getguardsize (const pthread_attr_t *__attr,
+          size_t *__guardsize)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_attr_setguardsize (pthread_attr_t *__attr,
+          size_t __guardsize)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_attr_getschedparam (const pthread_attr_t *__restrict __attr,
+           struct sched_param *__restrict __param)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_attr_setschedparam (pthread_attr_t *__restrict __attr,
+           const struct sched_param *__restrict
+           __param) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_attr_getschedpolicy (const pthread_attr_t *__restrict
+     __attr, int *__restrict __policy)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_attr_setschedpolicy (pthread_attr_t *__attr, int __policy)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_attr_getinheritsched (const pthread_attr_t *__restrict
+      __attr, int *__restrict __inherit)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_attr_setinheritsched (pthread_attr_t *__attr,
+      int __inherit)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_attr_getscope (const pthread_attr_t *__restrict __attr,
+      int *__restrict __scope)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_attr_setscope (pthread_attr_t *__attr, int __scope)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_attr_getstackaddr (const pthread_attr_t *__restrict
+          __attr, void **__restrict __stackaddr)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2))) __attribute__ ((__deprecated__));
+
+
+
+
+
+extern int pthread_attr_setstackaddr (pthread_attr_t *__attr,
+          void *__stackaddr)
+     noexcept (true) __attribute__ ((__nonnull__ (1))) __attribute__ ((__deprecated__));
+
+
+extern int pthread_attr_getstacksize (const pthread_attr_t *__restrict
+          __attr, size_t *__restrict __stacksize)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+extern int pthread_attr_setstacksize (pthread_attr_t *__attr,
+          size_t __stacksize)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_attr_getstack (const pthread_attr_t *__restrict __attr,
+      void **__restrict __stackaddr,
+      size_t *__restrict __stacksize)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2, 3)));
+
+
+
+
+extern int pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
+      size_t __stacksize) noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
+     size_t __cpusetsize,
+     const cpu_set_t *__cpuset)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
+
+
+
+extern int pthread_attr_getaffinity_np (const pthread_attr_t *__attr,
+     size_t __cpusetsize,
+     cpu_set_t *__cpuset)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
+
+
+extern int pthread_getattr_default_np (pthread_attr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_attr_setsigmask_np (pthread_attr_t *__attr,
+           const __sigset_t *sigmask);
+
+
+
+
+extern int pthread_attr_getsigmask_np (const pthread_attr_t *__attr,
+           __sigset_t *sigmask);
+
+
+
+
+
+
+
+extern int pthread_setattr_default_np (const pthread_attr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (2)));
+
+
+
+
+
+
+
+extern int pthread_setschedparam (pthread_t __target_thread, int __policy,
+      const struct sched_param *__param)
+     noexcept (true) __attribute__ ((__nonnull__ (3)));
+
+
+extern int pthread_getschedparam (pthread_t __target_thread,
+      int *__restrict __policy,
+      struct sched_param *__restrict __param)
+     noexcept (true) __attribute__ ((__nonnull__ (2, 3)));
+
+
+extern int pthread_setschedprio (pthread_t __target_thread, int __prio)
+     noexcept (true);
+
+
+
+
+extern int pthread_getname_np (pthread_t __target_thread, char *__buf,
+          size_t __buflen)
+     noexcept (true) __attribute__ ((__nonnull__ (2)));
+
+
+extern int pthread_setname_np (pthread_t __target_thread, const char *__name)
+     noexcept (true) __attribute__ ((__nonnull__ (2)));
+
+
+
+
+
+extern int pthread_getconcurrency (void) noexcept (true);
+
+
+extern int pthread_setconcurrency (int __level) noexcept (true);
+
+
+
+extern int pthread_yield (void) noexcept (true);
+
+extern int pthread_yield (void) noexcept (true) __asm__ ("" "sched_yield")
+  __attribute__ ((__deprecated__ ("pthread_yield is deprecated, use sched_yield instead")))
+                                                      ;
+
+
+
+
+
+
+
+extern int pthread_setaffinity_np (pthread_t __th, size_t __cpusetsize,
+       const cpu_set_t *__cpuset)
+     noexcept (true) __attribute__ ((__nonnull__ (3)));
+
+
+extern int pthread_getaffinity_np (pthread_t __th, size_t __cpusetsize,
+       cpu_set_t *__cpuset)
+     noexcept (true) __attribute__ ((__nonnull__ (3)));
+# 518 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_once (pthread_once_t *__once_control,
+    void (*__init_routine) (void)) __attribute__ ((__nonnull__ (1, 2)));
+# 530 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_setcancelstate (int __state, int *__oldstate);
+
+
+
+extern int pthread_setcanceltype (int __type, int *__oldtype);
+
+
+extern int pthread_cancel (pthread_t __th);
+
+
+
+
+extern void pthread_testcancel (void);
+
+
+
+
+struct __cancel_jmp_buf_tag
+{
+  __jmp_buf __cancel_jmp_buf;
+  int __mask_was_saved;
+};
+
+typedef struct
+{
+  struct __cancel_jmp_buf_tag __cancel_jmp_buf[1];
+  void *__pad[4];
+} __pthread_unwind_buf_t __attribute__ ((__aligned__));
+# 566 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+struct __pthread_cleanup_frame
+{
+  void (*__cancel_routine) (void *);
+  void *__cancel_arg;
+  int __do_it;
+  int __cancel_type;
+};
+
+
+
+
+class __pthread_cleanup_class
+{
+  void (*__cancel_routine) (void *);
+  void *__cancel_arg;
+  int __do_it;
+  int __cancel_type;
+
+ public:
+  __pthread_cleanup_class (void (*__fct) (void *), void *__arg)
+    : __cancel_routine (__fct), __cancel_arg (__arg), __do_it (1) { }
+  ~__pthread_cleanup_class () { if (__do_it) __cancel_routine (__cancel_arg); }
+  void __setdoit (int __newval) { __do_it = __newval; }
+  void __defer () { pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,
+        &__cancel_type); }
+  void __restore () const { pthread_setcanceltype (__cancel_type, 0); }
+};
+# 775 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int __sigsetjmp_cancel (struct __cancel_jmp_buf_tag __env[1], int __savemask) noexcept (true) __asm__ ("" "__sigsetjmp")
+
+
+                     __attribute__ ((__returns_twice__));
+# 790 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_mutex_init (pthread_mutex_t *__mutex,
+          const pthread_mutexattr_t *__mutexattr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutex_destroy (pthread_mutex_t *__mutex)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutex_trylock (pthread_mutex_t *__mutex)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutex_lock (pthread_mutex_t *__mutex)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
+        const struct timespec *__restrict
+        __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+# 826 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_mutex_clocklock (pthread_mutex_t *__restrict __mutex,
+        clockid_t __clockid,
+        const struct timespec *__restrict
+        __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
+# 844 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_mutex_unlock (pthread_mutex_t *__mutex)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_mutex_getprioceiling (const pthread_mutex_t *
+      __restrict __mutex,
+      int *__restrict __prioceiling)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
+      int __prioceiling,
+      int *__restrict __old_ceiling)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
+
+
+
+
+extern int pthread_mutex_consistent (pthread_mutex_t *__mutex)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutex_consistent_np (pthread_mutex_t *) noexcept (true) __asm__ ("" "pthread_mutex_consistent")
+                                __attribute__ ((__nonnull__ (1)))
+  __attribute__ ((__deprecated__ ("pthread_mutex_consistent_np is deprecated, use pthread_mutex_consistent")))
+                                                                         ;
+# 883 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_mutexattr_init (pthread_mutexattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutexattr_destroy (pthread_mutexattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutexattr_getpshared (const pthread_mutexattr_t *
+      __restrict __attr,
+      int *__restrict __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_mutexattr_setpshared (pthread_mutexattr_t *__attr,
+      int __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_mutexattr_gettype (const pthread_mutexattr_t *__restrict
+          __attr, int *__restrict __kind)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_mutexattr_getprotocol (const pthread_mutexattr_t *
+       __restrict __attr,
+       int *__restrict __protocol)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+extern int pthread_mutexattr_setprotocol (pthread_mutexattr_t *__attr,
+       int __protocol)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *
+          __restrict __attr,
+          int *__restrict __prioceiling)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
+          int __prioceiling)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_mutexattr_getrobust (const pthread_mutexattr_t *__attr,
+     int *__robustness)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_mutexattr_getrobust_np (pthread_mutexattr_t *, int *) noexcept (true) __asm__ ("" "pthread_mutexattr_getrobust")
+
+                                   __attribute__ ((__nonnull__ (1)))
+  __attribute__ ((__deprecated__ ("pthread_mutexattr_getrobust_np is deprecated, use pthread_mutexattr_getrobust")))
+                                                                               ;
+
+
+
+
+
+
+extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
+     int __robustness)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *, int) noexcept (true) __asm__ ("" "pthread_mutexattr_setrobust")
+
+                                   __attribute__ ((__nonnull__ (1)))
+  __attribute__ ((__deprecated__ ("pthread_mutexattr_setrobust_np is deprecated, use pthread_mutexattr_setrobust")))
+                                                                               ;
+# 976 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
+    const pthread_rwlockattr_t *__restrict
+    __attr) noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_rwlock_destroy (pthread_rwlock_t *__rwlock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock)
+  noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+extern int pthread_rwlock_timedrdlock (pthread_rwlock_t *__restrict __rwlock,
+           const struct timespec *__restrict
+           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+# 1013 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_rwlock_clockrdlock (pthread_rwlock_t *__restrict __rwlock,
+           clockid_t __clockid,
+           const struct timespec *__restrict
+           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
+# 1032 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+extern int pthread_rwlock_timedwrlock (pthread_rwlock_t *__restrict __rwlock,
+           const struct timespec *__restrict
+           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+# 1060 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_rwlock_clockwrlock (pthread_rwlock_t *__restrict __rwlock,
+           clockid_t __clockid,
+           const struct timespec *__restrict
+           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
+# 1080 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_rwlock_unlock (pthread_rwlock_t *__rwlock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+extern int pthread_rwlockattr_init (pthread_rwlockattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_rwlockattr_destroy (pthread_rwlockattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_rwlockattr_getpshared (const pthread_rwlockattr_t *
+       __restrict __attr,
+       int *__restrict __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_rwlockattr_setpshared (pthread_rwlockattr_t *__attr,
+       int __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_rwlockattr_getkind_np (const pthread_rwlockattr_t *
+       __restrict __attr,
+       int *__restrict __pref)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
+       int __pref) noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+
+
+extern int pthread_cond_init (pthread_cond_t *__restrict __cond,
+         const pthread_condattr_t *__restrict __cond_attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_cond_destroy (pthread_cond_t *__cond)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_cond_signal (pthread_cond_t *__cond)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_cond_broadcast (pthread_cond_t *__cond)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+
+extern int pthread_cond_wait (pthread_cond_t *__restrict __cond,
+         pthread_mutex_t *__restrict __mutex)
+     __attribute__ ((__nonnull__ (1, 2)));
+# 1154 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_cond_timedwait (pthread_cond_t *__restrict __cond,
+       pthread_mutex_t *__restrict __mutex,
+       const struct timespec *__restrict __abstime)
+     __attribute__ ((__nonnull__ (1, 2, 3)));
+# 1180 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_cond_clockwait (pthread_cond_t *__restrict __cond,
+       pthread_mutex_t *__restrict __mutex,
+       __clockid_t __clock_id,
+       const struct timespec *__restrict __abstime)
+     __attribute__ ((__nonnull__ (1, 2, 4)));
+# 1203 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_condattr_init (pthread_condattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_condattr_destroy (pthread_condattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_condattr_getpshared (const pthread_condattr_t *
+     __restrict __attr,
+     int *__restrict __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_condattr_setpshared (pthread_condattr_t *__attr,
+     int __pshared) noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_condattr_getclock (const pthread_condattr_t *
+          __restrict __attr,
+          __clockid_t *__restrict __clock_id)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_condattr_setclock (pthread_condattr_t *__attr,
+          __clockid_t __clock_id)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+# 1239 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_spin_init (pthread_spinlock_t *__lock, int __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_spin_destroy (pthread_spinlock_t *__lock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_spin_lock (pthread_spinlock_t *__lock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_spin_trylock (pthread_spinlock_t *__lock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_spin_unlock (pthread_spinlock_t *__lock)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+
+extern int pthread_barrier_init (pthread_barrier_t *__restrict __barrier,
+     const pthread_barrierattr_t *__restrict
+     __attr, unsigned int __count)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_barrier_destroy (pthread_barrier_t *__barrier)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_barrier_wait (pthread_barrier_t *__barrier)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern int pthread_barrierattr_init (pthread_barrierattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_barrierattr_destroy (pthread_barrierattr_t *__attr)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_barrierattr_getpshared (const pthread_barrierattr_t *
+        __restrict __attr,
+        int *__restrict __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int pthread_barrierattr_setpshared (pthread_barrierattr_t *__attr,
+        int __pshared)
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+# 1306 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_key_create (pthread_key_t *__key,
+          void (*__destr_function) (void *))
+     noexcept (true) __attribute__ ((__nonnull__ (1)));
+
+
+extern int pthread_key_delete (pthread_key_t __key) noexcept (true);
+
+
+extern void *pthread_getspecific (pthread_key_t __key) noexcept (true);
+
+
+extern int pthread_setspecific (pthread_key_t __key,
+    const void *__pointer)
+  noexcept (true) __attribute__ ((__access__ (__none__, 2)));
+
+
+
+
+extern int pthread_getcpuclockid (pthread_t __thread_id,
+      __clockid_t *__clock_id)
+     noexcept (true) __attribute__ ((__nonnull__ (2)));
+# 1341 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+extern int pthread_atfork (void (*__prepare) (void),
+      void (*__parent) (void),
+      void (*__child) (void)) noexcept (true);
+# 1355 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
+}
+# 36 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 2 3
+# 47 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
+typedef pthread_t __gthread_t;
+typedef pthread_key_t __gthread_key_t;
+typedef pthread_once_t __gthread_once_t;
+typedef pthread_mutex_t __gthread_mutex_t;
+
+
+
+typedef pthread_mutex_t __gthread_recursive_mutex_t;
+typedef pthread_cond_t __gthread_cond_t;
+typedef struct timespec __gthread_time_t;
+# 108 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 312 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
+static inline int
+__gthread_active_p (void)
+{
+  return 1;
+}
+# 672 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
+static inline int
+__gthread_create (__gthread_t *__threadid, void *(*__func) (void*),
+    void *__args)
+{
+  return pthread_create (__threadid, __null, __func, __args);
+}
+
+static inline int
+__gthread_join (__gthread_t __threadid, void **__value_ptr)
+{
+  return pthread_join (__threadid, __value_ptr);
+}
+
+static inline int
+__gthread_detach (__gthread_t __threadid)
+{
+  return pthread_detach (__threadid);
+}
+
+static inline int
+__gthread_equal (__gthread_t __t1, __gthread_t __t2)
+{
+  return pthread_equal (__t1, __t2);
+}
+
+static inline __gthread_t
+__gthread_self (void)
+{
+  return pthread_self ();
+}
+
+static inline int
+__gthread_yield (void)
+{
+  return sched_yield ();
+}
+
+static inline int
+__gthread_once (__gthread_once_t *__once, void (*__func) (void))
+{
+  if (__gthread_active_p ())
+    return pthread_once (__once, __func);
+  else
+    return -1;
+}
+
+static inline int
+__gthread_key_create (__gthread_key_t *__key, void (*__dtor) (void *))
+{
+  return pthread_key_create (__key, __dtor);
+}
+
+static inline int
+__gthread_key_delete (__gthread_key_t __key)
+{
+  return pthread_key_delete (__key);
+}
+
+static inline void *
+__gthread_getspecific (__gthread_key_t __key)
+{
+  return pthread_getspecific (__key);
+}
+
+static inline int
+__gthread_setspecific (__gthread_key_t __key, const void *__ptr)
+{
+  return pthread_setspecific (__key, __ptr);
+}
+
+static inline void
+__gthread_mutex_init_function (__gthread_mutex_t *__mutex)
+{
+  if (__gthread_active_p ())
+    pthread_mutex_init (__mutex, __null);
+}
+
+static inline int
+__gthread_mutex_destroy (__gthread_mutex_t *__mutex)
+{
+  if (__gthread_active_p ())
+    return pthread_mutex_destroy (__mutex);
+  else
+    return 0;
+}
+
+static inline int
+__gthread_mutex_lock (__gthread_mutex_t *__mutex)
+{
+  if (__gthread_active_p ())
+    return pthread_mutex_lock (__mutex);
+  else
+    return 0;
+}
+
+static inline int
+__gthread_mutex_trylock (__gthread_mutex_t *__mutex)
+{
+  if (__gthread_active_p ())
+    return pthread_mutex_trylock (__mutex);
+  else
+    return 0;
+}
+
+
+static inline int
+__gthread_mutex_timedlock (__gthread_mutex_t *__mutex,
+      const __gthread_time_t *__abs_timeout)
+{
+  if (__gthread_active_p ())
+    return pthread_mutex_timedlock (__mutex, __abs_timeout);
+  else
+    return 0;
+}
+
+
+static inline int
+__gthread_mutex_unlock (__gthread_mutex_t *__mutex)
+{
+  if (__gthread_active_p ())
+    return pthread_mutex_unlock (__mutex);
+  else
+    return 0;
+}
+# 821 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
+static inline int
+__gthread_recursive_mutex_lock (__gthread_recursive_mutex_t *__mutex)
+{
+  return __gthread_mutex_lock (__mutex);
+}
+
+static inline int
+__gthread_recursive_mutex_trylock (__gthread_recursive_mutex_t *__mutex)
+{
+  return __gthread_mutex_trylock (__mutex);
+}
+
+
+static inline int
+__gthread_recursive_mutex_timedlock (__gthread_recursive_mutex_t *__mutex,
+         const __gthread_time_t *__abs_timeout)
+{
+  return __gthread_mutex_timedlock (__mutex, __abs_timeout);
+}
+
+
+static inline int
+__gthread_recursive_mutex_unlock (__gthread_recursive_mutex_t *__mutex)
+{
+  return __gthread_mutex_unlock (__mutex);
+}
+
+static inline int
+__gthread_recursive_mutex_destroy (__gthread_recursive_mutex_t *__mutex)
+{
+  return __gthread_mutex_destroy (__mutex);
+}
+# 863 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
+static inline int
+__gthread_cond_broadcast (__gthread_cond_t *__cond)
+{
+  return pthread_cond_broadcast (__cond);
+}
+
+static inline int
+__gthread_cond_signal (__gthread_cond_t *__cond)
+{
+  return pthread_cond_signal (__cond);
+}
+
+static inline int
+__gthread_cond_wait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex)
+{
+  return pthread_cond_wait (__cond, __mutex);
+}
+
+static inline int
+__gthread_cond_timedwait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex,
+     const __gthread_time_t *__abs_timeout)
+{
+  return pthread_cond_timedwait (__cond, __mutex, __abs_timeout);
+}
+
+static inline int
+__gthread_cond_wait_recursive (__gthread_cond_t *__cond,
+          __gthread_recursive_mutex_t *__mutex)
+{
+  return __gthread_cond_wait (__cond, __mutex);
+}
+
+static inline int
+__gthread_cond_destroy (__gthread_cond_t* __cond)
+{
+  return pthread_cond_destroy (__cond);
+}
+# 158 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 2 3
+
+
+#pragma GCC visibility pop
+# 36 "/usr/include/c++/14.2.0/ext/atomicity.h" 2 3
+# 1 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/atomic_word.h" 1 3
+# 32 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/atomic_word.h" 3
+typedef int _Atomic_word;
+# 37 "/usr/include/c++/14.2.0/ext/atomicity.h" 2 3
+
+# 1 "/usr/include/x86_64-linux-gnu/sys/single_threaded.h" 1 3 4
+# 24 "/usr/include/x86_64-linux-gnu/sys/single_threaded.h" 3 4
+extern "C" {
+
+
+
+
+extern char __libc_single_threaded;
+
+}
+# 39 "/usr/include/c++/14.2.0/ext/atomicity.h" 2 3
+
+
+namespace __gnu_cxx __attribute__ ((__visibility__ ("default")))
+{
+
+
+  __attribute__((__always_inline__))
+  inline bool
+  __is_single_threaded() noexcept
+  {
+
+
+
+    return ::__libc_single_threaded;
+
+
+
+  }
+
+
+
+
+
+
+  inline _Atomic_word
+  __attribute__((__always_inline__))
+  __exchange_and_add(volatile _Atomic_word* __mem, int __val)
+  { return __atomic_fetch_add(__mem, __val, 4); }
+
+  inline void
+  __attribute__((__always_inline__))
+  __atomic_add(volatile _Atomic_word* __mem, int __val)
+  { __atomic_fetch_add(__mem, __val, 4); }
+# 80 "/usr/include/c++/14.2.0/ext/atomicity.h" 3
+  inline _Atomic_word
+  __attribute__((__always_inline__))
+  __exchange_and_add_single(_Atomic_word* __mem, int __val)
+  {
+    _Atomic_word __result = *__mem;
+    *__mem += __val;
+    return __result;
+  }
+
+  inline void
+  __attribute__((__always_inline__))
+  __atomic_add_single(_Atomic_word* __mem, int __val)
+  { *__mem += __val; }
+
+  inline _Atomic_word
+  __attribute__ ((__always_inline__))
+  __exchange_and_add_dispatch(_Atomic_word* __mem, int __val)
+  {
+    if (__is_single_threaded())
+      return __exchange_and_add_single(__mem, __val);
+    else
+      return __exchange_and_add(__mem, __val);
+  }
+
+  inline void
+  __attribute__ ((__always_inline__))
+  __atomic_add_dispatch(_Atomic_word* __mem, int __val)
+  {
+    if (__is_single_threaded())
+      __atomic_add_single(__mem, __val);
+    else
+      __atomic_add(__mem, __val);
+  }
+
+
+}
+# 38 "/usr/include/c++/14.2.0/bits/cow_string.h" 2 3
 
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
-namespace __cxx11 {
-# 85 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 107 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
   template<typename _CharT, typename _Traits, typename _Alloc>
     class basic_string
     {
-
-      static_assert(is_same_v<_CharT, typename _Traits::char_type>);
-      static_assert(is_same_v<_CharT, typename _Alloc::value_type>);
-      using _Char_alloc_type = _Alloc;
-
-
-
-
-
-      typedef __gnu_cxx::__alloc_traits<_Char_alloc_type> _Alloc_traits;
+      typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
+ rebind<_CharT>::other _CharT_alloc_type;
+      typedef __gnu_cxx::__alloc_traits<_CharT_alloc_type> _CharT_alloc_traits;
 
 
     public:
       typedef _Traits traits_type;
       typedef typename _Traits::char_type value_type;
-      typedef _Char_alloc_type allocator_type;
-      typedef typename _Alloc_traits::size_type size_type;
-      typedef typename _Alloc_traits::difference_type difference_type;
-      typedef typename _Alloc_traits::reference reference;
-      typedef typename _Alloc_traits::const_reference const_reference;
-      typedef typename _Alloc_traits::pointer pointer;
-      typedef typename _Alloc_traits::const_pointer const_pointer;
+      typedef _Alloc allocator_type;
+      typedef typename _CharT_alloc_traits::size_type size_type;
+      typedef typename _CharT_alloc_traits::difference_type difference_type;
+
+
+
+
+      typedef value_type& reference;
+      typedef const value_type& const_reference;
+
+      typedef typename _CharT_alloc_traits::pointer pointer;
+      typedef typename _CharT_alloc_traits::const_pointer const_pointer;
       typedef __gnu_cxx::__normal_iterator<pointer, basic_string> iterator;
       typedef __gnu_cxx::__normal_iterator<const_pointer, basic_string>
-       const_iterator;
+           const_iterator;
       typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
       typedef std::reverse_iterator<iterator> reverse_iterator;
+
+    protected:
+
+      typedef iterator __const_iterator;
+
+    private:
+# 155 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      struct _Rep_base
+      {
+ size_type _M_length;
+ size_type _M_capacity;
+ _Atomic_word _M_refcount;
+      };
+
+      struct _Rep : _Rep_base
+      {
+
+ typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template
+   rebind<char>::other _Raw_bytes_alloc;
+# 181 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+ static const size_type _S_max_size;
+ static const _CharT _S_terminal;
+
+
+
+ static size_type _S_empty_rep_storage[];
+
+ static _Rep&
+ _S_empty_rep() noexcept
+ {
+
+
+
+   void* __p = reinterpret_cast<void*>(&_S_empty_rep_storage);
+   return *reinterpret_cast<_Rep*>(__p);
+ }
+
+ bool
+ _M_is_leaked() const noexcept
+ {
+
+
+
+
+
+   return __atomic_load_n(&this->_M_refcount, 0) < 0;
+
+
+
+ }
+
+ bool
+ _M_is_shared() const noexcept
+ {
+
+
+
+
+
+
+   if (!__gnu_cxx::__is_single_threaded())
+     return __atomic_load_n(&this->_M_refcount, 2) > 0;
+
+   return this->_M_refcount > 0;
+ }
+
+ void
+ _M_set_leaked() noexcept
+ { this->_M_refcount = -1; }
+
+ void
+ _M_set_sharable() noexcept
+ { this->_M_refcount = 0; }
+
+ void
+ _M_set_length_and_sharable(size_type __n) noexcept
+ {
+
+   if (__builtin_expect(this != &_S_empty_rep(), false))
+
+     {
+       this->_M_set_sharable();
+       this->_M_length = __n;
+       traits_type::assign(this->_M_refdata()[__n], _S_terminal);
+
+
+     }
+ }
+
+ _CharT*
+ _M_refdata() throw()
+ { return reinterpret_cast<_CharT*>(this + 1); }
+
+ _CharT*
+ _M_grab(const _Alloc& __alloc1, const _Alloc& __alloc2)
+ {
+   return (!_M_is_leaked() && __alloc1 == __alloc2)
+    ? _M_refcopy() : _M_clone(__alloc1);
+ }
+
+
+ static _Rep*
+ _S_create(size_type, size_type, const _Alloc&);
+
+ void
+ _M_dispose(const _Alloc& __a) noexcept
+ {
+
+   if (__builtin_expect(this != &_S_empty_rep(), false))
+
+     {
+
+       ;
+# 282 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+       if (__gnu_cxx::__exchange_and_add_dispatch(&this->_M_refcount,
+        -1) <= 0)
+  {
+    ;
+    _M_destroy(__a);
+  }
+     }
+ }
+
+ void
+ _M_destroy(const _Alloc&) throw();
+
+ _CharT*
+ _M_refcopy() throw()
+ {
+
+   if (__builtin_expect(this != &_S_empty_rep(), false))
+
+     __gnu_cxx::__atomic_add_dispatch(&this->_M_refcount, 1);
+   return _M_refdata();
+ }
+
+ _CharT*
+ _M_clone(const _Alloc&, size_type __res = 0);
+      };
+
+
+      struct _Alloc_hider : _Alloc
+      {
+ _Alloc_hider(_CharT* __dat, const _Alloc& __a) noexcept
+ : _Alloc(__a), _M_p(__dat) { }
+
+ _CharT* _M_p;
+      };
+
+    public:
+
+
 
 
       static const size_type npos = static_cast<size_type>(-1);
 
-    protected:
-
-
-
-
-      typedef const_iterator __const_iterator;
-
-
     private:
-      static constexpr pointer
-      _S_allocate(_Char_alloc_type& __a, size_type __n)
-      {
- pointer __p = _Alloc_traits::allocate(__a, __n);
 
+      mutable _Alloc_hider _M_dataplus;
 
-
- if constexpr (!is_same_v<_Traits, char_traits<_CharT>>)
-   if (std::__is_constant_evaluated())
-
-     for (size_type __i = 0; __i < __n; ++__i)
-       std::construct_at(__builtin_addressof(__p[__i]));
-
- return __p;
-      }
-
-
-
-      typedef basic_string_view<_CharT, _Traits> __sv_type;
-
-      template<typename _Tp, typename _Res>
- using _If_sv = enable_if_t<
-   __and_<is_convertible<const _Tp&, __sv_type>,
-   __not_<is_convertible<const _Tp*, const basic_string*>>,
-   __not_<is_convertible<const _Tp&, const _CharT*>>>::value,
-   _Res>;
-
-
-      constexpr
-      static __sv_type
-      _S_to_string_view(__sv_type __svt) noexcept
-      { return __svt; }
-
-
-
-
-
-      struct __sv_wrapper
-      {
- constexpr explicit
- __sv_wrapper(__sv_type __sv) noexcept : _M_sv(__sv) { }
-
- __sv_type _M_sv;
-      };
-
-
-
-
-
-
-
-      constexpr
-      explicit
-      basic_string(__sv_wrapper __svw, const _Alloc& __a)
-      : basic_string(__svw._M_sv.data(), __svw._M_sv.size(), __a) { }
-
-
-
-      struct _Alloc_hider : allocator_type
-      {
-
-
-
-
- constexpr
- _Alloc_hider(pointer __dat, const _Alloc& __a)
- : allocator_type(__a), _M_p(__dat) { }
-
- constexpr
- _Alloc_hider(pointer __dat, _Alloc&& __a = _Alloc())
- : allocator_type(std::move(__a)), _M_p(__dat) { }
-
-
- pointer _M_p;
-      };
-
-      _Alloc_hider _M_dataplus;
-      size_type _M_string_length;
-
-      enum { _S_local_capacity = 15 / sizeof(_CharT) };
-
-      union
-      {
- _CharT _M_local_buf[_S_local_capacity + 1];
- size_type _M_allocated_capacity;
-      };
-
-      constexpr
-      void
-      _M_data(pointer __p)
-      { _M_dataplus._M_p = __p; }
-
-      constexpr
-      void
-      _M_length(size_type __length)
-      { _M_string_length = __length; }
-
-      constexpr
-      pointer
-      _M_data() const
+      _CharT*
+      _M_data() const noexcept
       { return _M_dataplus._M_p; }
 
-      constexpr
-      pointer
-      _M_local_data()
-      {
+      _CharT*
+      _M_data(_CharT* __p) noexcept
+      { return (_M_dataplus._M_p = __p); }
 
- return std::pointer_traits<pointer>::pointer_to(*_M_local_buf);
-
-
-
-      }
-
-      constexpr
-      const_pointer
-      _M_local_data() const
-      {
-
- return std::pointer_traits<const_pointer>::pointer_to(*_M_local_buf);
+      _Rep*
+      _M_rep() const noexcept
+      { return &((reinterpret_cast<_Rep*> (_M_data()))[-1]); }
 
 
 
-      }
+      iterator
+      _M_ibegin() const noexcept
+      { return iterator(_M_data()); }
 
-      constexpr
+      iterator
+      _M_iend() const noexcept
+      { return iterator(_M_data() + this->size()); }
+
       void
-      _M_capacity(size_type __capacity)
-      { _M_allocated_capacity = __capacity; }
-
-      constexpr
-      void
-      _M_set_length(size_type __n)
+      _M_leak()
       {
- _M_length(__n);
- traits_type::assign(_M_data()[__n], _CharT());
+ if (!_M_rep()->_M_is_leaked())
+   _M_leak_hard();
       }
 
-      constexpr
-      bool
-      _M_is_local() const
-      {
- if (_M_data() == _M_local_data())
-   {
-     if (_M_string_length > _S_local_capacity)
-       __builtin_unreachable();
-     return true;
-   }
- return false;
-      }
-
-
-      constexpr
-      pointer
-      _M_create(size_type&, size_type);
-
-      constexpr
-      void
-      _M_dispose()
-      {
- if (!_M_is_local())
-   _M_destroy(_M_allocated_capacity);
-      }
-
-      constexpr
-      void
-      _M_destroy(size_type __size) throw()
-      { _Alloc_traits::deallocate(_M_get_allocator(), _M_data(), __size + 1); }
-# 321 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename _InIterator>
- constexpr
-        void
-        _M_construct(_InIterator __beg, _InIterator __end,
-       std::input_iterator_tag);
-
-
-
-      template<typename _FwdIterator>
- constexpr
-        void
-        _M_construct(_FwdIterator __beg, _FwdIterator __end,
-       std::forward_iterator_tag);
-
-      constexpr
-      void
-      _M_construct(size_type __req, _CharT __c);
-
-      constexpr
-      allocator_type&
-      _M_get_allocator()
-      { return _M_dataplus; }
-
-      constexpr
-      const allocator_type&
-      _M_get_allocator() const
-      { return _M_dataplus; }
-
-
-      __attribute__((__always_inline__))
-      constexpr
-      void
-      _M_init_local_buf() noexcept
-      {
-
- if (std::is_constant_evaluated())
-   for (size_type __i = 0; __i <= _S_local_capacity; ++__i)
-     _M_local_buf[__i] = _CharT();
-
-      }
-
-      __attribute__((__always_inline__))
-      constexpr
-      pointer
-      _M_use_local_data() noexcept
-      {
-
- _M_init_local_buf();
-
- return _M_local_data();
-      }
-
-    private:
-# 389 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
       size_type
       _M_check(size_type __pos, const char* __s) const
       {
@@ -22663,7 +24457,6 @@ namespace __cxx11 {
  return __pos;
       }
 
-      constexpr
       void
       _M_check_length(size_type __n1, size_type __n2, const char* __s) const
       {
@@ -22672,8 +24465,6 @@ namespace __cxx11 {
       }
 
 
-
-      constexpr
       size_type
       _M_limit(size_type __pos, size_type __off) const noexcept
       {
@@ -22691,9 +24482,8 @@ namespace __cxx11 {
 
 
 
-      constexpr
       static void
-      _S_copy(_CharT* __d, const _CharT* __s, size_type __n)
+      _M_copy(_CharT* __d, const _CharT* __s, size_type __n) noexcept
       {
  if (__n == 1)
    traits_type::assign(*__d, *__s);
@@ -22701,9 +24491,8 @@ namespace __cxx11 {
    traits_type::copy(__d, __s, __n);
       }
 
-      constexpr
       static void
-      _S_move(_CharT* __d, const _CharT* __s, size_type __n)
+      _M_move(_CharT* __d, const _CharT* __s, size_type __n) noexcept
       {
  if (__n == 1)
    traits_type::assign(*__d, *__s);
@@ -22711,9 +24500,8 @@ namespace __cxx11 {
    traits_type::move(__d, __s, __n);
       }
 
-      constexpr
       static void
-      _S_assign(_CharT* __d, size_type __n, _CharT __c)
+      _M_assign(_CharT* __d, size_type __n, _CharT __c) noexcept
       {
  if (__n == 1)
    traits_type::assign(*__d, __c);
@@ -22724,37 +24512,31 @@ namespace __cxx11 {
 
 
       template<class _Iterator>
- constexpr
-        static void
-        _S_copy_chars(_CharT* __p, _Iterator __k1, _Iterator __k2)
-        {
+ static void
+ _S_copy_chars(_CharT* __p, _Iterator __k1, _Iterator __k2)
+ {
    for (; __k1 != __k2; ++__k1, (void)++__p)
      traits_type::assign(*__p, *__k1);
  }
 
-      constexpr
       static void
       _S_copy_chars(_CharT* __p, iterator __k1, iterator __k2) noexcept
       { _S_copy_chars(__p, __k1.base(), __k2.base()); }
 
-      constexpr
       static void
       _S_copy_chars(_CharT* __p, const_iterator __k1, const_iterator __k2)
       noexcept
       { _S_copy_chars(__p, __k1.base(), __k2.base()); }
 
-      constexpr
       static void
       _S_copy_chars(_CharT* __p, _CharT* __k1, _CharT* __k2) noexcept
-      { _S_copy(__p, __k1, __k2 - __k1); }
+      { _M_copy(__p, __k1, __k2 - __k1); }
 
-      constexpr
       static void
       _S_copy_chars(_CharT* __p, const _CharT* __k1, const _CharT* __k2)
       noexcept
-      { _S_copy(__p, __k1, __k2 - __k1); }
+      { _M_copy(__p, __k1, __k2 - __k1); }
 
-      constexpr
       static int
       _S_compare(size_type __n1, size_type __n2) noexcept
       {
@@ -22768,18 +24550,52 @@ namespace __cxx11 {
    return int(__d);
       }
 
-      constexpr
       void
-      _M_assign(const basic_string&);
+      _M_mutate(size_type __pos, size_type __len1, size_type __len2);
 
-      constexpr
       void
-      _M_mutate(size_type __pos, size_type __len1, const _CharT* __s,
-  size_type __len2);
+      _M_leak_hard();
 
-      constexpr
-      void
-      _M_erase(size_type __pos, size_type __n);
+      static _Rep&
+      _S_empty_rep() noexcept
+      { return _Rep::_S_empty_rep(); }
+
+
+
+      typedef basic_string_view<_CharT, _Traits> __sv_type;
+
+      template<typename _Tp, typename _Res>
+ using _If_sv = enable_if_t<
+   __and_<is_convertible<const _Tp&, __sv_type>,
+   __not_<is_convertible<const _Tp*, const basic_string*>>,
+   __not_<is_convertible<const _Tp&, const _CharT*>>>::value,
+   _Res>;
+
+
+      static __sv_type
+      _S_to_string_view(__sv_type __svt) noexcept
+      { return __svt; }
+
+
+
+
+
+      struct __sv_wrapper
+      {
+ explicit __sv_wrapper(__sv_type __sv) noexcept : _M_sv(__sv) { }
+ __sv_type _M_sv;
+      };
+
+
+
+
+
+
+
+      explicit
+      basic_string(__sv_wrapper __svw, const _Alloc& __a)
+      : basic_string(__svw._M_sv.data(), __svw._M_sv.size(), __a) { }
+
 
     public:
 
@@ -22789,50 +24605,36 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string()
-      noexcept(is_nothrow_default_constructible<_Alloc>::value)
-      : _M_dataplus(_M_local_data())
-      {
- _M_init_local_buf();
- _M_set_length(0);
-      }
+
+      noexcept
+      : _M_dataplus(_S_empty_rep()._M_refdata(), _Alloc())
+
+
+
+      { }
 
 
 
 
-      constexpr
       explicit
-      basic_string(const _Alloc& __a) noexcept
-      : _M_dataplus(_M_local_data(), __a)
-      {
- _M_init_local_buf();
- _M_set_length(0);
-      }
+      basic_string(const _Alloc& __a)
+      : _M_dataplus(_S_construct(size_type(), _CharT(), __a), __a)
+      { }
 
 
 
 
 
-      constexpr
+
       basic_string(const basic_string& __str)
-      : _M_dataplus(_M_local_data(),
-      _Alloc_traits::_S_select_on_copy(__str._M_get_allocator()))
-      {
- _M_construct(__str._M_data(), __str._M_data() + __str.length(),
-       std::forward_iterator_tag());
-      }
-# 568 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      : _M_dataplus(__str._M_rep()->_M_grab(_Alloc(__str.get_allocator()),
+         __str.get_allocator()),
+      __str.get_allocator())
+      { }
+# 551 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string(const basic_string& __str, size_type __pos,
-     const _Alloc& __a = _Alloc())
-      : _M_dataplus(_M_local_data(), __a)
-      {
- const _CharT* __start = __str._M_data()
-   + __str._M_check(__pos, "basic_string::basic_string");
- _M_construct(__start, __start + __str._M_limit(__pos, npos),
-       std::forward_iterator_tag());
-      }
+     const _Alloc& __a = _Alloc());
 
 
 
@@ -22840,83 +24642,47 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string(const basic_string& __str, size_type __pos,
-     size_type __n)
-      : _M_dataplus(_M_local_data())
-      {
- const _CharT* __start = __str._M_data()
-   + __str._M_check(__pos, "basic_string::basic_string");
- _M_construct(__start, __start + __str._M_limit(__pos, __n),
-       std::forward_iterator_tag());
-      }
-# 603 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+     size_type __n);
+
+
+
+
+
+
+
       basic_string(const basic_string& __str, size_type __pos,
-     size_type __n, const _Alloc& __a)
-      : _M_dataplus(_M_local_data(), __a)
-      {
- const _CharT* __start
-   = __str._M_data() + __str._M_check(__pos, "string::string");
- _M_construct(__start, __start + __str._M_limit(__pos, __n),
-       std::forward_iterator_tag());
-      }
-# 623 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+     size_type __n, const _Alloc& __a);
+# 581 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string(const _CharT* __s, size_type __n,
      const _Alloc& __a = _Alloc())
-      : _M_dataplus(_M_local_data(), __a)
-      {
-
- if (__s == 0 && __n > 0)
-   std::__throw_logic_error(("basic_string: " "construction from null is not valid")
-                                                 );
- _M_construct(__s, __s + __n, std::forward_iterator_tag());
-      }
-# 643 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+      : _M_dataplus(_S_construct(__s, __s + __n, __a), __a)
+      { }
+# 594 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename = _RequireAllocator<_Alloc>>
 
-      constexpr
       basic_string(const _CharT* __s, const _Alloc& __a = _Alloc())
-      : _M_dataplus(_M_local_data(), __a)
-      {
+      : _M_dataplus(_S_construct(__s, __s ? __s + traits_type::length(__s) :
+     __s + npos, __a), __a)
+      { }
 
- if (__s == 0)
-   std::__throw_logic_error(("basic_string: " "construction from null is not valid")
-                                                 );
- const _CharT* __end = __s + traits_type::length(__s);
- _M_construct(__s, __end, forward_iterator_tag());
-      }
-# 666 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename = _RequireAllocator<_Alloc>>
 
-      constexpr
+
+
+
+
+
       basic_string(size_type __n, _CharT __c, const _Alloc& __a = _Alloc())
-      : _M_dataplus(_M_local_data(), __a)
-      { _M_construct(__n, __c); }
-# 681 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      : _M_dataplus(_S_construct(__n, __c, __a), __a)
+      { }
+# 619 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string(basic_string&& __str) noexcept
-      : _M_dataplus(_M_local_data(), std::move(__str._M_get_allocator()))
+      : _M_dataplus(std::move(__str._M_dataplus))
       {
- if (__str._M_is_local())
-   {
-     _M_init_local_buf();
-     traits_type::copy(_M_local_buf, __str._M_local_buf,
-         __str.length() + 1);
-   }
- else
-   {
-     _M_data(__str._M_data());
-     _M_capacity(__str._M_allocated_capacity);
-   }
 
 
-
-
- _M_length(__str.length());
- __str._M_data(__str._M_use_local_data());
- __str._M_set_length(0);
+ __str._M_data(_S_empty_rep()._M_refdata());
+# 635 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       }
 
 
@@ -22924,63 +24690,37 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string(initializer_list<_CharT> __l, const _Alloc& __a = _Alloc())
-      : _M_dataplus(_M_local_data(), __a)
-      { _M_construct(__l.begin(), __l.end(), std::forward_iterator_tag()); }
+      : _M_dataplus(_S_construct(__l.begin(), __l.end(), __a), __a)
+      { }
 
-      constexpr
       basic_string(const basic_string& __str, const _Alloc& __a)
-      : _M_dataplus(_M_local_data(), __a)
-      { _M_construct(__str.begin(), __str.end(), std::forward_iterator_tag()); }
+      : _M_dataplus(__str._M_rep()->_M_grab(__a, __str.get_allocator()), __a)
+      { }
 
-      constexpr
       basic_string(basic_string&& __str, const _Alloc& __a)
-      noexcept(_Alloc_traits::_S_always_equal())
-      : _M_dataplus(_M_local_data(), __a)
+      : _M_dataplus(__str._M_data(), __a)
       {
- if (__str._M_is_local())
+ if (__a == __str.get_allocator())
    {
-     _M_init_local_buf();
-     traits_type::copy(_M_local_buf, __str._M_local_buf,
-         __str.length() + 1);
-     _M_length(__str.length());
-     __str._M_set_length(0);
-   }
- else if (_Alloc_traits::_S_always_equal()
-     || __str.get_allocator() == __a)
-   {
-     _M_data(__str._M_data());
-     _M_length(__str.length());
-     _M_capacity(__str._M_allocated_capacity);
-     __str._M_data(__str._M_use_local_data());
-     __str._M_set_length(0);
+
+     __str._M_data(_S_empty_rep()._M_refdata());
+
+
+
    }
  else
-   _M_construct(__str.begin(), __str.end(), std::forward_iterator_tag());
+   _M_dataplus._M_p = _S_construct(__str.begin(), __str.end(), __a);
       }
-# 759 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
-
-
-
- constexpr
-        basic_string(_InputIterator __beg, _InputIterator __end,
+# 677 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<class _InputIterator>
+ basic_string(_InputIterator __beg, _InputIterator __end,
        const _Alloc& __a = _Alloc())
- : _M_dataplus(_M_local_data(), __a), _M_string_length(0)
- {
-
-   _M_construct(__beg, __end, std::__iterator_category(__beg));
-
-
-
-
- }
-# 785 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+ : _M_dataplus(_S_construct(__beg, __end, __a), __a)
+ { }
+# 691 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp,
         typename = enable_if_t<is_convertible_v<const _Tp&, __sv_type>>>
- constexpr
  basic_string(const _Tp& __t, size_type __pos, size_type __n,
        const _Alloc& __a = _Alloc())
  : basic_string(_S_to_string_view(__t).substr(__pos, __n), __a) { }
@@ -22991,7 +24731,6 @@ namespace __cxx11 {
 
 
       template<typename _Tp, typename = _If_sv<_Tp, void>>
- constexpr
  explicit
  basic_string(const _Tp& __t, const _Alloc& __a = _Alloc())
  : basic_string(__sv_wrapper(_S_to_string_view(__t)), __a) { }
@@ -23000,99 +24739,38 @@ namespace __cxx11 {
 
 
 
-      constexpr
-      ~basic_string()
-      { _M_dispose(); }
+      ~basic_string() noexcept
+      { _M_rep()->_M_dispose(this->get_allocator()); }
 
 
 
 
 
-      constexpr
       basic_string&
       operator=(const basic_string& __str)
-      {
- return this->assign(__str);
-      }
+      { return this->assign(__str); }
 
 
 
 
 
-      constexpr
       basic_string&
       operator=(const _CharT* __s)
       { return this->assign(__s); }
-# 838 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 737 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       operator=(_CharT __c)
       {
  this->assign(1, __c);
  return *this;
       }
-# 856 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 752 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       operator=(basic_string&& __str)
-      noexcept(_Alloc_traits::_S_nothrow_move())
+      noexcept(allocator_traits<_Alloc>::is_always_equal::value)
       {
- const bool __equal_allocs = _Alloc_traits::_S_always_equal()
-   || _M_get_allocator() == __str._M_get_allocator();
- if (!_M_is_local() && _Alloc_traits::_S_propagate_on_move_assign()
-     && !__equal_allocs)
-   {
 
-     _M_destroy(_M_allocated_capacity);
-     _M_data(_M_local_data());
-     _M_set_length(0);
-   }
-
- std::__alloc_on_move(_M_get_allocator(), __str._M_get_allocator());
-
- if (__str._M_is_local())
-   {
-
-
-
-     if (__builtin_expect(std::__addressof(__str) != this, true))
-       {
-  if (__str.size())
-    this->_S_copy(_M_data(), __str._M_data(), __str.size());
-  _M_set_length(__str.size());
-       }
-   }
- else if (_Alloc_traits::_S_propagate_on_move_assign() || __equal_allocs)
-   {
-
-     pointer __data = nullptr;
-     size_type __capacity;
-     if (!_M_is_local())
-       {
-  if (__equal_allocs)
-    {
-
-      __data = _M_data();
-      __capacity = _M_allocated_capacity;
-    }
-  else
-    _M_destroy(_M_allocated_capacity);
-       }
-
-     _M_data(__str._M_data());
-     _M_length(__str.length());
-     _M_capacity(__str._M_allocated_capacity);
-     if (__data)
-       {
-  __str._M_data(__data);
-  __str._M_capacity(__capacity);
-       }
-     else
-       __str._M_data(__str._M_use_local_data());
-   }
- else
-   assign(__str);
- __str.clear();
+ this->swap(__str);
  return *this;
       }
 
@@ -23100,7 +24778,6 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
       operator=(initializer_list<_CharT> __l)
       {
@@ -23114,17 +24791,15 @@ namespace __cxx11 {
 
 
 
-     template<typename _Tp>
-       constexpr
-       _If_sv<_Tp, basic_string&>
-       operator=(const _Tp& __svt)
-       { return this->assign(__svt); }
+      template<typename _Tp>
+ _If_sv<_Tp, basic_string&>
+ operator=(const _Tp& __svt)
+ { return this->assign(__svt); }
 
 
 
 
 
-      constexpr
       operator __sv_type() const noexcept
       { return __sv_type(data(), size()); }
 
@@ -23134,16 +24809,17 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       iterator
-      begin() noexcept
-      { return iterator(_M_data()); }
+      begin()
+      {
+ _M_leak();
+ return iterator(_M_data());
+      }
 
 
 
 
 
-      [[__nodiscard__]] constexpr
       const_iterator
       begin() const noexcept
       { return const_iterator(_M_data()); }
@@ -23152,16 +24828,17 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       iterator
-      end() noexcept
-      { return iterator(_M_data() + this->size()); }
+      end()
+      {
+ _M_leak();
+ return iterator(_M_data() + this->size());
+      }
 
 
 
 
 
-      [[__nodiscard__]] constexpr
       const_iterator
       end() const noexcept
       { return const_iterator(_M_data() + this->size()); }
@@ -23171,9 +24848,8 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       reverse_iterator
-      rbegin() noexcept
+      rbegin()
       { return reverse_iterator(this->end()); }
 
 
@@ -23181,7 +24857,6 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_reverse_iterator
       rbegin() const noexcept
       { return const_reverse_iterator(this->end()); }
@@ -23191,9 +24866,8 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       reverse_iterator
-      rend() noexcept
+      rend()
       { return reverse_iterator(this->begin()); }
 
 
@@ -23201,7 +24875,6 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_reverse_iterator
       rend() const noexcept
       { return const_reverse_iterator(this->begin()); }
@@ -23211,7 +24884,6 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_iterator
       cbegin() const noexcept
       { return const_iterator(this->_M_data()); }
@@ -23220,7 +24892,6 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_iterator
       cend() const noexcept
       { return const_iterator(this->_M_data() + this->size()); }
@@ -23230,7 +24901,6 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_reverse_iterator
       crbegin() const noexcept
       { return const_reverse_iterator(this->end()); }
@@ -23240,7 +24910,6 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_reverse_iterator
       crend() const noexcept
       { return const_reverse_iterator(this->begin()); }
@@ -23250,29 +24919,31 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
+
       size_type
       size() const noexcept
-      { return _M_string_length; }
+      {
 
 
 
-      [[__nodiscard__]] constexpr
+
+ return _M_rep()->_M_length;
+      }
+
+
+
       size_type
       length() const noexcept
-      { return _M_string_length; }
+      { return size(); }
 
 
-      [[__nodiscard__]] constexpr
       size_type
       max_size() const noexcept
-      { return (_Alloc_traits::max_size(_M_get_allocator()) - 1) / 2; }
-# 1102 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      { return _Rep::_S_max_size; }
+# 938 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       void
       resize(size_type __n, _CharT __c);
-# 1116 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 951 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       void
       resize(size_type __n)
       { this->resize(__n, _CharT()); }
@@ -23281,14 +24952,13 @@ namespace __cxx11 {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-      constexpr
       void
       shrink_to_fit() noexcept
       { reserve(); }
 #pragma GCC diagnostic pop
-# 1169 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 1002 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Operation>
- constexpr void
+ void
  __resize_and_overwrite(size_type __n, _Operation __op);
 
 
@@ -23296,54 +24966,47 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       size_type
       capacity() const noexcept
-      {
- return _M_is_local() ? size_type(_S_local_capacity)
-                      : _M_allocated_capacity;
-      }
-# 1203 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      { return _M_rep()->_M_capacity; }
+# 1032 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       void
       reserve(size_type __res_arg);
 
 
 
-
-
       [[deprecated("use shrink_to_fit() instead")]]
 
-      constexpr
       void
       reserve();
 
 
 
 
-      constexpr
+
       void
       clear() noexcept
-      { _M_set_length(0); }
-
-
-
-
-
-      [[__nodiscard__]] constexpr
-      bool
+      {
+ if (_M_rep()->_M_is_shared())
+   {
+     _M_rep()->_M_dispose(this->get_allocator());
+     _M_data(_S_empty_rep()._M_refdata());
+   }
+ else
+   _M_rep()->_M_set_length_and_sharable(0);
+      }
+# 1068 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      [[__nodiscard__]] bool
       empty() const noexcept
       { return this->size() == 0; }
-# 1245 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 1083 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       const_reference
       operator[] (size_type __pos) const noexcept
       {
  do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__pos <= size()), false)) std::__glibcxx_assert_fail(); } while (false);
  return _M_data()[__pos];
       }
-# 1263 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 1100 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       reference
       operator[](size_type __pos)
       {
@@ -23352,10 +25015,10 @@ namespace __cxx11 {
  do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__pos <= size()), false)) std::__glibcxx_assert_fail(); } while (false);
 
  ;
+ _M_leak();
  return _M_data()[__pos];
       }
-# 1285 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 1122 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       const_reference
       at(size_type __n) const
       {
@@ -23366,8 +25029,7 @@ namespace __cxx11 {
        __n, this->size());
  return _M_data()[__n];
       }
-# 1307 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 1144 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       reference
       at(size_type __n)
       {
@@ -23376,6 +25038,7 @@ namespace __cxx11 {
 
                             ,
        __n, this->size());
+ _M_leak();
  return _M_data()[__n];
       }
 
@@ -23384,9 +25047,8 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       reference
-      front() noexcept
+      front()
       {
  do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
  return operator[](0);
@@ -23396,7 +25058,6 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_reference
       front() const noexcept
       {
@@ -23408,9 +25069,8 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       reference
-      back() noexcept
+      back()
       {
  do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
  return operator[](this->size() - 1);
@@ -23420,15 +25080,13 @@ namespace __cxx11 {
 
 
 
-      [[__nodiscard__]] constexpr
       const_reference
       back() const noexcept
       {
  do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
  return operator[](this->size() - 1);
       }
-# 1375 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1208 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       operator+=(const basic_string& __str)
       { return this->append(__str); }
@@ -23438,7 +25096,6 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
       operator+=(const _CharT* __s)
       { return this->append(__s); }
@@ -23448,7 +25105,6 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
       operator+=(_CharT __c)
       {
@@ -23462,13 +25118,11 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
       operator+=(initializer_list<_CharT> __l)
       { return this->append(__l.begin(), __l.size()); }
-# 1421 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 1250 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  operator+=(const _Tp& __svt)
  { return this->append(__svt); }
@@ -23479,17 +25133,11 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
-      append(const basic_string& __str)
-      { return this->append(__str._M_data(), __str.size()); }
-# 1451 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      append(const basic_string& __str);
+# 1277 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      append(const basic_string& __str, size_type __pos, size_type __n = npos)
-      { return this->append(__str._M_data()
-       + __str._M_check(__pos, "basic_string::append"),
-       __str._M_limit(__pos, __n)); }
+      append(const basic_string& __str, size_type __pos, size_type __n = npos);
 
 
 
@@ -23497,34 +25145,23 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
-      append(const _CharT* __s, size_type __n)
-      {
- ;
- _M_check_length(size_type(0), __n, "basic_string::append");
- return _M_append(__s, __n);
-      }
+      append(const _CharT* __s, size_type __n);
 
 
 
 
 
 
-      constexpr
       basic_string&
       append(const _CharT* __s)
       {
  ;
- const size_type __n = traits_type::length(__s);
- _M_check_length(size_type(0), __n, "basic_string::append");
- return _M_append(__s, __n);
+ return this->append(__s, traits_type::length(__s));
       }
-# 1496 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1309 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      append(size_type __n, _CharT __c)
-      { return _M_replace_aux(this->size(), size_type(0), __n, __c); }
+      append(size_type __n, _CharT __c);
 
 
 
@@ -23532,20 +25169,14 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
       append(initializer_list<_CharT> __l)
       { return this->append(__l.begin(), __l.size()); }
-# 1522 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<class _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
-
-
-
-        basic_string&
-        append(_InputIterator __first, _InputIterator __last)
-        { return this->replace(end(), end(), __first, __last); }
+# 1331 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<class _InputIterator>
+ basic_string&
+ append(_InputIterator __first, _InputIterator __last)
+ { return this->replace(_M_iend(), _M_iend(), __first, __last); }
 
 
 
@@ -23554,21 +25185,19 @@ namespace __cxx11 {
 
 
       template<typename _Tp>
- constexpr
-        _If_sv<_Tp, basic_string&>
-        append(const _Tp& __svt)
-        {
-          __sv_type __sv = __svt;
-          return this->append(__sv.data(), __sv.size());
-        }
-# 1554 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+ _If_sv<_Tp, basic_string&>
+ append(const _Tp& __svt)
+ {
+   __sv_type __sv = __svt;
+   return this->append(__sv.data(), __sv.size());
+ }
+# 1358 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
-        _If_sv<_Tp, basic_string&>
+ _If_sv<_Tp, basic_string&>
  append(const _Tp& __svt, size_type __pos, size_type __n = npos)
  {
    __sv_type __sv = __svt;
-   return _M_append(__sv.data()
+   return append(__sv.data()
        + std::__sv_check(__sv.size(), __pos, "basic_string::append"),
        std::__sv_limit(__sv.size(), __pos, __n));
  }
@@ -23578,15 +25207,14 @@ namespace __cxx11 {
 
 
 
-      constexpr
       void
       push_back(_CharT __c)
       {
- const size_type __size = this->size();
- if (__size + 1 > this->capacity())
-   this->_M_mutate(__size, size_type(0), 0, size_type(1));
- traits_type::assign(this->_M_data()[__size], __c);
- this->_M_set_length(__size + 1);
+ const size_type __len = 1 + this->size();
+ if (__len > this->capacity() || _M_rep()->_M_is_shared())
+   this->reserve(__len);
+ traits_type::assign(_M_data()[this->size()], __c);
+ _M_rep()->_M_set_length_and_sharable(__len);
       }
 
 
@@ -23594,275 +25222,162 @@ namespace __cxx11 {
 
 
 
-      constexpr
       basic_string&
-      assign(const basic_string& __str)
-      {
-
- if (_Alloc_traits::_S_propagate_on_copy_assign())
-   {
-     if (!_Alloc_traits::_S_always_equal() && !_M_is_local()
-  && _M_get_allocator() != __str._M_get_allocator())
-       {
-
-
-  if (__str.size() <= _S_local_capacity)
-    {
-      _M_destroy(_M_allocated_capacity);
-      _M_data(_M_use_local_data());
-      _M_set_length(0);
-    }
-  else
-    {
-      const auto __len = __str.size();
-      auto __alloc = __str._M_get_allocator();
-
-      auto __ptr = _S_allocate(__alloc, __len + 1);
-      _M_destroy(_M_allocated_capacity);
-      _M_data(__ptr);
-      _M_capacity(__len);
-      _M_set_length(__len);
-    }
-       }
-     std::__alloc_on_copy(_M_get_allocator(), __str._M_get_allocator());
-   }
-
- this->_M_assign(__str);
- return *this;
-      }
-# 1632 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      assign(const basic_string& __str);
+# 1400 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       assign(basic_string&& __str)
-      noexcept(_Alloc_traits::_S_nothrow_move())
+      noexcept(allocator_traits<_Alloc>::is_always_equal::value)
       {
-
-
- return *this = std::move(__str);
+ this->swap(__str);
+ return *this;
       }
-# 1656 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1422 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       assign(const basic_string& __str, size_type __pos, size_type __n = npos)
-      { return _M_replace(size_type(0), this->size(), __str._M_data()
-     + __str._M_check(__pos, "basic_string::assign"),
-     __str._M_limit(__pos, __n)); }
-# 1673 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      { return this->assign(__str._M_data()
+       + __str._M_check(__pos, "basic_string::assign"),
+       __str._M_limit(__pos, __n)); }
+# 1438 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      assign(const _CharT* __s, size_type __n)
-      {
- ;
- return _M_replace(size_type(0), this->size(), __s, __n);
-      }
-# 1690 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      assign(const _CharT* __s, size_type __n);
+# 1450 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       assign(const _CharT* __s)
       {
  ;
- return _M_replace(size_type(0), this->size(), __s,
-     traits_type::length(__s));
+ return this->assign(__s, traits_type::length(__s));
       }
-# 1708 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1466 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       assign(size_type __n, _CharT __c)
       { return _M_replace_aux(size_type(0), this->size(), __n, __c); }
-# 1722 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wc++17-extensions"
-      template<class _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
+# 1478 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<class _InputIterator>
  basic_string&
  assign(_InputIterator __first, _InputIterator __last)
- {
-
-   if constexpr (contiguous_iterator<_InputIterator>
-     && is_same_v<iter_value_t<_InputIterator>, _CharT>)
+ { return this->replace(_M_ibegin(), _M_iend(), __first, __last); }
 
 
 
 
-     {
-       ;
-       return _M_replace(size_type(0), size(),
-    std::__to_address(__first), __last - __first);
-     }
-   else
-     return *this = basic_string(__first, __last, get_allocator());
- }
-#pragma GCC diagnostic pop
-# 1759 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+
+
+
       basic_string&
       assign(initializer_list<_CharT> __l)
-      {
-
-
- const size_type __n = __l.size();
- if (__n > capacity())
-   *this = basic_string(__l.begin(), __l.end(), get_allocator());
- else
-   {
-     if (__n)
-       _S_copy(_M_data(), __l.begin(), __n);
-     _M_set_length(__n);
-   }
- return *this;
-      }
-# 1784 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+      { return this->assign(__l.begin(), __l.size()); }
+# 1500 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  assign(const _Tp& __svt)
  {
    __sv_type __sv = __svt;
    return this->assign(__sv.data(), __sv.size());
  }
-# 1800 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 1515 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  assign(const _Tp& __svt, size_type __pos, size_type __n = npos)
  {
    __sv_type __sv = __svt;
-   return _M_replace(size_type(0), this->size(),
-       __sv.data()
+   return assign(__sv.data()
        + std::__sv_check(__sv.size(), __pos, "basic_string::assign"),
        std::__sv_limit(__sv.size(), __pos, __n));
  }
-# 1829 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
-      iterator
-      insert(const_iterator __p, size_type __n, _CharT __c)
+# 1539 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      void
+      insert(iterator __p, size_type __n, _CharT __c)
+      { this->replace(__p, __p, __n, __c); }
+# 1555 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<class _InputIterator>
+ void
+ insert(iterator __p, _InputIterator __beg, _InputIterator __end)
+ { this->replace(__p, __p, __beg, __end); }
+# 1567 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      void
+      insert(iterator __p, initializer_list<_CharT> __l)
       {
  ;
- const size_type __pos = __p - begin();
- this->replace(__p, __p, __n, __c);
- return iterator(this->_M_data() + __pos);
+ this->insert(__p - _M_ibegin(), __l.begin(), __l.size());
       }
-# 1872 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<class _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
- iterator
-        insert(const_iterator __p, _InputIterator __beg, _InputIterator __end)
-        {
-   ;
-   const size_type __pos = __p - begin();
-   this->replace(__p, __p, __beg, __end);
-   return iterator(this->_M_data() + __pos);
- }
-# 1909 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
-      iterator
-      insert(const_iterator __p, initializer_list<_CharT> __l)
-      { return this->insert(__p, __l.begin(), __l.end()); }
-# 1937 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1587 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       insert(size_type __pos1, const basic_string& __str)
-      { return this->replace(__pos1, size_type(0),
-        __str._M_data(), __str.size()); }
-# 1961 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      { return this->insert(__pos1, __str, size_type(0), __str.size()); }
+# 1609 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       insert(size_type __pos1, const basic_string& __str,
       size_type __pos2, size_type __n = npos)
-      { return this->replace(__pos1, size_type(0), __str._M_data()
-        + __str._M_check(__pos2, "basic_string::insert"),
-        __str._M_limit(__pos2, __n)); }
-# 1985 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      { return this->insert(__pos1, __str._M_data()
+       + __str._M_check(__pos2, "basic_string::insert"),
+       __str._M_limit(__pos2, __n)); }
+# 1632 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      insert(size_type __pos, const _CharT* __s, size_type __n)
-      { return this->replace(__pos, size_type(0), __s, __n); }
-# 2005 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+      insert(size_type __pos, const _CharT* __s, size_type __n);
+# 1650 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       insert(size_type __pos, const _CharT* __s)
       {
  ;
- return this->replace(__pos, size_type(0), __s,
-        traits_type::length(__s));
+ return this->insert(__pos, __s, traits_type::length(__s));
       }
-# 2030 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1673 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       insert(size_type __pos, size_type __n, _CharT __c)
       { return _M_replace_aux(_M_check(__pos, "basic_string::insert"),
          size_type(0), __n, __c); }
-# 2049 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1691 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       iterator
-      insert(__const_iterator __p, _CharT __c)
+      insert(iterator __p, _CharT __c)
       {
  ;
- const size_type __pos = __p - begin();
+ const size_type __pos = __p - _M_ibegin();
  _M_replace_aux(__pos, size_type(0), size_type(1), __c);
+ _M_rep()->_M_set_leaked();
  return iterator(_M_data() + __pos);
       }
-# 2066 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 1708 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  insert(size_type __pos, const _Tp& __svt)
  {
    __sv_type __sv = __svt;
    return this->insert(__pos, __sv.data(), __sv.size());
  }
-# 2083 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 1724 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  insert(size_type __pos1, const _Tp& __svt,
         size_type __pos2, size_type __n = npos)
  {
    __sv_type __sv = __svt;
-   return this->replace(__pos1, size_type(0),
-       __sv.data()
+   return this->replace(__pos1, size_type(0), __sv.data()
        + std::__sv_check(__sv.size(), __pos2, "basic_string::insert"),
        std::__sv_limit(__sv.size(), __pos2, __n));
  }
-# 2112 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1751 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       erase(size_type __pos = 0, size_type __n = npos)
       {
- _M_check(__pos, "basic_string::erase");
- if (__n == npos)
-   this->_M_set_length(__pos);
- else if (__n != 0)
-   this->_M_erase(__pos, _M_limit(__pos, __n));
+ _M_mutate(_M_check(__pos, "basic_string::erase"),
+    _M_limit(__pos, __n), size_type(0));
  return *this;
       }
-# 2132 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1767 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       iterator
-      erase(__const_iterator __position)
+      erase(iterator __position)
       {
 
-                           ;
- const size_type __pos = __position - begin();
- this->_M_erase(__pos, size_type(1));
+                               ;
+ const size_type __pos = __position - _M_ibegin();
+ _M_mutate(__pos, size_type(1), size_type(0));
+ _M_rep()->_M_set_leaked();
  return iterator(_M_data() + __pos);
       }
-# 2152 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1787 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       iterator
-      erase(__const_iterator __first, __const_iterator __last)
-      {
-
-                        ;
-        const size_type __pos = __first - begin();
- if (__last == end())
-   this->_M_set_length(__pos);
- else
-   this->_M_erase(__pos, __last - __first);
- return iterator(this->_M_data() + __pos);
-      }
+      erase(iterator __first, iterator __last);
 
 
 
@@ -23870,163 +25385,136 @@ namespace __cxx11 {
 
 
 
-      constexpr
       void
-      pop_back() noexcept
+      pop_back()
       {
  do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
- _M_erase(size() - 1, 1);
+ erase(size() - 1, 1);
       }
-# 2198 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1821 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       replace(size_type __pos, size_type __n, const basic_string& __str)
       { return this->replace(__pos, __n, __str._M_data(), __str.size()); }
-# 2221 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1843 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       replace(size_type __pos1, size_type __n1, const basic_string& __str,
        size_type __pos2, size_type __n2 = npos)
       { return this->replace(__pos1, __n1, __str._M_data()
         + __str._M_check(__pos2, "basic_string::replace"),
         __str._M_limit(__pos2, __n2)); }
-# 2247 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1868 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       replace(size_type __pos, size_type __n1, const _CharT* __s,
-       size_type __n2)
-      {
- ;
- return _M_replace(_M_check(__pos, "basic_string::replace"),
-     _M_limit(__pos, __n1), __s, __n2);
-      }
-# 2273 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+       size_type __n2);
+# 1888 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       replace(size_type __pos, size_type __n1, const _CharT* __s)
       {
  ;
  return this->replace(__pos, __n1, __s, traits_type::length(__s));
       }
-# 2298 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1912 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
       replace(size_type __pos, size_type __n1, size_type __n2, _CharT __c)
       { return _M_replace_aux(_M_check(__pos, "basic_string::replace"),
          _M_limit(__pos, __n1), __n2, __c); }
-# 2317 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1930 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2,
-       const basic_string& __str)
+      replace(iterator __i1, iterator __i2, const basic_string& __str)
       { return this->replace(__i1, __i2, __str._M_data(), __str.size()); }
-# 2338 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1949 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2,
-       const _CharT* __s, size_type __n)
+      replace(iterator __i1, iterator __i2, const _CharT* __s, size_type __n)
       {
 
-                      ;
- return this->replace(__i1 - begin(), __i2 - __i1, __s, __n);
+                          ;
+ return this->replace(__i1 - _M_ibegin(), __i2 - __i1, __s, __n);
       }
-# 2361 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1970 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2, const _CharT* __s)
+      replace(iterator __i1, iterator __i2, const _CharT* __s)
       {
  ;
  return this->replace(__i1, __i2, __s, traits_type::length(__s));
       }
-# 2383 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 1991 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2, size_type __n,
-       _CharT __c)
+      replace(iterator __i1, iterator __i2, size_type __n, _CharT __c)
       {
 
-                      ;
- return _M_replace_aux(__i1 - begin(), __i2 - __i1, __n, __c);
+                          ;
+ return _M_replace_aux(__i1 - _M_ibegin(), __i2 - __i1, __n, __c);
       }
-# 2409 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<class _InputIterator,
-        typename = std::_RequireInputIter<_InputIterator>>
- constexpr
-        basic_string&
-        replace(const_iterator __i1, const_iterator __i2,
+# 2014 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<class _InputIterator>
+ basic_string&
+ replace(iterator __i1, iterator __i2,
   _InputIterator __k1, _InputIterator __k2)
-        {
+ {
   
-                        ;
+                            ;
    ;
-   return this->_M_replace_dispatch(__i1, __i2, __k1, __k2,
-        std::__false_type());
+   typedef typename std::__is_integer<_InputIterator>::__type _Integral;
+   return _M_replace_dispatch(__i1, __i2, __k1, __k2, _Integral());
  }
-# 2442 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+
+
+
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2,
-       _CharT* __k1, _CharT* __k2)
+      replace(iterator __i1, iterator __i2, _CharT* __k1, _CharT* __k2)
       {
 
-                      ;
+                          ;
  ;
- return this->replace(__i1 - begin(), __i2 - __i1,
+ return this->replace(__i1 - _M_ibegin(), __i2 - __i1,
         __k1, __k2 - __k1);
       }
 
-      constexpr
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2,
+      replace(iterator __i1, iterator __i2,
        const _CharT* __k1, const _CharT* __k2)
       {
 
-                      ;
+                          ;
  ;
- return this->replace(__i1 - begin(), __i2 - __i1,
+ return this->replace(__i1 - _M_ibegin(), __i2 - __i1,
         __k1, __k2 - __k1);
       }
 
-      constexpr
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2,
-       iterator __k1, iterator __k2)
+      replace(iterator __i1, iterator __i2, iterator __k1, iterator __k2)
       {
 
-                      ;
+                          ;
  ;
- return this->replace(__i1 - begin(), __i2 - __i1,
+ return this->replace(__i1 - _M_ibegin(), __i2 - __i1,
         __k1.base(), __k2 - __k1);
       }
 
-      constexpr
       basic_string&
-      replace(__const_iterator __i1, __const_iterator __i2,
+      replace(iterator __i1, iterator __i2,
        const_iterator __k1, const_iterator __k2)
       {
 
-                      ;
+                          ;
  ;
- return this->replace(__i1 - begin(), __i2 - __i1,
+ return this->replace(__i1 - _M_ibegin(), __i2 - __i1,
         __k1.base(), __k2 - __k1);
       }
-# 2505 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
-      basic_string& replace(const_iterator __i1, const_iterator __i2,
+# 2085 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      basic_string& replace(iterator __i1, iterator __i2,
        initializer_list<_CharT> __l)
-      { return this->replace(__i1, __i2, __l.begin(), __l.size()); }
-# 2519 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+      { return this->replace(__i1, __i2, __l.begin(), __l.end()); }
+# 2098 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  replace(size_type __pos, size_type __n, const _Tp& __svt)
  {
    __sv_type __sv = __svt;
    return this->replace(__pos, __n, __sv.data(), __sv.size());
  }
-# 2537 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 2115 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  replace(size_type __pos1, size_type __n1, const _Tp& __svt,
   size_type __pos2, size_type __n2 = npos)
@@ -24037,9 +25525,8 @@ namespace __cxx11 {
        + std::__sv_check(__sv.size(), __pos2, "basic_string::replace"),
        std::__sv_limit(__sv.size(), __pos2, __n2));
  }
-# 2559 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 2136 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- constexpr
  _If_sv<_Tp, basic_string&>
  replace(const_iterator __i1, const_iterator __i2, const _Tp& __svt)
  {
@@ -24050,84 +25537,124 @@ namespace __cxx11 {
 
     private:
       template<class _Integer>
- constexpr
  basic_string&
- _M_replace_dispatch(const_iterator __i1, const_iterator __i2,
-       _Integer __n, _Integer __val, __true_type)
-        { return _M_replace_aux(__i1 - begin(), __i2 - __i1, __n, __val); }
+ _M_replace_dispatch(iterator __i1, iterator __i2, _Integer __n,
+       _Integer __val, __true_type)
+ { return _M_replace_aux(__i1 - _M_ibegin(), __i2 - __i1, __n, __val); }
 
       template<class _InputIterator>
- constexpr
  basic_string&
- _M_replace_dispatch(const_iterator __i1, const_iterator __i2,
-       _InputIterator __k1, _InputIterator __k2,
-       __false_type);
+ _M_replace_dispatch(iterator __i1, iterator __i2, _InputIterator __k1,
+       _InputIterator __k2, __false_type);
 
-      constexpr
       basic_string&
       _M_replace_aux(size_type __pos1, size_type __n1, size_type __n2,
        _CharT __c);
 
-      __attribute__((__noinline__, __noclone__, __cold__)) void
-      _M_replace_cold(pointer __p, size_type __len1, const _CharT* __s,
-        const size_type __len2, const size_type __how_much);
-
-      constexpr
       basic_string&
-      _M_replace(size_type __pos, size_type __len1, const _CharT* __s,
-   const size_type __len2);
+      _M_replace_safe(size_type __pos1, size_type __n1, const _CharT* __s,
+        size_type __n2);
 
-      constexpr
-      basic_string&
-      _M_append(const _CharT* __s, size_type __n);
+
+
+      template<class _InIterator>
+ static _CharT*
+ _S_construct_aux(_InIterator __beg, _InIterator __end,
+    const _Alloc& __a, __false_type)
+ {
+   typedef typename iterator_traits<_InIterator>::iterator_category _Tag;
+   return _S_construct(__beg, __end, __a, _Tag());
+ }
+
+
+
+      template<class _Integer>
+ static _CharT*
+ _S_construct_aux(_Integer __beg, _Integer __end,
+    const _Alloc& __a, __true_type)
+ { return _S_construct_aux_2(static_cast<size_type>(__beg),
+        __end, __a); }
+
+      static _CharT*
+      _S_construct_aux_2(size_type __req, _CharT __c, const _Alloc& __a)
+      { return _S_construct(__req, __c, __a); }
+
+      template<class _InIterator>
+ static _CharT*
+ _S_construct(_InIterator __beg, _InIterator __end, const _Alloc& __a)
+ {
+   typedef typename std::__is_integer<_InIterator>::__type _Integral;
+   return _S_construct_aux(__beg, __end, __a, _Integral());
+ }
+
+
+      template<class _InIterator>
+ static _CharT*
+  _S_construct(_InIterator __beg, _InIterator __end, const _Alloc& __a,
+        input_iterator_tag);
+
+
+
+      template<class _FwdIterator>
+ static _CharT*
+ _S_construct(_FwdIterator __beg, _FwdIterator __end, const _Alloc& __a,
+       forward_iterator_tag);
+
+      static _CharT*
+      _S_construct(size_type __req, _CharT __c, const _Alloc& __a);
 
     public:
-# 2616 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 2227 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       copy(_CharT* __s, size_type __n, size_type __pos = 0) const;
-# 2627 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      constexpr
+# 2237 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       void
-      swap(basic_string& __s) noexcept;
-# 2638 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+      swap(basic_string& __s)
+      noexcept(allocator_traits<_Alloc>::is_always_equal::value);
+# 2248 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       const _CharT*
       c_str() const noexcept
       { return _M_data(); }
-# 2651 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2260 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       const _CharT*
       data() const noexcept
       { return _M_data(); }
-# 2663 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2271 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       _CharT*
       data() noexcept
-      { return _M_data(); }
+      {
+ _M_leak();
+ return _M_data();
+      }
 
 
 
 
 
-      [[__nodiscard__]] constexpr
       allocator_type
       get_allocator() const noexcept
-      { return _M_get_allocator(); }
-# 2689 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+      { return _M_dataplus; }
+# 2298 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find(const _CharT* __s, size_type __pos, size_type __n) const
       noexcept;
-# 2704 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2312 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find(const basic_string& __str, size_type __pos = 0) const
       noexcept
       { return this->find(__str.data(), __pos, __str.size()); }
-# 2717 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 2327 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      size_type
+      find(const _CharT* __s, size_type __pos = 0) const noexcept
+      {
+ ;
+ return this->find(__s, __pos, traits_type::length(__s));
+      }
+# 2344 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      size_type
+      find(_CharT __c, size_type __pos = 0) const noexcept;
+# 2354 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- [[__nodiscard__]] constexpr
  _If_sv<_Tp, size_type>
  find(const _Tp& __svt, size_type __pos = 0) const
  noexcept(is_same<_Tp, __sv_type>::value)
@@ -24135,27 +25662,27 @@ namespace __cxx11 {
    __sv_type __sv = __svt;
    return this->find(__sv.data(), __pos, __sv.size());
  }
-# 2738 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
-      size_type
-      find(const _CharT* __s, size_type __pos = 0) const noexcept
-      {
- ;
- return this->find(__s, __pos, traits_type::length(__s));
-      }
-# 2756 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
-      size_type
-      find(_CharT __c, size_type __pos = 0) const noexcept;
-# 2770 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2374 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       rfind(const basic_string& __str, size_type __pos = npos) const
       noexcept
       { return this->rfind(__str.data(), __pos, __str.size()); }
-# 2783 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 2391 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      size_type
+      rfind(const _CharT* __s, size_type __pos, size_type __n) const
+      noexcept;
+# 2405 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      size_type
+      rfind(const _CharT* __s, size_type __pos = npos) const noexcept
+      {
+ ;
+ return this->rfind(__s, __pos, traits_type::length(__s));
+      }
+# 2422 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      size_type
+      rfind(_CharT __c, size_type __pos = npos) const noexcept;
+# 2432 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- [[__nodiscard__]] constexpr
  _If_sv<_Tp, size_type>
  rfind(const _Tp& __svt, size_type __pos = npos) const
  noexcept(is_same<_Tp, __sv_type>::value)
@@ -24163,46 +25690,16 @@ namespace __cxx11 {
    __sv_type __sv = __svt;
    return this->rfind(__sv.data(), __pos, __sv.size());
  }
-# 2806 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
-      size_type
-      rfind(const _CharT* __s, size_type __pos, size_type __n) const
-      noexcept;
-# 2821 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
-      size_type
-      rfind(const _CharT* __s, size_type __pos = npos) const
-      {
- ;
- return this->rfind(__s, __pos, traits_type::length(__s));
-      }
-# 2839 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
-      size_type
-      rfind(_CharT __c, size_type __pos = npos) const noexcept;
-# 2854 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2453 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_of(const basic_string& __str, size_type __pos = 0) const
       noexcept
       { return this->find_first_of(__str.data(), __pos, __str.size()); }
-# 2868 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename _Tp>
- [[__nodiscard__]] constexpr
- _If_sv<_Tp, size_type>
- find_first_of(const _Tp& __svt, size_type __pos = 0) const
- noexcept(is_same<_Tp, __sv_type>::value)
- {
-   __sv_type __sv = __svt;
-   return this->find_first_of(__sv.data(), __pos, __sv.size());
- }
-# 2891 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2470 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_of(const _CharT* __s, size_type __pos, size_type __n) const
       noexcept;
-# 2906 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2484 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_of(const _CharT* __s, size_type __pos = 0) const
       noexcept
@@ -24210,34 +25707,29 @@ namespace __cxx11 {
  ;
  return this->find_first_of(__s, __pos, traits_type::length(__s));
       }
-# 2927 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2504 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_of(_CharT __c, size_type __pos = 0) const noexcept
       { return this->find(__c, __pos); }
-# 2943 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2516 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<typename _Tp>
+ _If_sv<_Tp, size_type>
+ find_first_of(const _Tp& __svt, size_type __pos = 0) const
+ noexcept(is_same<_Tp, __sv_type>::value)
+ {
+   __sv_type __sv = __svt;
+   return this->find_first_of(__sv.data(), __pos, __sv.size());
+ }
+# 2537 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_of(const basic_string& __str, size_type __pos = npos) const
       noexcept
       { return this->find_last_of(__str.data(), __pos, __str.size()); }
-# 2957 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename _Tp>
- [[__nodiscard__]] constexpr
- _If_sv<_Tp, size_type>
- find_last_of(const _Tp& __svt, size_type __pos = npos) const
- noexcept(is_same<_Tp, __sv_type>::value)
- {
-   __sv_type __sv = __svt;
-   return this->find_last_of(__sv.data(), __pos, __sv.size());
- }
-# 2980 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2554 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_of(const _CharT* __s, size_type __pos, size_type __n) const
       noexcept;
-# 2995 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2568 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_of(const _CharT* __s, size_type __pos = npos) const
       noexcept
@@ -24245,34 +25737,29 @@ namespace __cxx11 {
  ;
  return this->find_last_of(__s, __pos, traits_type::length(__s));
       }
-# 3016 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2588 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_of(_CharT __c, size_type __pos = npos) const noexcept
       { return this->rfind(__c, __pos); }
-# 3031 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2600 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<typename _Tp>
+ _If_sv<_Tp, size_type>
+ find_last_of(const _Tp& __svt, size_type __pos = npos) const
+ noexcept(is_same<_Tp, __sv_type>::value)
+ {
+   __sv_type __sv = __svt;
+   return this->find_last_of(__sv.data(), __pos, __sv.size());
+ }
+# 2620 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_not_of(const basic_string& __str, size_type __pos = 0) const
       noexcept
       { return this->find_first_not_of(__str.data(), __pos, __str.size()); }
-# 3045 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename _Tp>
- [[__nodiscard__]] constexpr
- _If_sv<_Tp, size_type>
- find_first_not_of(const _Tp& __svt, size_type __pos = 0) const
- noexcept(is_same<_Tp, __sv_type>::value)
- {
-   __sv_type __sv = __svt;
-   return this->find_first_not_of(__sv.data(), __pos, __sv.size());
- }
-# 3068 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2637 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_not_of(const _CharT* __s, size_type __pos,
    size_type __n) const noexcept;
-# 3083 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2651 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_not_of(const _CharT* __s, size_type __pos = 0) const
       noexcept
@@ -24280,34 +25767,29 @@ namespace __cxx11 {
  ;
  return this->find_first_not_of(__s, __pos, traits_type::length(__s));
       }
-# 3102 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2669 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_first_not_of(_CharT __c, size_type __pos = 0) const
       noexcept;
-# 3118 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2681 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<typename _Tp>
+ _If_sv<_Tp, size_type>
+ find_first_not_of(const _Tp& __svt, size_type __pos = 0) const
+ noexcept(is_same<_Tp, __sv_type>::value)
+ {
+   __sv_type __sv = __svt;
+   return this->find_first_not_of(__sv.data(), __pos, __sv.size());
+ }
+# 2702 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_not_of(const basic_string& __str, size_type __pos = npos) const
       noexcept
       { return this->find_last_not_of(__str.data(), __pos, __str.size()); }
-# 3132 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename _Tp>
- [[__nodiscard__]] constexpr
- _If_sv<_Tp, size_type>
- find_last_not_of(const _Tp& __svt, size_type __pos = npos) const
- noexcept(is_same<_Tp, __sv_type>::value)
- {
-   __sv_type __sv = __svt;
-   return this->find_last_not_of(__sv.data(), __pos, __sv.size());
- }
-# 3155 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2719 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_not_of(const _CharT* __s, size_type __pos,
          size_type __n) const noexcept;
-# 3170 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2733 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_not_of(const _CharT* __s, size_type __pos = npos) const
       noexcept
@@ -24315,19 +25797,25 @@ namespace __cxx11 {
  ;
  return this->find_last_not_of(__s, __pos, traits_type::length(__s));
       }
-# 3189 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2751 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       size_type
       find_last_not_of(_CharT __c, size_type __pos = npos) const
       noexcept;
-# 3206 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2763 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      template<typename _Tp>
+ _If_sv<_Tp, size_type>
+ find_last_not_of(const _Tp& __svt, size_type __pos = npos) const
+ noexcept(is_same<_Tp, __sv_type>::value)
+ {
+   __sv_type __sv = __svt;
+   return this->find_last_not_of(__sv.data(), __pos, __sv.size());
+ }
+# 2785 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       basic_string
       substr(size_type __pos = 0, size_type __n = npos) const
       { return basic_string(*this,
        _M_check(__pos, "basic_string::substr"), __n); }
-# 3226 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2804 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       int
       compare(const basic_string& __str) const
       {
@@ -24348,12 +25836,11 @@ namespace __cxx11 {
 
 
       template<typename _Tp>
- [[__nodiscard__]] constexpr
  _If_sv<_Tp, int>
  compare(const _Tp& __svt) const
  noexcept(is_same<_Tp, __sv_type>::value)
  {
-   __sv_type __sv = __svt;
+    __sv_type __sv = __svt;
    const size_type __size = this->size();
    const size_type __osize = __sv.size();
    const size_type __len = std::min(__size, __osize);
@@ -24363,9 +25850,8 @@ namespace __cxx11 {
      __r = _S_compare(__size, __osize);
    return __r;
  }
-# 3271 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 2847 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- [[__nodiscard__]] constexpr
  _If_sv<_Tp, int>
  compare(size_type __pos, size_type __n, const _Tp& __svt) const
  noexcept(is_same<_Tp, __sv_type>::value)
@@ -24373,9 +25859,8 @@ namespace __cxx11 {
    __sv_type __sv = __svt;
    return __sv_type(*this).substr(__pos, __n).compare(__sv);
  }
-# 3291 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
+# 2866 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       template<typename _Tp>
- [[__nodiscard__]] constexpr
  _If_sv<_Tp, int>
  compare(size_type __pos1, size_type __n1, const _Tp& __svt,
   size_type __pos2, size_type __n2 = npos) const
@@ -24385,8 +25870,7 @@ namespace __cxx11 {
    return __sv_type(*this)
      .substr(__pos1, __n1).compare(__sv.substr(__pos2, __n2));
  }
-# 3323 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2897 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       int
       compare(size_type __pos, size_type __n, const basic_string& __str) const
       {
@@ -24399,8 +25883,7 @@ namespace __cxx11 {
    __r = _S_compare(__n, __osize);
  return __r;
       }
-# 3360 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2933 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       int
       compare(size_type __pos1, size_type __n1, const basic_string& __str,
        size_type __pos2, size_type __n2 = npos) const
@@ -24416,8 +25899,7 @@ namespace __cxx11 {
    __r = _S_compare(__n1, __n2);
  return __r;
       }
-# 3391 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2963 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       int
       compare(const _CharT* __s) const noexcept
       {
@@ -24430,8 +25912,7 @@ namespace __cxx11 {
    __r = _S_compare(__size, __osize);
  return __r;
       }
-# 3426 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 2997 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       int
       compare(size_type __pos, size_type __n1, const _CharT* __s) const
       {
@@ -24445,8 +25926,7 @@ namespace __cxx11 {
    __r = _S_compare(__n1, __osize);
  return __r;
       }
-# 3465 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      [[__nodiscard__]] constexpr
+# 3035 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
       int
       compare(size_type __pos, size_type __n1, const _CharT* __s,
        size_type __n2) const
@@ -24462,49 +25942,706 @@ namespace __cxx11 {
       }
 
 
-      [[nodiscard]]
-      constexpr bool
+      bool
       starts_with(basic_string_view<_CharT, _Traits> __x) const noexcept
       { return __sv_type(this->data(), this->size()).starts_with(__x); }
 
-      [[nodiscard]]
-      constexpr bool
+      bool
       starts_with(_CharT __x) const noexcept
       { return __sv_type(this->data(), this->size()).starts_with(__x); }
 
-      [[nodiscard, __gnu__::__nonnull__]]
-      constexpr bool
+      [[__gnu__::__nonnull__]]
+      bool
       starts_with(const _CharT* __x) const noexcept
       { return __sv_type(this->data(), this->size()).starts_with(__x); }
 
-      [[nodiscard]]
-      constexpr bool
+      bool
       ends_with(basic_string_view<_CharT, _Traits> __x) const noexcept
       { return __sv_type(this->data(), this->size()).ends_with(__x); }
 
-      [[nodiscard]]
-      constexpr bool
+      bool
       ends_with(_CharT __x) const noexcept
       { return __sv_type(this->data(), this->size()).ends_with(__x); }
 
-      [[nodiscard, __gnu__::__nonnull__]]
-      constexpr bool
+      [[__gnu__::__nonnull__]]
+      bool
       ends_with(const _CharT* __x) const noexcept
       { return __sv_type(this->data(), this->size()).ends_with(__x); }
-# 3530 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
-      template<typename, typename, typename> friend class basic_stringbuf;
-    };
-}
+# 3103 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+  };
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    const typename basic_string<_CharT, _Traits, _Alloc>::size_type
+    basic_string<_CharT, _Traits, _Alloc>::
+    _Rep::_S_max_size = (((npos - sizeof(_Rep_base))/sizeof(_CharT)) - 1) / 4;
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    const _CharT
+    basic_string<_CharT, _Traits, _Alloc>::
+    _Rep::_S_terminal = _CharT();
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    const typename basic_string<_CharT, _Traits, _Alloc>::size_type
+    basic_string<_CharT, _Traits, _Alloc>::npos;
+
+
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    typename basic_string<_CharT, _Traits, _Alloc>::size_type
+    basic_string<_CharT, _Traits, _Alloc>::_Rep::_S_empty_rep_storage[
+    (sizeof(_Rep_base) + sizeof(_CharT) + sizeof(size_type) - 1) /
+      sizeof(size_type)];
+
+
+
+
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    template<typename _InIterator>
+      _CharT*
+      basic_string<_CharT, _Traits, _Alloc>::
+      _S_construct(_InIterator __beg, _InIterator __end, const _Alloc& __a,
+     input_iterator_tag)
+      {
+
+ if (__beg == __end && __a == _Alloc())
+   return _S_empty_rep()._M_refdata();
+
+
+ _CharT __buf[128];
+ size_type __len = 0;
+ while (__beg != __end && __len < sizeof(__buf) / sizeof(_CharT))
+   {
+     __buf[__len++] = *__beg;
+     ++__beg;
+   }
+ _Rep* __r = _Rep::_S_create(__len, size_type(0), __a);
+ _M_copy(__r->_M_refdata(), __buf, __len);
+ try
+   {
+     while (__beg != __end)
+       {
+  if (__len == __r->_M_capacity)
+    {
+
+      _Rep* __another = _Rep::_S_create(__len + 1, __len, __a);
+      _M_copy(__another->_M_refdata(), __r->_M_refdata(), __len);
+      __r->_M_destroy(__a);
+      __r = __another;
+    }
+  __r->_M_refdata()[__len++] = *__beg;
+  ++__beg;
+       }
+   }
+ catch(...)
+   {
+     __r->_M_destroy(__a);
+     throw;
+   }
+ __r->_M_set_length_and_sharable(__len);
+ return __r->_M_refdata();
+      }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    template <typename _InIterator>
+      _CharT*
+      basic_string<_CharT, _Traits, _Alloc>::
+      _S_construct(_InIterator __beg, _InIterator __end, const _Alloc& __a,
+     forward_iterator_tag)
+      {
+
+ if (__beg == __end && __a == _Alloc())
+   return _S_empty_rep()._M_refdata();
+
+
+ if (__gnu_cxx::__is_null_pointer(__beg) && __beg != __end)
+   __throw_logic_error(("basic_string::_S_construct null not valid"));
+
+ const size_type __dnew = static_cast<size_type>(std::distance(__beg,
+              __end));
+
+ _Rep* __r = _Rep::_S_create(__dnew, size_type(0), __a);
+ try
+   { _S_copy_chars(__r->_M_refdata(), __beg, __end); }
+ catch(...)
+   {
+     __r->_M_destroy(__a);
+     throw;
+   }
+ __r->_M_set_length_and_sharable(__dnew);
+ return __r->_M_refdata();
+      }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    _CharT*
+    basic_string<_CharT, _Traits, _Alloc>::
+    _S_construct(size_type __n, _CharT __c, const _Alloc& __a)
+    {
+
+      if (__n == 0 && __a == _Alloc())
+ return _S_empty_rep()._M_refdata();
+
+
+      _Rep* __r = _Rep::_S_create(__n, size_type(0), __a);
+      if (__n)
+ _M_assign(__r->_M_refdata(), __n, __c);
+
+      __r->_M_set_length_and_sharable(__n);
+      return __r->_M_refdata();
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>::
+    basic_string(const basic_string& __str, size_type __pos, const _Alloc& __a)
+    : _M_dataplus(_S_construct(__str._M_data()
+          + __str._M_check(__pos,
+      "basic_string::basic_string"),
+          __str._M_data() + __str._M_limit(__pos, npos)
+          + __pos, __a), __a)
+    { }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>::
+    basic_string(const basic_string& __str, size_type __pos, size_type __n)
+    : _M_dataplus(_S_construct(__str._M_data()
+          + __str._M_check(__pos,
+      "basic_string::basic_string"),
+          __str._M_data() + __str._M_limit(__pos, __n)
+          + __pos, _Alloc()), _Alloc())
+    { }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>::
+    basic_string(const basic_string& __str, size_type __pos,
+   size_type __n, const _Alloc& __a)
+    : _M_dataplus(_S_construct(__str._M_data()
+          + __str._M_check(__pos,
+      "basic_string::basic_string"),
+          __str._M_data() + __str._M_limit(__pos, __n)
+          + __pos, __a), __a)
+    { }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    assign(const basic_string& __str)
+    {
+      if (_M_rep() != __str._M_rep())
+ {
+
+   const allocator_type __a = this->get_allocator();
+   _CharT* __tmp = __str._M_rep()->_M_grab(__a, __str.get_allocator());
+   _M_rep()->_M_dispose(__a);
+   _M_data(__tmp);
+ }
+      return *this;
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    assign(const _CharT* __s, size_type __n)
+    {
+      ;
+      _M_check_length(this->size(), __n, "basic_string::assign");
+      if (_M_disjunct(__s) || _M_rep()->_M_is_shared())
+ return _M_replace_safe(size_type(0), this->size(), __s, __n);
+      else
+ {
+
+   const size_type __pos = __s - _M_data();
+   if (__pos >= __n)
+     _M_copy(_M_data(), __s, __n);
+   else if (__pos)
+     _M_move(_M_data(), __s, __n);
+   _M_rep()->_M_set_length_and_sharable(__n);
+   return *this;
+ }
+     }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    append(size_type __n, _CharT __c)
+    {
+      if (__n)
+ {
+   _M_check_length(size_type(0), __n, "basic_string::append");
+   const size_type __len = __n + this->size();
+   if (__len > this->capacity() || _M_rep()->_M_is_shared())
+     this->reserve(__len);
+   _M_assign(_M_data() + this->size(), __n, __c);
+   _M_rep()->_M_set_length_and_sharable(__len);
+ }
+      return *this;
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    append(const _CharT* __s, size_type __n)
+    {
+      ;
+      if (__n)
+ {
+   _M_check_length(size_type(0), __n, "basic_string::append");
+   const size_type __len = __n + this->size();
+   if (__len > this->capacity() || _M_rep()->_M_is_shared())
+     {
+       if (_M_disjunct(__s))
+  this->reserve(__len);
+       else
+  {
+    const size_type __off = __s - _M_data();
+    this->reserve(__len);
+    __s = _M_data() + __off;
+  }
+     }
+   _M_copy(_M_data() + this->size(), __s, __n);
+   _M_rep()->_M_set_length_and_sharable(__len);
+ }
+      return *this;
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    append(const basic_string& __str)
+    {
+      const size_type __size = __str.size();
+      if (__size)
+ {
+   const size_type __len = __size + this->size();
+   if (__len > this->capacity() || _M_rep()->_M_is_shared())
+     this->reserve(__len);
+   _M_copy(_M_data() + this->size(), __str._M_data(), __size);
+   _M_rep()->_M_set_length_and_sharable(__len);
+ }
+      return *this;
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    append(const basic_string& __str, size_type __pos, size_type __n)
+    {
+      __str._M_check(__pos, "basic_string::append");
+      __n = __str._M_limit(__pos, __n);
+      if (__n)
+ {
+   const size_type __len = __n + this->size();
+   if (__len > this->capacity() || _M_rep()->_M_is_shared())
+     this->reserve(__len);
+   _M_copy(_M_data() + this->size(), __str._M_data() + __pos, __n);
+   _M_rep()->_M_set_length_and_sharable(__len);
+ }
+      return *this;
+    }
+
+   template<typename _CharT, typename _Traits, typename _Alloc>
+     basic_string<_CharT, _Traits, _Alloc>&
+     basic_string<_CharT, _Traits, _Alloc>::
+     insert(size_type __pos, const _CharT* __s, size_type __n)
+     {
+       ;
+       _M_check(__pos, "basic_string::insert");
+       _M_check_length(size_type(0), __n, "basic_string::insert");
+       if (_M_disjunct(__s) || _M_rep()->_M_is_shared())
+  return _M_replace_safe(__pos, size_type(0), __s, __n);
+       else
+  {
+
+    const size_type __off = __s - _M_data();
+    _M_mutate(__pos, 0, __n);
+    __s = _M_data() + __off;
+    _CharT* __p = _M_data() + __pos;
+    if (__s + __n <= __p)
+      _M_copy(__p, __s, __n);
+    else if (__s >= __p)
+      _M_copy(__p, __s + __n, __n);
+    else
+      {
+        const size_type __nleft = __p - __s;
+        _M_copy(__p, __s, __nleft);
+        _M_copy(__p + __nleft, __p + __n, __n - __nleft);
+      }
+    return *this;
+  }
+     }
+
+   template<typename _CharT, typename _Traits, typename _Alloc>
+     typename basic_string<_CharT, _Traits, _Alloc>::iterator
+     basic_string<_CharT, _Traits, _Alloc>::
+     erase(iterator __first, iterator __last)
+     {
+      
+                           ;
+
+
+
+
+       const size_type __size = __last - __first;
+       if (__size)
+  {
+    const size_type __pos = __first - _M_ibegin();
+    _M_mutate(__pos, __size, size_type(0));
+    _M_rep()->_M_set_leaked();
+    return iterator(_M_data() + __pos);
+  }
+       else
+  return __first;
+     }
+
+   template<typename _CharT, typename _Traits, typename _Alloc>
+     basic_string<_CharT, _Traits, _Alloc>&
+     basic_string<_CharT, _Traits, _Alloc>::
+     replace(size_type __pos, size_type __n1, const _CharT* __s,
+      size_type __n2)
+     {
+       ;
+       _M_check(__pos, "basic_string::replace");
+       __n1 = _M_limit(__pos, __n1);
+       _M_check_length(__n1, __n2, "basic_string::replace");
+       bool __left;
+       if (_M_disjunct(__s) || _M_rep()->_M_is_shared())
+  return _M_replace_safe(__pos, __n1, __s, __n2);
+       else if ((__left = __s + __n2 <= _M_data() + __pos)
+  || _M_data() + __pos + __n1 <= __s)
+  {
+
+    size_type __off = __s - _M_data();
+    __left ? __off : (__off += __n2 - __n1);
+    _M_mutate(__pos, __n1, __n2);
+    _M_copy(_M_data() + __pos, _M_data() + __off, __n2);
+    return *this;
+  }
+       else
+  {
+
+    const basic_string __tmp(__s, __n2);
+    return _M_replace_safe(__pos, __n1, __tmp._M_data(), __n2);
+  }
+     }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::_Rep::
+    _M_destroy(const _Alloc& __a) throw ()
+    {
+      const size_type __size = sizeof(_Rep_base)
+          + (this->_M_capacity + 1) * sizeof(_CharT);
+      _Raw_bytes_alloc(__a).deallocate(reinterpret_cast<char*>(this), __size);
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::
+    _M_leak_hard()
+    {
+
+
+
+
+      if (this->empty())
+ return;
+
+      if (_M_rep()->_M_is_shared())
+ _M_mutate(0, 0, 0);
+      _M_rep()->_M_set_leaked();
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::
+    _M_mutate(size_type __pos, size_type __len1, size_type __len2)
+    {
+      const size_type __old_size = this->size();
+      const size_type __new_size = __old_size + __len2 - __len1;
+      const size_type __how_much = __old_size - __pos - __len1;
+
+      if (__new_size > this->capacity() || _M_rep()->_M_is_shared())
+ {
+
+   const allocator_type __a = get_allocator();
+   _Rep* __r = _Rep::_S_create(__new_size, this->capacity(), __a);
+
+   if (__pos)
+     _M_copy(__r->_M_refdata(), _M_data(), __pos);
+   if (__how_much)
+     _M_copy(__r->_M_refdata() + __pos + __len2,
+      _M_data() + __pos + __len1, __how_much);
+
+   _M_rep()->_M_dispose(__a);
+   _M_data(__r->_M_refdata());
+ }
+      else if (__how_much && __len1 != __len2)
+ {
+
+   _M_move(_M_data() + __pos + __len2,
+    _M_data() + __pos + __len1, __how_much);
+ }
+      _M_rep()->_M_set_length_and_sharable(__new_size);
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::
+    reserve(size_type __res)
+    {
+      const size_type __capacity = capacity();
+
+
+
+
+
+      if (__res <= __capacity)
+ {
+   if (!_M_rep()->_M_is_shared())
+     return;
+
+
+   __res = __capacity;
+ }
+
+      const allocator_type __a = get_allocator();
+      _CharT* __tmp = _M_rep()->_M_clone(__a, __res - this->size());
+      _M_rep()->_M_dispose(__a);
+      _M_data(__tmp);
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::
+    swap(basic_string& __s)
+    noexcept(allocator_traits<_Alloc>::is_always_equal::value)
+    {
+      if (_M_rep()->_M_is_leaked())
+ _M_rep()->_M_set_sharable();
+      if (__s._M_rep()->_M_is_leaked())
+ __s._M_rep()->_M_set_sharable();
+      if (this->get_allocator() == __s.get_allocator())
+ {
+   _CharT* __tmp = _M_data();
+   _M_data(__s._M_data());
+   __s._M_data(__tmp);
+ }
+
+      else
+ {
+   const basic_string __tmp1(_M_ibegin(), _M_iend(),
+        __s.get_allocator());
+   const basic_string __tmp2(__s._M_ibegin(), __s._M_iend(),
+        this->get_allocator());
+   *this = __tmp2;
+   __s = __tmp1;
+ }
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    typename basic_string<_CharT, _Traits, _Alloc>::_Rep*
+    basic_string<_CharT, _Traits, _Alloc>::_Rep::
+    _S_create(size_type __capacity, size_type __old_capacity,
+       const _Alloc& __alloc)
+    {
+
+
+      if (__capacity > _S_max_size)
+ __throw_length_error(("basic_string::_S_create"));
+# 3606 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+      const size_type __pagesize = 4096;
+      const size_type __malloc_header_size = 4 * sizeof(void*);
+
+
+
+
+
+
+
+      if (__capacity > __old_capacity && __capacity < 2 * __old_capacity)
+ __capacity = 2 * __old_capacity;
+
+
+
+
+      size_type __size = (__capacity + 1) * sizeof(_CharT) + sizeof(_Rep);
+
+      const size_type __adj_size = __size + __malloc_header_size;
+      if (__adj_size > __pagesize && __capacity > __old_capacity)
+ {
+   const size_type __extra = __pagesize - __adj_size % __pagesize;
+   __capacity += __extra / sizeof(_CharT);
+
+   if (__capacity > _S_max_size)
+     __capacity = _S_max_size;
+   __size = (__capacity + 1) * sizeof(_CharT) + sizeof(_Rep);
+ }
+
+
+
+      void* __place = _Raw_bytes_alloc(__alloc).allocate(__size);
+      _Rep *__p = new (__place) _Rep;
+      __p->_M_capacity = __capacity;
+
+
+
+
+
+
+
+      __p->_M_set_sharable();
+      return __p;
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    _CharT*
+    basic_string<_CharT, _Traits, _Alloc>::_Rep::
+    _M_clone(const _Alloc& __alloc, size_type __res)
+    {
+
+      const size_type __requested_cap = this->_M_length + __res;
+      _Rep* __r = _Rep::_S_create(__requested_cap, this->_M_capacity,
+      __alloc);
+      if (this->_M_length)
+ _M_copy(__r->_M_refdata(), _M_refdata(), this->_M_length);
+
+      __r->_M_set_length_and_sharable(this->_M_length);
+      return __r->_M_refdata();
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::
+    resize(size_type __n, _CharT __c)
+    {
+      const size_type __size = this->size();
+      _M_check_length(__size, __n, "basic_string::resize");
+      if (__size < __n)
+ this->append(__n - __size, __c);
+      else if (__n < __size)
+ this->erase(__n);
+
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    template<typename _InputIterator>
+      basic_string<_CharT, _Traits, _Alloc>&
+      basic_string<_CharT, _Traits, _Alloc>::
+      _M_replace_dispatch(iterator __i1, iterator __i2, _InputIterator __k1,
+     _InputIterator __k2, __false_type)
+      {
+ const basic_string __s(__k1, __k2);
+ const size_type __n1 = __i2 - __i1;
+ _M_check_length(__n1, __s.size(), "basic_string::_M_replace_dispatch");
+ return _M_replace_safe(__i1 - _M_ibegin(), __n1, __s._M_data(),
+          __s.size());
+      }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    _M_replace_aux(size_type __pos1, size_type __n1, size_type __n2,
+     _CharT __c)
+    {
+      _M_check_length(__n1, __n2, "basic_string::_M_replace_aux");
+      _M_mutate(__pos1, __n1, __n2);
+      if (__n2)
+ _M_assign(_M_data() + __pos1, __n2, __c);
+      return *this;
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    basic_string<_CharT, _Traits, _Alloc>&
+    basic_string<_CharT, _Traits, _Alloc>::
+    _M_replace_safe(size_type __pos1, size_type __n1, const _CharT* __s,
+      size_type __n2)
+    {
+      _M_mutate(__pos1, __n1, __n2);
+      if (__n2)
+ _M_copy(_M_data() + __pos1, __s, __n2);
+      return *this;
+    }
+
+  template<typename _CharT, typename _Traits, typename _Alloc>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::
+    reserve()
+    {
+
+      if (length() < capacity() || _M_rep()->_M_is_shared())
+ try
+   {
+     const allocator_type __a = get_allocator();
+     _CharT* __tmp = _M_rep()->_M_clone(__a);
+     _M_rep()->_M_dispose(__a);
+     _M_data(__tmp);
+   }
+ catch (const __cxxabiv1::__forced_unwind&)
+   { throw; }
+ catch (...)
+   { }
+
+    }
+
+    template<typename _CharT, typename _Traits, typename _Alloc>
+    typename basic_string<_CharT, _Traits, _Alloc>::size_type
+    basic_string<_CharT, _Traits, _Alloc>::
+    copy(_CharT* __s, size_type __n, size_type __pos) const
+    {
+      _M_check(__pos, "basic_string::copy");
+      __n = _M_limit(__pos, __n);
+      ;
+      if (__n)
+ _M_copy(__s, _M_data() + __pos, __n);
+
+      return __n;
+    }
+# 3765 "/usr/include/c++/14.2.0/bits/cow_string.h" 3
+  template<typename _CharT, typename _Traits, typename _Alloc>
+  template<typename _Operation>
+    void
+    basic_string<_CharT, _Traits, _Alloc>::
+
+
+
+    __resize_and_overwrite(const size_type __n, _Operation __op)
+
+    {
+      const size_type __capacity = capacity();
+      _CharT* __p;
+      if (__n > __capacity || _M_rep()->_M_is_shared())
+ this->reserve(__n);
+      __p = _M_data();
+      struct _Terminator {
+ ~_Terminator() { _M_this->_M_rep()->_M_set_length_and_sharable(_M_r); }
+ basic_string* _M_this;
+ size_type _M_r;
+      };
+      _Terminator __term{this, 0};
+      auto __r = std::move(__op)(__p + 0, __n + 0);
+
+      static_assert(ranges::__detail::__is_integer_like<decltype(__r)>);
+
+
+
+
+      ;
+      __term._M_r = size_type(__r);
+      if (__term._M_r > __n)
+ __builtin_unreachable();
+    }
+
+
+
 
 }
-
-
+# 58 "/usr/include/c++/14.2.0/bits/basic_string.h" 2 3
+# 3537 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
 
 
-namespace __cxx11 {
+
   template<typename _InputIterator, typename _CharT
       = typename iterator_traits<_InputIterator>::value_type,
     typename _Allocator = allocator<_CharT>,
@@ -24529,7 +26666,7 @@ namespace __cxx11 {
    typename basic_string<_CharT, _Traits, _Allocator>::size_type,
    const _Allocator& = _Allocator())
       -> basic_string<_CharT, _Traits, _Allocator>;
-}
+
 
 
   template<typename _Str>
@@ -24654,15 +26791,7 @@ namespace __cxx11 {
     operator+(basic_string<_CharT, _Traits, _Alloc>&& __lhs,
        basic_string<_CharT, _Traits, _Alloc>&& __rhs)
     {
-
-      using _Alloc_traits = allocator_traits<_Alloc>;
-      bool __use_rhs = false;
-      if constexpr (typename _Alloc_traits::is_always_equal{})
- __use_rhs = true;
-      else if (__lhs.get_allocator() == __rhs.get_allocator())
- __use_rhs = true;
-      if (__use_rhs)
-
+# 3708 "/usr/include/c++/14.2.0/bits/basic_string.h" 3
  {
    const auto __size = __lhs.size() + __rhs.size();
    if (__size > __lhs.capacity() && __size <= __rhs.capacity())
@@ -25217,16 +27346,7 @@ typedef __off_t off_t;
 
 
 typedef __off64_t off64_t;
-
-
-
-
-typedef __pid_t pid_t;
-
-
-
-
-
+# 103 "/usr/include/x86_64-linux-gnu/sys/types.h" 3 4
 typedef __id_t id_t;
 
 
@@ -25246,45 +27366,7 @@ typedef __caddr_t caddr_t;
 
 
 typedef __key_t key_t;
-
-
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/clock_t.h" 1 3 4
-
-
-
-
-
-
-typedef __clock_t clock_t;
-# 127 "/usr/include/x86_64-linux-gnu/sys/types.h" 2 3 4
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h" 1 3 4
-
-
-
-
-
-
-typedef __clockid_t clockid_t;
-# 129 "/usr/include/x86_64-linux-gnu/sys/types.h" 2 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/time_t.h" 1 3 4
-# 10 "/usr/include/x86_64-linux-gnu/bits/types/time_t.h" 3 4
-typedef __time_t time_t;
-# 130 "/usr/include/x86_64-linux-gnu/sys/types.h" 2 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/timer_t.h" 1 3 4
-
-
-
-
-
-
-typedef __timer_t timer_t;
-# 131 "/usr/include/x86_64-linux-gnu/sys/types.h" 2 3 4
-
-
-
+# 134 "/usr/include/x86_64-linux-gnu/sys/types.h" 3 4
 typedef __useconds_t useconds_t;
 
 
@@ -25396,59 +27478,11 @@ __uint64_identity (__uint64_t __x)
 
 
 
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h" 1 3 4
 
-
-
-
-typedef struct
-{
-  unsigned long int __val[(1024 / (8 * sizeof (unsigned long int)))];
-} __sigset_t;
-# 5 "/usr/include/x86_64-linux-gnu/bits/types/sigset_t.h" 2 3 4
 
 
 typedef __sigset_t sigset_t;
 # 34 "/usr/include/x86_64-linux-gnu/sys/select.h" 2 3 4
-
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h" 1 3 4
-
-
-
-
-
-
-
-struct timeval
-{
-
-
-
-
-  __time_t tv_sec;
-  __suseconds_t tv_usec;
-
-};
-# 38 "/usr/include/x86_64-linux-gnu/sys/select.h" 2 3 4
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h" 1 3 4
-# 11 "/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h" 3 4
-struct timespec
-{
-
-
-
-  __time_t tv_sec;
-
-
-
-
-  __syscall_slong_t tv_nsec;
-# 31 "/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h" 3 4
-};
-# 40 "/usr/include/x86_64-linux-gnu/sys/select.h" 2 3 4
 # 49 "/usr/include/x86_64-linux-gnu/sys/select.h" 3 4
 typedef long int __fd_mask;
 # 59 "/usr/include/x86_64-linux-gnu/sys/select.h" 3 4
@@ -25512,218 +27546,7 @@ typedef __fsfilcnt_t fsfilcnt_t;
 typedef __blkcnt64_t blkcnt64_t;
 typedef __fsblkcnt64_t fsblkcnt64_t;
 typedef __fsfilcnt64_t fsfilcnt64_t;
-
-
-
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h" 1 3 4
-# 23 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 1 3 4
-# 44 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h" 1 3 4
-# 21 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
-# 22 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h" 2 3 4
-# 45 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h" 1 3 4
-# 25 "/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h" 3 4
-typedef union
-{
-  __extension__ unsigned long long int __value64;
-  struct
-  {
-    unsigned int __low;
-    unsigned int __high;
-  } __value32;
-} __atomic_wide_counter;
-# 47 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
-
-
-
-
-typedef struct __pthread_internal_list
-{
-  struct __pthread_internal_list *__prev;
-  struct __pthread_internal_list *__next;
-} __pthread_list_t;
-
-typedef struct __pthread_internal_slist
-{
-  struct __pthread_internal_slist *__next;
-} __pthread_slist_t;
-# 76 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/struct_mutex.h" 1 3 4
-# 22 "/usr/include/x86_64-linux-gnu/bits/struct_mutex.h" 3 4
-struct __pthread_mutex_s
-{
-  int __lock;
-  unsigned int __count;
-  int __owner;
-
-  unsigned int __nusers;
-
-
-
-  int __kind;
-
-  short __spins;
-  short __elision;
-  __pthread_list_t __list;
-# 53 "/usr/include/x86_64-linux-gnu/bits/struct_mutex.h" 3 4
-};
-# 77 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
-# 89 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h" 1 3 4
-# 23 "/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h" 3 4
-struct __pthread_rwlock_arch_t
-{
-  unsigned int __readers;
-  unsigned int __writers;
-  unsigned int __wrphase_futex;
-  unsigned int __writers_futex;
-  unsigned int __pad3;
-  unsigned int __pad4;
-
-  int __cur_writer;
-  int __shared;
-  signed char __rwelision;
-
-
-
-
-  unsigned char __pad1[7];
-
-
-  unsigned long int __pad2;
-
-
-  unsigned int __flags;
-# 55 "/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h" 3 4
-};
-# 90 "/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h" 2 3 4
-
-
-
-
-struct __pthread_cond_s
-{
-  __atomic_wide_counter __wseq;
-  __atomic_wide_counter __g1_start;
-  unsigned int __g_refs[2] ;
-  unsigned int __g_size[2];
-  unsigned int __g1_orig_size;
-  unsigned int __wrefs;
-  unsigned int __g_signals[2];
-};
-
-typedef unsigned int __tss_t;
-typedef unsigned long int __thrd_t;
-
-typedef struct
-{
-  int __data ;
-} __once_flag;
-# 24 "/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h" 2 3 4
-
-
-
-typedef unsigned long int pthread_t;
-
-
-
-
-typedef union
-{
-  char __size[4];
-  int __align;
-} pthread_mutexattr_t;
-
-
-
-
-typedef union
-{
-  char __size[4];
-  int __align;
-} pthread_condattr_t;
-
-
-
-typedef unsigned int pthread_key_t;
-
-
-
-typedef int pthread_once_t;
-
-
-union pthread_attr_t
-{
-  char __size[56];
-  long int __align;
-};
-
-typedef union pthread_attr_t pthread_attr_t;
-
-
-
-
-typedef union
-{
-  struct __pthread_mutex_s __data;
-  char __size[40];
-  long int __align;
-} pthread_mutex_t;
-
-
-typedef union
-{
-  struct __pthread_cond_s __data;
-  char __size[48];
-  __extension__ long long int __align;
-} pthread_cond_t;
-
-
-
-
-
-typedef union
-{
-  struct __pthread_rwlock_arch_t __data;
-  char __size[56];
-  long int __align;
-} pthread_rwlock_t;
-
-typedef union
-{
-  char __size[8];
-  long int __align;
-} pthread_rwlockattr_t;
-
-
-
-
-
-typedef volatile int pthread_spinlock_t;
-
-
-
-
-typedef union
-{
-  char __size[32];
-  long int __align;
-} pthread_barrier_t;
-
-typedef union
-{
-  char __size[4];
-  int __align;
-} pthread_barrierattr_t;
-# 228 "/usr/include/x86_64-linux-gnu/sys/types.h" 2 3 4
-
-
+# 230 "/usr/include/x86_64-linux-gnu/sys/types.h" 3 4
 }
 # 515 "/usr/include/stdlib.h" 2 3 4
 
@@ -27396,7 +29219,7 @@ namespace __detail
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
-namespace __cxx11 {
+
 
 
   inline int
@@ -27443,7 +29266,7 @@ namespace __cxx11 {
   inline string
   to_string(int __val)
 
-  noexcept
+
 
   {
     const bool __neg = __val < 0;
@@ -27462,7 +29285,7 @@ namespace __cxx11 {
   inline string
   to_string(unsigned __val)
 
-  noexcept
+
 
   {
     const auto __len = __detail::__to_chars_len(__val);
@@ -27658,7 +29481,7 @@ namespace __cxx11 {
   }
 
 
-  constexpr
+
 
   inline wstring
 
@@ -27732,7 +29555,7 @@ namespace __cxx11 {
 
 
 
-}
+
 
 }
 
@@ -27822,29 +29645,29 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
 
-    __attribute ((__abi_tag__ ("cxx11"))) constexpr
+   
     inline basic_string<char>
     operator""s(const char* __str, size_t __len)
     { return basic_string<char>{__str, __len}; }
 
-    __attribute ((__abi_tag__ ("cxx11"))) constexpr
+   
     inline basic_string<wchar_t>
     operator""s(const wchar_t* __str, size_t __len)
     { return basic_string<wchar_t>{__str, __len}; }
 
 
-    __attribute ((__abi_tag__ ("cxx11"))) constexpr
+   
     inline basic_string<char8_t>
     operator""s(const char8_t* __str, size_t __len)
     { return basic_string<char8_t>{__str, __len}; }
 
 
-    __attribute ((__abi_tag__ ("cxx11"))) constexpr
+   
     inline basic_string<char16_t>
     operator""s(const char16_t* __str, size_t __len)
     { return basic_string<char16_t>{__str, __len}; }
 
-    __attribute ((__abi_tag__ ("cxx11"))) constexpr
+   
     inline basic_string<char32_t>
     operator""s(const char32_t* __str, size_t __len)
     { return basic_string<char32_t>{__str, __len}; }
@@ -27885,563 +29708,9 @@ namespace std __attribute__ ((__visibility__ ("default")))
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
-
-
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    const typename basic_string<_CharT, _Traits, _Alloc>::size_type
-    basic_string<_CharT, _Traits, _Alloc>::npos;
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    swap(basic_string& __s) noexcept
-    {
-      if (this == std::__addressof(__s))
- return;
-
-      _Alloc_traits::_S_on_swap(_M_get_allocator(), __s._M_get_allocator());
-
-      if (_M_is_local())
- if (__s._M_is_local())
-   {
-     if (length() && __s.length())
-       {
-  _CharT __tmp_data[_S_local_capacity + 1];
-  traits_type::copy(__tmp_data, __s._M_local_buf,
-      __s.length() + 1);
-  traits_type::copy(__s._M_local_buf, _M_local_buf,
-      length() + 1);
-  traits_type::copy(_M_local_buf, __tmp_data,
-      __s.length() + 1);
-       }
-     else if (__s.length())
-       {
-  _M_init_local_buf();
-  traits_type::copy(_M_local_buf, __s._M_local_buf,
-      __s.length() + 1);
-  _M_length(__s.length());
-  __s._M_set_length(0);
-  return;
-       }
-     else if (length())
-       {
-  __s._M_init_local_buf();
-  traits_type::copy(__s._M_local_buf, _M_local_buf,
-      length() + 1);
-  __s._M_length(length());
-  _M_set_length(0);
-  return;
-       }
-   }
- else
-   {
-     const size_type __tmp_capacity = __s._M_allocated_capacity;
-     __s._M_init_local_buf();
-     traits_type::copy(__s._M_local_buf, _M_local_buf,
-         length() + 1);
-     _M_data(__s._M_data());
-     __s._M_data(__s._M_local_buf);
-     _M_capacity(__tmp_capacity);
-   }
-      else
- {
-   const size_type __tmp_capacity = _M_allocated_capacity;
-   if (__s._M_is_local())
-     {
-       _M_init_local_buf();
-       traits_type::copy(_M_local_buf, __s._M_local_buf,
-    __s.length() + 1);
-       __s._M_data(_M_data());
-       _M_data(_M_local_buf);
-     }
-   else
-     {
-       pointer __tmp_ptr = _M_data();
-       _M_data(__s._M_data());
-       __s._M_data(__tmp_ptr);
-       _M_capacity(__s._M_allocated_capacity);
-     }
-   __s._M_capacity(__tmp_capacity);
- }
-
-      const size_type __tmp_length = length();
-      _M_length(__s.length());
-      __s._M_length(__tmp_length);
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    typename basic_string<_CharT, _Traits, _Alloc>::pointer
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_create(size_type& __capacity, size_type __old_capacity)
-    {
-
-
-      if (__capacity > max_size())
- std::__throw_length_error(("basic_string::_M_create"));
-
-
-
-
-      if (__capacity > __old_capacity && __capacity < 2 * __old_capacity)
- {
-   __capacity = 2 * __old_capacity;
-
-   if (__capacity > max_size())
-     __capacity = max_size();
- }
-
-
-
-      return _S_allocate(_M_get_allocator(), __capacity + 1);
-    }
-
-
-
-
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    template<typename _InIterator>
-      constexpr
-      void
-      basic_string<_CharT, _Traits, _Alloc>::
-      _M_construct(_InIterator __beg, _InIterator __end,
-     std::input_iterator_tag)
-      {
- size_type __len = 0;
- size_type __capacity = size_type(_S_local_capacity);
-
- _M_init_local_buf();
-
- while (__beg != __end && __len < __capacity)
-   {
-     _M_local_buf[__len++] = *__beg;
-     ++__beg;
-   }
-
- struct _Guard
- {
-   constexpr
-   explicit _Guard(basic_string* __s) : _M_guarded(__s) { }
-
-   constexpr
-   ~_Guard() { if (_M_guarded) _M_guarded->_M_dispose(); }
-
-   basic_string* _M_guarded;
- } __guard(this);
-
- while (__beg != __end)
-   {
-     if (__len == __capacity)
-       {
-
-  __capacity = __len + 1;
-  pointer __another = _M_create(__capacity, __len);
-  this->_S_copy(__another, _M_data(), __len);
-  _M_dispose();
-  _M_data(__another);
-  _M_capacity(__capacity);
-       }
-     traits_type::assign(_M_data()[__len++], *__beg);
-     ++__beg;
-   }
-
- __guard._M_guarded = 0;
-
- _M_set_length(__len);
-      }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    template<typename _InIterator>
-      constexpr
-      void
-      basic_string<_CharT, _Traits, _Alloc>::
-      _M_construct(_InIterator __beg, _InIterator __end,
-     std::forward_iterator_tag)
-      {
- size_type __dnew = static_cast<size_type>(std::distance(__beg, __end));
-
- if (__dnew > size_type(_S_local_capacity))
-   {
-     _M_data(_M_create(__dnew, size_type(0)));
-     _M_capacity(__dnew);
-   }
- else
-   _M_init_local_buf();
-
-
- struct _Guard
- {
-   constexpr
-   explicit _Guard(basic_string* __s) : _M_guarded(__s) { }
-
-   constexpr
-   ~_Guard() { if (_M_guarded) _M_guarded->_M_dispose(); }
-
-   basic_string* _M_guarded;
- } __guard(this);
-
- this->_S_copy_chars(_M_data(), __beg, __end);
-
- __guard._M_guarded = 0;
-
- _M_set_length(__dnew);
-      }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_construct(size_type __n, _CharT __c)
-    {
-      if (__n > size_type(_S_local_capacity))
- {
-   _M_data(_M_create(__n, size_type(0)));
-   _M_capacity(__n);
- }
-      else
- _M_init_local_buf();
-
-      if (__n)
- this->_S_assign(_M_data(), __n, __c);
-
-      _M_set_length(__n);
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_assign(const basic_string& __str)
-    {
-      if (this != std::__addressof(__str))
- {
-   const size_type __rsize = __str.length();
-   const size_type __capacity = capacity();
-
-   if (__rsize > __capacity)
-     {
-       size_type __new_capacity = __rsize;
-       pointer __tmp = _M_create(__new_capacity, __capacity);
-       _M_dispose();
-       _M_data(__tmp);
-       _M_capacity(__new_capacity);
-     }
-
-   if (__rsize)
-     this->_S_copy(_M_data(), __str._M_data(), __rsize);
-
-   _M_set_length(__rsize);
- }
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    reserve(size_type __res)
-    {
-      const size_type __capacity = capacity();
-
-
-
-
-      if (__res <= __capacity)
- return;
-
-      pointer __tmp = _M_create(__res, __capacity);
-      this->_S_copy(__tmp, _M_data(), length() + 1);
-      _M_dispose();
-      _M_data(__tmp);
-      _M_capacity(__res);
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_mutate(size_type __pos, size_type __len1, const _CharT* __s,
-       size_type __len2)
-    {
-      const size_type __how_much = length() - __pos - __len1;
-
-      size_type __new_capacity = length() + __len2 - __len1;
-      pointer __r = _M_create(__new_capacity, capacity());
-
-      if (__pos)
- this->_S_copy(__r, _M_data(), __pos);
-      if (__s && __len2)
- this->_S_copy(__r + __pos, __s, __len2);
-      if (__how_much)
- this->_S_copy(__r + __pos + __len2,
-        _M_data() + __pos + __len1, __how_much);
-
-      _M_dispose();
-      _M_data(__r);
-      _M_capacity(__new_capacity);
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_erase(size_type __pos, size_type __n)
-    {
-      const size_type __how_much = length() - __pos - __n;
-
-      if (__how_much && __n)
- this->_S_move(_M_data() + __pos, _M_data() + __pos + __n, __how_much);
-
-      _M_set_length(length() - __n);
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    reserve()
-    {
-      if (_M_is_local())
- return;
-
-      const size_type __length = length();
-      const size_type __capacity = _M_allocated_capacity;
-
-      if (__length <= size_type(_S_local_capacity))
- {
-   _M_init_local_buf();
-   this->_S_copy(_M_local_buf, _M_data(), __length + 1);
-   _M_destroy(__capacity);
-   _M_data(_M_local_data());
- }
-
-      else if (__length < __capacity)
- try
-   {
-     pointer __tmp = _S_allocate(_M_get_allocator(), __length + 1);
-     this->_S_copy(__tmp, _M_data(), __length + 1);
-     _M_dispose();
-     _M_data(__tmp);
-     _M_capacity(__length);
-   }
- catch (const __cxxabiv1::__forced_unwind&)
-   { throw; }
- catch (...)
-   { }
-
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    void
-    basic_string<_CharT, _Traits, _Alloc>::
-    resize(size_type __n, _CharT __c)
-    {
-      const size_type __size = this->size();
-      if (__size < __n)
- this->append(__n - __size, __c);
-      else if (__n < __size)
- this->_M_set_length(__n);
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    basic_string<_CharT, _Traits, _Alloc>&
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_append(const _CharT* __s, size_type __n)
-    {
-      const size_type __len = __n + this->size();
-
-      if (__len <= this->capacity())
- {
-   if (__n)
-     this->_S_copy(this->_M_data() + this->size(), __s, __n);
- }
-      else
- this->_M_mutate(this->size(), size_type(0), __s, __n);
-
-      this->_M_set_length(__len);
-      return *this;
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    template<typename _InputIterator>
-      constexpr
-      basic_string<_CharT, _Traits, _Alloc>&
-      basic_string<_CharT, _Traits, _Alloc>::
-      _M_replace_dispatch(const_iterator __i1, const_iterator __i2,
-     _InputIterator __k1, _InputIterator __k2,
-     std::__false_type)
-      {
-
-
- const basic_string __s(__k1, __k2, this->get_allocator());
- const size_type __n1 = __i2 - __i1;
- return _M_replace(__i1 - begin(), __n1, __s._M_data(),
-     __s.size());
-      }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    basic_string<_CharT, _Traits, _Alloc>&
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_replace_aux(size_type __pos1, size_type __n1, size_type __n2,
-     _CharT __c)
-    {
-      _M_check_length(__n1, __n2, "basic_string::_M_replace_aux");
-
-      const size_type __old_size = this->size();
-      const size_type __new_size = __old_size + __n2 - __n1;
-
-      if (__new_size <= this->capacity())
- {
-   pointer __p = this->_M_data() + __pos1;
-
-   const size_type __how_much = __old_size - __pos1 - __n1;
-   if (__how_much && __n1 != __n2)
-     this->_S_move(__p + __n2, __p + __n1, __how_much);
- }
-      else
- this->_M_mutate(__pos1, __n1, 0, __n2);
-
-      if (__n2)
- this->_S_assign(this->_M_data() + __pos1, __n2, __c);
-
-      this->_M_set_length(__new_size);
-      return *this;
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    __attribute__((__noinline__, __noclone__, __cold__)) void
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_replace_cold(pointer __p, size_type __len1, const _CharT* __s,
-      const size_type __len2, const size_type __how_much)
-    {
-
-      if (__len2 && __len2 <= __len1)
- this->_S_move(__p, __s, __len2);
-      if (__how_much && __len1 != __len2)
- this->_S_move(__p + __len2, __p + __len1, __how_much);
-      if (__len2 > __len1)
- {
-   if (__s + __len2 <= __p + __len1)
-     this->_S_move(__p, __s, __len2);
-   else if (__s >= __p + __len1)
-     {
-
-
-       const size_type __poff = (__s - __p) + (__len2 - __len1);
-       this->_S_copy(__p, __p + __poff, __len2);
-     }
-   else
-     {
-       const size_type __nleft = (__p + __len1) - __s;
-       this->_S_move(__p, __s, __nleft);
-       this->_S_copy(__p + __nleft, __p + __len2, __len2 - __nleft);
-     }
- }
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    basic_string<_CharT, _Traits, _Alloc>&
-    basic_string<_CharT, _Traits, _Alloc>::
-    _M_replace(size_type __pos, size_type __len1, const _CharT* __s,
-        const size_type __len2)
-    {
-      _M_check_length(__len1, __len2, "basic_string::_M_replace");
-
-      const size_type __old_size = this->size();
-      const size_type __new_size = __old_size + __len2 - __len1;
-
-      if (__new_size <= this->capacity())
- {
-   pointer __p = this->_M_data() + __pos;
-
-   const size_type __how_much = __old_size - __pos - __len1;
-
-   if (std::is_constant_evaluated())
-     {
-       auto __newp = _S_allocate(_M_get_allocator(), __new_size);
-       _S_copy(__newp, this->_M_data(), __pos);
-       _S_copy(__newp + __pos, __s, __len2);
-       _S_copy(__newp + __pos + __len2, __p + __len1, __how_much);
-       _S_copy(this->_M_data(), __newp, __new_size);
-       this->_M_get_allocator().deallocate(__newp, __new_size);
-     }
-   else
-
-   if (__builtin_expect(_M_disjunct(__s), true))
-     {
-       if (__how_much && __len1 != __len2)
-  this->_S_move(__p + __len2, __p + __len1, __how_much);
-       if (__len2)
-  this->_S_copy(__p, __s, __len2);
-     }
-   else
-     _M_replace_cold(__p, __len1, __s, __len2, __how_much);
- }
-      else
- this->_M_mutate(__pos, __len1, __s, __len2);
-
-      this->_M_set_length(__new_size);
-      return *this;
-    }
-
-  template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
-    typename basic_string<_CharT, _Traits, _Alloc>::size_type
-    basic_string<_CharT, _Traits, _Alloc>::
-    copy(_CharT* __s, size_type __n, size_type __pos) const
-    {
-      _M_check(__pos, "basic_string::copy");
-      __n = _M_limit(__pos, __n);
-      ;
-      if (__n)
- _S_copy(__s, _M_data() + __pos, __n);
-
-      return __n;
-    }
-# 580 "/usr/include/c++/14.2.0/bits/basic_string.tcc" 3
-  template<typename _CharT, typename _Traits, typename _Alloc>
-  template<typename _Operation>
-    constexpr void
-    basic_string<_CharT, _Traits, _Alloc>::
-
-
-
-    __resize_and_overwrite(const size_type __n, _Operation __op)
-
-    {
-      reserve(__n);
-      _CharT* const __p = _M_data();
-
-      if (std::__is_constant_evaluated() && __n > size())
- traits_type::assign(__p + size(), __n - size(), _CharT());
-
-      struct _Terminator {
- constexpr ~_Terminator() { _M_this->_M_set_length(_M_r); }
- basic_string* _M_this;
- size_type _M_r;
-      };
-      _Terminator __term{this, 0};
-      auto __r = std::move(__op)(__p + 0, __n + 0);
-
-      static_assert(ranges::__detail::__is_integer_like<decltype(__r)>);
-
-
-
-
-      ;
-      __term._M_r = size_type(__r);
-      if (__term._M_r > __n)
- __builtin_unreachable();
-    }
 # 623 "/usr/include/c++/14.2.0/bits/basic_string.tcc" 3
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find(const _CharT* __s, size_type __pos, size_type __n) const
@@ -28478,7 +29747,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find(_CharT __c, size_type __pos) const noexcept
@@ -28497,7 +29766,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     rfind(const _CharT* __s, size_type __pos, size_type __n) const
@@ -28520,7 +29789,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     rfind(_CharT __c, size_type __pos) const noexcept
@@ -28538,7 +29807,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find_first_of(const _CharT* __s, size_type __pos, size_type __n) const
@@ -28555,7 +29824,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find_last_of(const _CharT* __s, size_type __pos, size_type __n) const
@@ -28578,7 +29847,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find_first_not_of(const _CharT* __s, size_type __pos, size_type __n) const
@@ -28592,7 +29861,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find_first_not_of(_CharT __c, size_type __pos) const noexcept
@@ -28604,7 +29873,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find_last_not_of(const _CharT* __s, size_type __pos, size_type __n) const
@@ -28627,7 +29896,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     }
 
   template<typename _CharT, typename _Traits, typename _Alloc>
-    constexpr
+   
     typename basic_string<_CharT, _Traits, _Alloc>::size_type
     basic_string<_CharT, _Traits, _Alloc>::
     find_last_not_of(_CharT __c, size_type __pos) const noexcept
@@ -28784,10 +30053,14 @@ namespace std __attribute__ ((__visibility__ ("default")))
  __in.setstate(__err);
       return __in;
     }
-# 985 "/usr/include/c++/14.2.0/bits/basic_string.tcc" 3
-  extern template void
-    basic_string<char>::_M_replace_cold(char *, size_type, const char*,
-     const size_type, const size_type);
+# 981 "/usr/include/c++/14.2.0/bits/basic_string.tcc" 3
+  extern template basic_string<char>::size_type
+    basic_string<char>::_Rep::_S_empty_rep_storage[];
+
+
+
+
+
 
 
   extern template
@@ -28802,10 +30075,18 @@ namespace std __attribute__ ((__visibility__ ("default")))
   extern template
     basic_istream<char>&
     getline(basic_istream<char>&, string&);
-# 1011 "/usr/include/c++/14.2.0/bits/basic_string.tcc" 3
-  extern template void
-    basic_string<wchar_t>::_M_replace_cold(wchar_t*, size_type, const wchar_t*,
-        const size_type, const size_type);
+
+
+
+
+
+  extern template basic_string<wchar_t>::size_type
+    basic_string<wchar_t>::_Rep::_S_empty_rep_storage[];
+
+
+
+
+
 
 
   extern template
@@ -28832,3041 +30113,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
        
 # 48 "/usr/include/c++/14.2.0/bits/version.h" 3
 # 65 "/usr/include/c++/14.2.0/string" 2 3
-
-
-# 1 "/usr/include/c++/14.2.0/bits/memory_resource.h" 1 3
-# 33 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-       
-# 34 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-
-
-
-
-# 1 "/usr/include/c++/14.2.0/cstddef" 1 3
-# 42 "/usr/include/c++/14.2.0/cstddef" 3
-       
-# 43 "/usr/include/c++/14.2.0/cstddef" 3
-
-
-
-
-
-
-
-# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
-# 145 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 3 4
-typedef long int ptrdiff_t;
-# 425 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 3 4
-typedef struct {
-  long long __max_align_ll __attribute__((__aligned__(__alignof__(long long))));
-  long double __max_align_ld __attribute__((__aligned__(__alignof__(long double))));
-# 436 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 3 4
-} max_align_t;
-
-
-
-
-
-
-  typedef decltype(nullptr) nullptr_t;
-# 51 "/usr/include/c++/14.2.0/cstddef" 2 3
-
-
-# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
-# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
-       
-# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
-# 54 "/usr/include/c++/14.2.0/cstddef" 2 3
-
-extern "C++"
-{
-
-namespace std
-{
-
-  using ::max_align_t;
-}
-
-
-
-namespace std
-{
-
-
-  enum class byte : unsigned char {};
-
-  template<typename _IntegerType> struct __byte_operand { };
-  template<> struct __byte_operand<bool> { using __type = byte; };
-  template<> struct __byte_operand<char> { using __type = byte; };
-  template<> struct __byte_operand<signed char> { using __type = byte; };
-  template<> struct __byte_operand<unsigned char> { using __type = byte; };
-  template<> struct __byte_operand<wchar_t> { using __type = byte; };
-
-  template<> struct __byte_operand<char8_t> { using __type = byte; };
-
-  template<> struct __byte_operand<char16_t> { using __type = byte; };
-  template<> struct __byte_operand<char32_t> { using __type = byte; };
-  template<> struct __byte_operand<short> { using __type = byte; };
-  template<> struct __byte_operand<unsigned short> { using __type = byte; };
-  template<> struct __byte_operand<int> { using __type = byte; };
-  template<> struct __byte_operand<unsigned int> { using __type = byte; };
-  template<> struct __byte_operand<long> { using __type = byte; };
-  template<> struct __byte_operand<unsigned long> { using __type = byte; };
-  template<> struct __byte_operand<long long> { using __type = byte; };
-  template<> struct __byte_operand<unsigned long long> { using __type = byte; };
-
-  template<> struct __byte_operand<__int128>
-  { using __type = byte; };
-  template<> struct __byte_operand<unsigned __int128>
-  { using __type = byte; };
-# 109 "/usr/include/c++/14.2.0/cstddef" 3
-  template<typename _IntegerType>
-    struct __byte_operand<const _IntegerType>
-    : __byte_operand<_IntegerType> { };
-  template<typename _IntegerType>
-    struct __byte_operand<volatile _IntegerType>
-    : __byte_operand<_IntegerType> { };
-  template<typename _IntegerType>
-    struct __byte_operand<const volatile _IntegerType>
-    : __byte_operand<_IntegerType> { };
-
-  template<typename _IntegerType>
-    using __byte_op_t = typename __byte_operand<_IntegerType>::__type;
-
-  template<typename _IntegerType>
-    [[__gnu__::__always_inline__]]
-    constexpr __byte_op_t<_IntegerType>
-    operator<<(byte __b, _IntegerType __shift) noexcept
-    { return (byte)(unsigned char)((unsigned)__b << __shift); }
-
-  template<typename _IntegerType>
-    [[__gnu__::__always_inline__]]
-    constexpr __byte_op_t<_IntegerType>
-    operator>>(byte __b, _IntegerType __shift) noexcept
-    { return (byte)(unsigned char)((unsigned)__b >> __shift); }
-
-  [[__gnu__::__always_inline__]]
-  constexpr byte
-  operator|(byte __l, byte __r) noexcept
-  { return (byte)(unsigned char)((unsigned)__l | (unsigned)__r); }
-
-  [[__gnu__::__always_inline__]]
-  constexpr byte
-  operator&(byte __l, byte __r) noexcept
-  { return (byte)(unsigned char)((unsigned)__l & (unsigned)__r); }
-
-  [[__gnu__::__always_inline__]]
-  constexpr byte
-  operator^(byte __l, byte __r) noexcept
-  { return (byte)(unsigned char)((unsigned)__l ^ (unsigned)__r); }
-
-  [[__gnu__::__always_inline__]]
-  constexpr byte
-  operator~(byte __b) noexcept
-  { return (byte)(unsigned char)~(unsigned)__b; }
-
-  template<typename _IntegerType>
-    [[__gnu__::__always_inline__]]
-    constexpr __byte_op_t<_IntegerType>&
-    operator<<=(byte& __b, _IntegerType __shift) noexcept
-    { return __b = __b << __shift; }
-
-  template<typename _IntegerType>
-    [[__gnu__::__always_inline__]]
-    constexpr __byte_op_t<_IntegerType>&
-    operator>>=(byte& __b, _IntegerType __shift) noexcept
-    { return __b = __b >> __shift; }
-
-  [[__gnu__::__always_inline__]]
-  constexpr byte&
-  operator|=(byte& __l, byte __r) noexcept
-  { return __l = __l | __r; }
-
-  [[__gnu__::__always_inline__]]
-  constexpr byte&
-  operator&=(byte& __l, byte __r) noexcept
-  { return __l = __l & __r; }
-
-  [[__gnu__::__always_inline__]]
-  constexpr byte&
-  operator^=(byte& __l, byte __r) noexcept
-  { return __l = __l ^ __r; }
-
-  template<typename _IntegerType>
-    [[nodiscard,__gnu__::__always_inline__]]
-    constexpr _IntegerType
-    to_integer(__byte_op_t<_IntegerType> __b) noexcept
-    { return _IntegerType(__b); }
-
-
-}
-
-}
-# 39 "/usr/include/c++/14.2.0/bits/memory_resource.h" 2 3
-
-# 1 "/usr/include/c++/14.2.0/bits/uses_allocator.h" 1 3
-# 40 "/usr/include/c++/14.2.0/bits/uses_allocator.h" 3
-namespace std __attribute__ ((__visibility__ ("default")))
-{
-
-
-
-
-  struct __erased_type { };
-
-
-
-
-  template<typename _Alloc, typename _Tp>
-    using __is_erased_or_convertible
-      = __or_<is_convertible<_Alloc, _Tp>, is_same<_Tp, __erased_type>>;
-
-
-  struct allocator_arg_t { explicit allocator_arg_t() = default; };
-
-  inline constexpr allocator_arg_t allocator_arg =
-    allocator_arg_t();
-
-  template<typename _Tp, typename _Alloc, typename = __void_t<>>
-    struct __uses_allocator_helper
-    : false_type { };
-
-  template<typename _Tp, typename _Alloc>
-    struct __uses_allocator_helper<_Tp, _Alloc,
-       __void_t<typename _Tp::allocator_type>>
-    : __is_erased_or_convertible<_Alloc, typename _Tp::allocator_type>::type
-    { };
-
-
-  template<typename _Tp, typename _Alloc>
-    struct uses_allocator
-    : __uses_allocator_helper<_Tp, _Alloc>::type
-    { };
-
-  struct __uses_alloc_base { };
-
-  struct __uses_alloc0 : __uses_alloc_base
-  {
-    struct _Sink { void constexpr operator=(const void*) { } } _M_a;
-  };
-
-  template<typename _Alloc>
-    struct __uses_alloc1 : __uses_alloc_base { const _Alloc* _M_a; };
-
-  template<typename _Alloc>
-    struct __uses_alloc2 : __uses_alloc_base { const _Alloc* _M_a; };
-
-  template<bool, typename _Tp, typename _Alloc, typename... _Args>
-    struct __uses_alloc;
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    struct __uses_alloc<true, _Tp, _Alloc, _Args...>
-    : __conditional_t<
-        is_constructible<_Tp, allocator_arg_t, const _Alloc&, _Args...>::value,
-        __uses_alloc1<_Alloc>,
-        __uses_alloc2<_Alloc>>
-    {
-
-
-      static_assert(__or_<
-   is_constructible<_Tp, allocator_arg_t, const _Alloc&, _Args...>,
-   is_constructible<_Tp, _Args..., const _Alloc&>>::value,
-   "construction with an allocator must be possible"
-   " if uses_allocator is true");
-    };
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    struct __uses_alloc<false, _Tp, _Alloc, _Args...>
-    : __uses_alloc0 { };
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    using __uses_alloc_t =
-      __uses_alloc<uses_allocator<_Tp, _Alloc>::value, _Tp, _Alloc, _Args...>;
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    constexpr
-    inline __uses_alloc_t<_Tp, _Alloc, _Args...>
-    __use_alloc(const _Alloc& __a)
-    {
-      __uses_alloc_t<_Tp, _Alloc, _Args...> __ret;
-      __ret._M_a = std::__addressof(__a);
-      return __ret;
-    }
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    void
-    __use_alloc(const _Alloc&&) = delete;
-
-
-  template <typename _Tp, typename _Alloc>
-    inline constexpr bool uses_allocator_v =
-      uses_allocator<_Tp, _Alloc>::value;
-
-
-  template<template<typename...> class _Predicate,
-    typename _Tp, typename _Alloc, typename... _Args>
-    struct __is_uses_allocator_predicate
-    : __conditional_t<uses_allocator<_Tp, _Alloc>::value,
-      __or_<_Predicate<_Tp, allocator_arg_t, _Alloc, _Args...>,
-     _Predicate<_Tp, _Args..., _Alloc>>,
-      _Predicate<_Tp, _Args...>> { };
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    struct __is_uses_allocator_constructible
-    : __is_uses_allocator_predicate<is_constructible, _Tp, _Alloc, _Args...>
-    { };
-
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    inline constexpr bool __is_uses_allocator_constructible_v =
-      __is_uses_allocator_constructible<_Tp, _Alloc, _Args...>::value;
-
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    struct __is_nothrow_uses_allocator_constructible
-    : __is_uses_allocator_predicate<is_nothrow_constructible,
-        _Tp, _Alloc, _Args...>
-    { };
-
-
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    inline constexpr bool
-    __is_nothrow_uses_allocator_constructible_v =
-      __is_nothrow_uses_allocator_constructible<_Tp, _Alloc, _Args...>::value;
-
-
-  template<typename _Tp, typename... _Args>
-    void __uses_allocator_construct_impl(__uses_alloc0, _Tp* __ptr,
-      _Args&&... __args)
-    { ::new ((void*)__ptr) _Tp(std::forward<_Args>(__args)...); }
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    void __uses_allocator_construct_impl(__uses_alloc1<_Alloc> __a, _Tp* __ptr,
-      _Args&&... __args)
-    {
-      ::new ((void*)__ptr) _Tp(allocator_arg, *__a._M_a,
-          std::forward<_Args>(__args)...);
-    }
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    void __uses_allocator_construct_impl(__uses_alloc2<_Alloc> __a, _Tp* __ptr,
-      _Args&&... __args)
-    { ::new ((void*)__ptr) _Tp(std::forward<_Args>(__args)..., *__a._M_a); }
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    void __uses_allocator_construct(const _Alloc& __a, _Tp* __ptr,
-        _Args&&... __args)
-    {
-      std::__uses_allocator_construct_impl(
-   std::__use_alloc<_Tp, _Alloc, _Args...>(__a), __ptr,
-   std::forward<_Args>(__args)...);
-    }
-
-
-
-}
-# 41 "/usr/include/c++/14.2.0/bits/memory_resource.h" 2 3
-# 1 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 1 3
-# 33 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
-       
-# 34 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
-
-# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
-# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
-       
-# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
-# 36 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 2 3
-
-
-
-# 1 "/usr/include/c++/14.2.0/tuple" 1 3
-# 32 "/usr/include/c++/14.2.0/tuple" 3
-       
-# 33 "/usr/include/c++/14.2.0/tuple" 3
-# 44 "/usr/include/c++/14.2.0/tuple" 3
-# 1 "/usr/include/c++/14.2.0/bits/ranges_util.h" 1 3
-# 39 "/usr/include/c++/14.2.0/bits/ranges_util.h" 3
-namespace std __attribute__ ((__visibility__ ("default")))
-{
-
-namespace ranges
-{
-
-
-  namespace __detail
-  {
-    template<typename _Range>
-      concept __simple_view = view<_Range> && range<const _Range>
- && same_as<iterator_t<_Range>, iterator_t<const _Range>>
- && same_as<sentinel_t<_Range>, sentinel_t<const _Range>>;
-
-    template<typename _It>
-      concept __has_arrow = input_iterator<_It>
- && (is_pointer_v<_It> || requires(_It __it) { __it.operator->(); });
-
-    using std::__detail::__different_from;
-  }
-
-
-  template<typename _Derived>
-    requires is_class_v<_Derived> && same_as<_Derived, remove_cv_t<_Derived>>
-    class view_interface
-    {
-    private:
-      constexpr _Derived& _M_derived() noexcept
-      {
- static_assert(derived_from<_Derived, view_interface<_Derived>>);
- static_assert(view<_Derived>);
- return static_cast<_Derived&>(*this);
-      }
-
-      constexpr const _Derived& _M_derived() const noexcept
-      {
- static_assert(derived_from<_Derived, view_interface<_Derived>>);
- static_assert(view<_Derived>);
- return static_cast<const _Derived&>(*this);
-      }
-
-      static constexpr bool
-      _S_bool(bool) noexcept;
-
-      template<typename _Tp>
- static constexpr bool
- _S_empty(_Tp& __t)
- noexcept(noexcept(_S_bool(ranges::begin(__t) == ranges::end(__t))))
- { return ranges::begin(__t) == ranges::end(__t); }
-
-      template<typename _Tp>
- static constexpr auto
- _S_size(_Tp& __t)
- noexcept(noexcept(ranges::end(__t) - ranges::begin(__t)))
- { return ranges::end(__t) - ranges::begin(__t); }
-
-    public:
-      constexpr bool
-      empty()
-      noexcept(noexcept(_S_empty(_M_derived())))
-      requires forward_range<_Derived> && (!sized_range<_Derived>)
-      { return _S_empty(_M_derived()); }
-
-      constexpr bool
-      empty()
-      noexcept(noexcept(ranges::size(_M_derived()) == 0))
-      requires sized_range<_Derived>
-      { return ranges::size(_M_derived()) == 0; }
-
-      constexpr bool
-      empty() const
-      noexcept(noexcept(_S_empty(_M_derived())))
-      requires forward_range<const _Derived> && (!sized_range<const _Derived>)
-      { return _S_empty(_M_derived()); }
-
-      constexpr bool
-      empty() const
-      noexcept(noexcept(ranges::size(_M_derived()) == 0))
-      requires sized_range<const _Derived>
-      { return ranges::size(_M_derived()) == 0; }
-
-      constexpr explicit
-      operator bool() noexcept(noexcept(ranges::empty(_M_derived())))
-      requires requires { ranges::empty(_M_derived()); }
-      { return !ranges::empty(_M_derived()); }
-
-      constexpr explicit
-      operator bool() const noexcept(noexcept(ranges::empty(_M_derived())))
-      requires requires { ranges::empty(_M_derived()); }
-      { return !ranges::empty(_M_derived()); }
-
-      constexpr auto
-      data() noexcept(noexcept(ranges::begin(_M_derived())))
-      requires contiguous_iterator<iterator_t<_Derived>>
-      { return std::to_address(ranges::begin(_M_derived())); }
-
-      constexpr auto
-      data() const noexcept(noexcept(ranges::begin(_M_derived())))
-      requires range<const _Derived>
- && contiguous_iterator<iterator_t<const _Derived>>
-      { return std::to_address(ranges::begin(_M_derived())); }
-
-      constexpr auto
-      size() noexcept(noexcept(_S_size(_M_derived())))
-      requires forward_range<_Derived>
- && sized_sentinel_for<sentinel_t<_Derived>, iterator_t<_Derived>>
-      { return _S_size(_M_derived()); }
-
-      constexpr auto
-      size() const noexcept(noexcept(_S_size(_M_derived())))
-      requires forward_range<const _Derived>
- && sized_sentinel_for<sentinel_t<const _Derived>,
-         iterator_t<const _Derived>>
-      { return _S_size(_M_derived()); }
-
-      constexpr decltype(auto)
-      front() requires forward_range<_Derived>
-      {
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
- return *ranges::begin(_M_derived());
-      }
-
-      constexpr decltype(auto)
-      front() const requires forward_range<const _Derived>
-      {
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
- return *ranges::begin(_M_derived());
-      }
-
-      constexpr decltype(auto)
-      back()
-      requires bidirectional_range<_Derived> && common_range<_Derived>
-      {
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
- return *ranges::prev(ranges::end(_M_derived()));
-      }
-
-      constexpr decltype(auto)
-      back() const
-      requires bidirectional_range<const _Derived>
- && common_range<const _Derived>
-      {
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
- return *ranges::prev(ranges::end(_M_derived()));
-      }
-
-      template<random_access_range _Range = _Derived>
- constexpr decltype(auto)
- operator[](range_difference_t<_Range> __n)
- { return ranges::begin(_M_derived())[__n]; }
-
-      template<random_access_range _Range = const _Derived>
- constexpr decltype(auto)
- operator[](range_difference_t<_Range> __n) const
- { return ranges::begin(_M_derived())[__n]; }
-# 212 "/usr/include/c++/14.2.0/bits/ranges_util.h" 3
-    };
-
-  namespace __detail
-  {
-    template<typename _From, typename _To>
-      concept __uses_nonqualification_pointer_conversion
- = is_pointer_v<_From> && is_pointer_v<_To>
-   && !convertible_to<remove_pointer_t<_From>(*)[],
-        remove_pointer_t<_To>(*)[]>;
-
-    template<typename _From, typename _To>
-      concept __convertible_to_non_slicing = convertible_to<_From, _To>
- && !__uses_nonqualification_pointer_conversion<decay_t<_From>,
-             decay_t<_To>>;
-
-
-
-
-
-    template<typename _Tp>
-      concept __pair_like
- = !is_reference_v<_Tp> && requires(_Tp __t)
- {
-   typename tuple_size<_Tp>::type;
-   requires derived_from<tuple_size<_Tp>, integral_constant<size_t, 2>>;
-   typename tuple_element_t<0, remove_const_t<_Tp>>;
-   typename tuple_element_t<1, remove_const_t<_Tp>>;
-   { get<0>(__t) } -> convertible_to<const tuple_element_t<0, _Tp>&>;
-   { get<1>(__t) } -> convertible_to<const tuple_element_t<1, _Tp>&>;
- };
-
-
-    template<typename _Tp, typename _Up, typename _Vp>
-      concept __pair_like_convertible_from
- = !range<_Tp> && !is_reference_v<_Vp> && __pair_like<_Tp>
- && constructible_from<_Tp, _Up, _Vp>
- && __convertible_to_non_slicing<_Up, tuple_element_t<0, _Tp>>
- && convertible_to<_Vp, tuple_element_t<1, _Tp>>;
-
-  }
-
-  namespace views { struct _Drop; }
-
-  enum class subrange_kind : bool { unsized, sized };
-
-
-  template<input_or_output_iterator _It, sentinel_for<_It> _Sent = _It,
-    subrange_kind _Kind = sized_sentinel_for<_Sent, _It>
-      ? subrange_kind::sized : subrange_kind::unsized>
-    requires (_Kind == subrange_kind::sized || !sized_sentinel_for<_Sent, _It>)
-    class subrange : public view_interface<subrange<_It, _Sent, _Kind>>
-    {
-    private:
-      static constexpr bool _S_store_size
- = _Kind == subrange_kind::sized && !sized_sentinel_for<_Sent, _It>;
-
-      friend struct views::_Drop;
-
-      _It _M_begin = _It();
-      [[no_unique_address]] _Sent _M_end = _Sent();
-
-      using __size_type
- = __detail::__make_unsigned_like_t<iter_difference_t<_It>>;
-
-      template<typename _Tp, bool = _S_store_size>
- struct _Size
- {
-   [[__gnu__::__always_inline__]]
-   constexpr _Size(_Tp = {}) { }
- };
-
-      template<typename _Tp>
- struct _Size<_Tp, true>
- {
-   [[__gnu__::__always_inline__]]
-   constexpr _Size(_Tp __s = {}) : _M_size(__s) { }
-
-   _Tp _M_size;
- };
-
-      [[no_unique_address]] _Size<__size_type> _M_size = {};
-
-    public:
-      subrange() requires default_initializable<_It> = default;
-
-      constexpr
-      subrange(__detail::__convertible_to_non_slicing<_It> auto __i, _Sent __s)
-      noexcept(is_nothrow_constructible_v<_It, decltype(__i)>
-        && is_nothrow_constructible_v<_Sent, _Sent&>)
- requires (!_S_store_size)
-      : _M_begin(std::move(__i)), _M_end(__s)
-      { }
-
-      constexpr
-      subrange(__detail::__convertible_to_non_slicing<_It> auto __i, _Sent __s,
-        __size_type __n)
-      noexcept(is_nothrow_constructible_v<_It, decltype(__i)>
-        && is_nothrow_constructible_v<_Sent, _Sent&>)
- requires (_Kind == subrange_kind::sized)
-      : _M_begin(std::move(__i)), _M_end(__s), _M_size(__n)
-      { }
-
-      template<__detail::__different_from<subrange> _Rng>
- requires borrowed_range<_Rng>
-   && __detail::__convertible_to_non_slicing<iterator_t<_Rng>, _It>
-   && convertible_to<sentinel_t<_Rng>, _Sent>
- constexpr
- subrange(_Rng&& __r)
- noexcept(noexcept(subrange(__r, ranges::size(__r))))
- requires _S_store_size && sized_range<_Rng>
- : subrange(__r, ranges::size(__r))
- { }
-
-      template<__detail::__different_from<subrange> _Rng>
- requires borrowed_range<_Rng>
-   && __detail::__convertible_to_non_slicing<iterator_t<_Rng>, _It>
-   && convertible_to<sentinel_t<_Rng>, _Sent>
- constexpr
- subrange(_Rng&& __r)
- noexcept(noexcept(subrange(ranges::begin(__r), ranges::end(__r))))
- requires (!_S_store_size)
- : subrange(ranges::begin(__r), ranges::end(__r))
- { }
-
-      template<borrowed_range _Rng>
- requires __detail::__convertible_to_non_slicing<iterator_t<_Rng>, _It>
-   && convertible_to<sentinel_t<_Rng>, _Sent>
- constexpr
- subrange(_Rng&& __r, __size_type __n)
- noexcept(noexcept(subrange(ranges::begin(__r), ranges::end(__r), __n)))
- requires (_Kind == subrange_kind::sized)
- : subrange{ranges::begin(__r), ranges::end(__r), __n}
- { }
-
-      template<__detail::__different_from<subrange> _PairLike>
- requires __detail::__pair_like_convertible_from<_PairLike, const _It&,
-       const _Sent&>
- constexpr
- operator _PairLike() const
- { return _PairLike(_M_begin, _M_end); }
-
-      constexpr _It
-      begin() const requires copyable<_It>
-      { return _M_begin; }
-
-      [[nodiscard]] constexpr _It
-      begin() requires (!copyable<_It>)
-      { return std::move(_M_begin); }
-
-      constexpr _Sent end() const { return _M_end; }
-
-      constexpr bool empty() const { return _M_begin == _M_end; }
-
-      constexpr __size_type
-      size() const requires (_Kind == subrange_kind::sized)
-      {
- if constexpr (_S_store_size)
-   return _M_size._M_size;
- else
-   return __detail::__to_unsigned_like(_M_end - _M_begin);
-      }
-
-      [[nodiscard]] constexpr subrange
-      next(iter_difference_t<_It> __n = 1) const &
- requires forward_iterator<_It>
-      {
- auto __tmp = *this;
- __tmp.advance(__n);
- return __tmp;
-      }
-
-      [[nodiscard]] constexpr subrange
-      next(iter_difference_t<_It> __n = 1) &&
-      {
- advance(__n);
- return std::move(*this);
-      }
-
-      [[nodiscard]] constexpr subrange
-      prev(iter_difference_t<_It> __n = 1) const
- requires bidirectional_iterator<_It>
-      {
- auto __tmp = *this;
- __tmp.advance(-__n);
- return __tmp;
-      }
-
-      constexpr subrange&
-      advance(iter_difference_t<_It> __n)
-      {
-
-
- if constexpr (bidirectional_iterator<_It>)
-   if (__n < 0)
-     {
-       ranges::advance(_M_begin, __n);
-       if constexpr (_S_store_size)
-  _M_size._M_size += __detail::__to_unsigned_like(-__n);
-       return *this;
-     }
-
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__n >= 0), false)) std::__glibcxx_assert_fail(); } while (false);
- auto __d = __n - ranges::advance(_M_begin, __n, _M_end);
- if constexpr (_S_store_size)
-   _M_size._M_size -= __detail::__to_unsigned_like(__d);
- return *this;
-      }
-    };
-
-  template<input_or_output_iterator _It, sentinel_for<_It> _Sent>
-    subrange(_It, _Sent) -> subrange<_It, _Sent>;
-
-  template<input_or_output_iterator _It, sentinel_for<_It> _Sent>
-    subrange(_It, _Sent,
-      __detail::__make_unsigned_like_t<iter_difference_t<_It>>)
-      -> subrange<_It, _Sent, subrange_kind::sized>;
-
-  template<borrowed_range _Rng>
-    subrange(_Rng&&)
-      -> subrange<iterator_t<_Rng>, sentinel_t<_Rng>,
-   (sized_range<_Rng>
-    || sized_sentinel_for<sentinel_t<_Rng>, iterator_t<_Rng>>)
-   ? subrange_kind::sized : subrange_kind::unsized>;
-
-  template<borrowed_range _Rng>
-    subrange(_Rng&&,
-      __detail::__make_unsigned_like_t<range_difference_t<_Rng>>)
-      -> subrange<iterator_t<_Rng>, sentinel_t<_Rng>, subrange_kind::sized>;
-
-  template<size_t _Num, class _It, class _Sent, subrange_kind _Kind>
-    requires (_Num < 2)
-    constexpr auto
-    get(const subrange<_It, _Sent, _Kind>& __r)
-    {
-      if constexpr (_Num == 0)
- return __r.begin();
-      else
- return __r.end();
-    }
-
-  template<size_t _Num, class _It, class _Sent, subrange_kind _Kind>
-    requires (_Num < 2)
-    constexpr auto
-    get(subrange<_It, _Sent, _Kind>&& __r)
-    {
-      if constexpr (_Num == 0)
- return __r.begin();
-      else
- return __r.end();
-    }
-
-  template<typename _It, typename _Sent, subrange_kind _Kind>
-    inline constexpr bool
-      enable_borrowed_range<subrange<_It, _Sent, _Kind>> = true;
-
-  template<range _Range>
-    using borrowed_subrange_t = __conditional_t<borrowed_range<_Range>,
-      subrange<iterator_t<_Range>>,
-      dangling>;
-
-
-  template<typename _Iter, typename _Sent, subrange_kind _Kind>
-    inline constexpr bool __detail::__is_subrange<subrange<_Iter, _Sent, _Kind>> = true;
-}
-# 485 "/usr/include/c++/14.2.0/bits/ranges_util.h" 3
-namespace ranges
-{
-  struct __find_fn
-  {
-    template<input_iterator _Iter, sentinel_for<_Iter> _Sent, typename _Tp,
-      typename _Proj = identity>
-      requires indirect_binary_predicate<ranges::equal_to,
-      projected<_Iter, _Proj>, const _Tp*>
-      constexpr _Iter
-      operator()(_Iter __first, _Sent __last,
-   const _Tp& __value, _Proj __proj = {}) const
-      {
- while (__first != __last
-     && !(std::__invoke(__proj, *__first) == __value))
-   ++__first;
- return __first;
-      }
-
-    template<input_range _Range, typename _Tp, typename _Proj = identity>
-      requires indirect_binary_predicate<ranges::equal_to,
-      projected<iterator_t<_Range>, _Proj>,
-      const _Tp*>
-      constexpr borrowed_iterator_t<_Range>
-      operator()(_Range&& __r, const _Tp& __value, _Proj __proj = {}) const
-      {
- return (*this)(ranges::begin(__r), ranges::end(__r),
-         __value, std::move(__proj));
-      }
-  };
-
-  inline constexpr __find_fn find{};
-
-  struct __find_if_fn
-  {
-    template<input_iterator _Iter, sentinel_for<_Iter> _Sent,
-      typename _Proj = identity,
-      indirect_unary_predicate<projected<_Iter, _Proj>> _Pred>
-      constexpr _Iter
-      operator()(_Iter __first, _Sent __last,
-   _Pred __pred, _Proj __proj = {}) const
-      {
- while (__first != __last
-     && !(bool)std::__invoke(__pred, std::__invoke(__proj, *__first)))
-   ++__first;
- return __first;
-      }
-
-    template<input_range _Range, typename _Proj = identity,
-      indirect_unary_predicate<projected<iterator_t<_Range>, _Proj>>
-        _Pred>
-      constexpr borrowed_iterator_t<_Range>
-      operator()(_Range&& __r, _Pred __pred, _Proj __proj = {}) const
-      {
- return (*this)(ranges::begin(__r), ranges::end(__r),
-         std::move(__pred), std::move(__proj));
-      }
-  };
-
-  inline constexpr __find_if_fn find_if{};
-
-  struct __find_if_not_fn
-  {
-    template<input_iterator _Iter, sentinel_for<_Iter> _Sent,
-      typename _Proj = identity,
-      indirect_unary_predicate<projected<_Iter, _Proj>> _Pred>
-      constexpr _Iter
-      operator()(_Iter __first, _Sent __last,
-   _Pred __pred, _Proj __proj = {}) const
-      {
- while (__first != __last
-     && (bool)std::__invoke(__pred, std::__invoke(__proj, *__first)))
-   ++__first;
- return __first;
-      }
-
-    template<input_range _Range, typename _Proj = identity,
-      indirect_unary_predicate<projected<iterator_t<_Range>, _Proj>>
-        _Pred>
-      constexpr borrowed_iterator_t<_Range>
-      operator()(_Range&& __r, _Pred __pred, _Proj __proj = {}) const
-      {
- return (*this)(ranges::begin(__r), ranges::end(__r),
-         std::move(__pred), std::move(__proj));
-      }
-  };
-
-  inline constexpr __find_if_not_fn find_if_not{};
-
-  template<typename _Iter1, typename _Iter2>
-    struct in_in_result
-    {
-      [[no_unique_address]] _Iter1 in1;
-      [[no_unique_address]] _Iter2 in2;
-
-      template<typename _IIter1, typename _IIter2>
- requires convertible_to<const _Iter1&, _IIter1>
-   && convertible_to<const _Iter2&, _IIter2>
- constexpr
- operator in_in_result<_IIter1, _IIter2>() const &
- { return {in1, in2}; }
-
-      template<typename _IIter1, typename _IIter2>
- requires convertible_to<_Iter1, _IIter1>
-   && convertible_to<_Iter2, _IIter2>
- constexpr
- operator in_in_result<_IIter1, _IIter2>() &&
- { return {std::move(in1), std::move(in2)}; }
-    };
-
-  template<typename _Iter1, typename _Iter2>
-    using mismatch_result = in_in_result<_Iter1, _Iter2>;
-
-  struct __mismatch_fn
-  {
-    template<input_iterator _Iter1, sentinel_for<_Iter1> _Sent1,
-      input_iterator _Iter2, sentinel_for<_Iter2> _Sent2,
-      typename _Pred = ranges::equal_to,
-      typename _Proj1 = identity, typename _Proj2 = identity>
-      requires indirectly_comparable<_Iter1, _Iter2, _Pred, _Proj1, _Proj2>
-      constexpr mismatch_result<_Iter1, _Iter2>
-      operator()(_Iter1 __first1, _Sent1 __last1,
-   _Iter2 __first2, _Sent2 __last2, _Pred __pred = {},
-   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
-      {
- while (__first1 != __last1 && __first2 != __last2
-        && (bool)std::__invoke(__pred,
-          std::__invoke(__proj1, *__first1),
-          std::__invoke(__proj2, *__first2)))
- {
-   ++__first1;
-   ++__first2;
- }
- return { std::move(__first1), std::move(__first2) };
-      }
-
-    template<input_range _Range1, input_range _Range2,
-      typename _Pred = ranges::equal_to,
-      typename _Proj1 = identity, typename _Proj2 = identity>
-      requires indirectly_comparable<iterator_t<_Range1>, iterator_t<_Range2>,
-         _Pred, _Proj1, _Proj2>
-      constexpr mismatch_result<iterator_t<_Range1>, iterator_t<_Range2>>
-      operator()(_Range1&& __r1, _Range2&& __r2, _Pred __pred = {},
-   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
-      {
- return (*this)(ranges::begin(__r1), ranges::end(__r1),
-         ranges::begin(__r2), ranges::end(__r2),
-         std::move(__pred),
-         std::move(__proj1), std::move(__proj2));
-      }
-  };
-
-  inline constexpr __mismatch_fn mismatch{};
-
-  struct __search_fn
-  {
-    template<forward_iterator _Iter1, sentinel_for<_Iter1> _Sent1,
-      forward_iterator _Iter2, sentinel_for<_Iter2> _Sent2,
-      typename _Pred = ranges::equal_to,
-      typename _Proj1 = identity, typename _Proj2 = identity>
-      requires indirectly_comparable<_Iter1, _Iter2, _Pred, _Proj1, _Proj2>
-      constexpr subrange<_Iter1>
-      operator()(_Iter1 __first1, _Sent1 __last1,
-   _Iter2 __first2, _Sent2 __last2, _Pred __pred = {},
-   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
-      {
- if (__first1 == __last1 || __first2 == __last2)
-   return {__first1, __first1};
-
- for (;;)
-   {
-     for (;;)
-       {
-  if (__first1 == __last1)
-    return {__first1, __first1};
-  if (std::__invoke(__pred,
-      std::__invoke(__proj1, *__first1),
-      std::__invoke(__proj2, *__first2)))
-    break;
-  ++__first1;
-       }
-     auto __cur1 = __first1;
-     auto __cur2 = __first2;
-     for (;;)
-       {
-  if (++__cur2 == __last2)
-    return {__first1, ++__cur1};
-  if (++__cur1 == __last1)
-    return {__cur1, __cur1};
-  if (!(bool)std::__invoke(__pred,
-      std::__invoke(__proj1, *__cur1),
-      std::__invoke(__proj2, *__cur2)))
-    {
-      ++__first1;
-      break;
-    }
-       }
-   }
-      }
-
-    template<forward_range _Range1, forward_range _Range2,
-      typename _Pred = ranges::equal_to,
-      typename _Proj1 = identity, typename _Proj2 = identity>
-      requires indirectly_comparable<iterator_t<_Range1>, iterator_t<_Range2>,
-         _Pred, _Proj1, _Proj2>
-      constexpr borrowed_subrange_t<_Range1>
-      operator()(_Range1&& __r1, _Range2&& __r2, _Pred __pred = {},
-   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
-      {
- return (*this)(ranges::begin(__r1), ranges::end(__r1),
-         ranges::begin(__r2), ranges::end(__r2),
-         std::move(__pred),
-         std::move(__proj1), std::move(__proj2));
-      }
-  };
-
-  inline constexpr __search_fn search{};
-
-  struct __min_fn
-  {
-    template<typename _Tp, typename _Proj = identity,
-      indirect_strict_weak_order<projected<const _Tp*, _Proj>>
-        _Comp = ranges::less>
-      constexpr const _Tp&
-      operator()(const _Tp& __a, const _Tp& __b,
-   _Comp __comp = {}, _Proj __proj = {}) const
-      {
- if (std::__invoke(__comp,
-     std::__invoke(__proj, __b),
-     std::__invoke(__proj, __a)))
-   return __b;
- else
-   return __a;
-      }
-
-    template<input_range _Range, typename _Proj = identity,
-      indirect_strict_weak_order<projected<iterator_t<_Range>, _Proj>>
-        _Comp = ranges::less>
-      requires indirectly_copyable_storable<iterator_t<_Range>,
-         range_value_t<_Range>*>
-      constexpr range_value_t<_Range>
-      operator()(_Range&& __r, _Comp __comp = {}, _Proj __proj = {}) const
-      {
- auto __first = ranges::begin(__r);
- auto __last = ranges::end(__r);
- do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__first != __last), false)) std::__glibcxx_assert_fail(); } while (false);
- auto __result = *__first;
- while (++__first != __last)
-   {
-     auto __tmp = *__first;
-     if (std::__invoke(__comp,
-         std::__invoke(__proj, __tmp),
-         std::__invoke(__proj, __result)))
-       __result = std::move(__tmp);
-   }
- return __result;
-      }
-
-    template<copyable _Tp, typename _Proj = identity,
-      indirect_strict_weak_order<projected<const _Tp*, _Proj>>
-        _Comp = ranges::less>
-      constexpr _Tp
-      operator()(initializer_list<_Tp> __r,
-   _Comp __comp = {}, _Proj __proj = {}) const
-      {
- return (*this)(ranges::subrange(__r),
-         std::move(__comp), std::move(__proj));
-      }
-  };
-
-  inline constexpr __min_fn min{};
-
-  struct __adjacent_find_fn
-  {
-    template<forward_iterator _Iter, sentinel_for<_Iter> _Sent,
-      typename _Proj = identity,
-      indirect_binary_predicate<projected<_Iter, _Proj>,
-           projected<_Iter, _Proj>> _Pred
-        = ranges::equal_to>
-      constexpr _Iter
-      operator()(_Iter __first, _Sent __last,
-   _Pred __pred = {}, _Proj __proj = {}) const
-      {
- if (__first == __last)
-   return __first;
- auto __next = __first;
- for (; ++__next != __last; __first = __next)
-   {
-     if (std::__invoke(__pred,
-         std::__invoke(__proj, *__first),
-         std::__invoke(__proj, *__next)))
-       return __first;
-   }
- return __next;
-      }
-
-    template<forward_range _Range, typename _Proj = identity,
-      indirect_binary_predicate<
-        projected<iterator_t<_Range>, _Proj>,
-        projected<iterator_t<_Range>, _Proj>> _Pred = ranges::equal_to>
-      constexpr borrowed_iterator_t<_Range>
-      operator()(_Range&& __r, _Pred __pred = {}, _Proj __proj = {}) const
-      {
- return (*this)(ranges::begin(__r), ranges::end(__r),
-         std::move(__pred), std::move(__proj));
-      }
-  };
-
-  inline constexpr __adjacent_find_fn adjacent_find{};
-
-}
-
-  using ranges::get;
-
-  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
-    struct tuple_size<ranges::subrange<_Iter, _Sent, _Kind>>
-    : integral_constant<size_t, 2>
-    { };
-
-  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
-    struct tuple_element<0, ranges::subrange<_Iter, _Sent, _Kind>>
-    { using type = _Iter; };
-
-  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
-    struct tuple_element<1, ranges::subrange<_Iter, _Sent, _Kind>>
-    { using type = _Sent; };
-
-  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
-    struct tuple_element<0, const ranges::subrange<_Iter, _Sent, _Kind>>
-    { using type = _Iter; };
-
-  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
-    struct tuple_element<1, const ranges::subrange<_Iter, _Sent, _Kind>>
-    { using type = _Sent; };
-
-
-}
-# 45 "/usr/include/c++/14.2.0/tuple" 2 3
-# 54 "/usr/include/c++/14.2.0/tuple" 3
-# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
-# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
-       
-# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
-# 55 "/usr/include/c++/14.2.0/tuple" 2 3
-
-namespace std __attribute__ ((__visibility__ ("default")))
-{
-
-
-
-
-
-
-
-  template<typename... _Elements>
-    class tuple;
-
-  template<typename _Tp>
-    struct __is_empty_non_tuple : is_empty<_Tp> { };
-
-
-  template<typename _El0, typename... _El>
-    struct __is_empty_non_tuple<tuple<_El0, _El...>> : false_type { };
-
-
-  template<typename _Tp>
-    using __empty_not_final
-    = __conditional_t<__is_final(_Tp), false_type,
-        __is_empty_non_tuple<_Tp>>;
-
-  template<size_t _Idx, typename _Head,
-    bool = __empty_not_final<_Head>::value>
-    struct _Head_base;
-
-
-  template<size_t _Idx, typename _Head>
-    struct _Head_base<_Idx, _Head, true>
-    {
-      constexpr _Head_base()
-      : _M_head_impl() { }
-
-      constexpr _Head_base(const _Head& __h)
-      : _M_head_impl(__h) { }
-
-      constexpr _Head_base(const _Head_base&) = default;
-      constexpr _Head_base(_Head_base&&) = default;
-
-      template<typename _UHead>
- constexpr _Head_base(_UHead&& __h)
- : _M_head_impl(std::forward<_UHead>(__h)) { }
-
-      constexpr
-      _Head_base(allocator_arg_t, __uses_alloc0)
-      : _M_head_impl() { }
-
-      template<typename _Alloc>
- constexpr
- _Head_base(allocator_arg_t, __uses_alloc1<_Alloc> __a)
- : _M_head_impl(allocator_arg, *__a._M_a) { }
-
-      template<typename _Alloc>
- constexpr
- _Head_base(allocator_arg_t, __uses_alloc2<_Alloc> __a)
- : _M_head_impl(*__a._M_a) { }
-
-      template<typename _UHead>
- constexpr
- _Head_base(__uses_alloc0, _UHead&& __uhead)
- : _M_head_impl(std::forward<_UHead>(__uhead)) { }
-
-      template<typename _Alloc, typename _UHead>
- constexpr
- _Head_base(__uses_alloc1<_Alloc> __a, _UHead&& __uhead)
- : _M_head_impl(allocator_arg, *__a._M_a, std::forward<_UHead>(__uhead))
- { }
-
-      template<typename _Alloc, typename _UHead>
- constexpr
- _Head_base(__uses_alloc2<_Alloc> __a, _UHead&& __uhead)
- : _M_head_impl(std::forward<_UHead>(__uhead), *__a._M_a) { }
-
-      static constexpr _Head&
-      _M_head(_Head_base& __b) noexcept { return __b._M_head_impl; }
-
-      static constexpr const _Head&
-      _M_head(const _Head_base& __b) noexcept { return __b._M_head_impl; }
-
-      [[__no_unique_address__]] _Head _M_head_impl;
-    };
-# 195 "/usr/include/c++/14.2.0/tuple" 3
-  template<size_t _Idx, typename _Head>
-    struct _Head_base<_Idx, _Head, false>
-    {
-      constexpr _Head_base()
-      : _M_head_impl() { }
-
-      constexpr _Head_base(const _Head& __h)
-      : _M_head_impl(__h) { }
-
-      constexpr _Head_base(const _Head_base&) = default;
-      constexpr _Head_base(_Head_base&&) = default;
-
-      template<typename _UHead>
-        constexpr _Head_base(_UHead&& __h)
- : _M_head_impl(std::forward<_UHead>(__h)) { }
-
-      constexpr
-      _Head_base(allocator_arg_t, __uses_alloc0)
-      : _M_head_impl() { }
-
-      template<typename _Alloc>
- constexpr
- _Head_base(allocator_arg_t, __uses_alloc1<_Alloc> __a)
- : _M_head_impl(allocator_arg, *__a._M_a) { }
-
-      template<typename _Alloc>
- constexpr
- _Head_base(allocator_arg_t, __uses_alloc2<_Alloc> __a)
- : _M_head_impl(*__a._M_a) { }
-
-      template<typename _UHead>
- constexpr
- _Head_base(__uses_alloc0, _UHead&& __uhead)
- : _M_head_impl(std::forward<_UHead>(__uhead)) { }
-
-      template<typename _Alloc, typename _UHead>
- constexpr
- _Head_base(__uses_alloc1<_Alloc> __a, _UHead&& __uhead)
- : _M_head_impl(allocator_arg, *__a._M_a, std::forward<_UHead>(__uhead))
- { }
-
-      template<typename _Alloc, typename _UHead>
- constexpr
- _Head_base(__uses_alloc2<_Alloc> __a, _UHead&& __uhead)
- : _M_head_impl(std::forward<_UHead>(__uhead), *__a._M_a) { }
-
-      static constexpr _Head&
-      _M_head(_Head_base& __b) noexcept { return __b._M_head_impl; }
-
-      static constexpr const _Head&
-      _M_head(const _Head_base& __b) noexcept { return __b._M_head_impl; }
-
-      _Head _M_head_impl;
-    };
-# 274 "/usr/include/c++/14.2.0/tuple" 3
-  template<size_t _Idx, typename... _Elements>
-    struct _Tuple_impl;
-
-
-
-
-
-
-  template<size_t _Idx, typename _Head, typename... _Tail>
-    struct _Tuple_impl<_Idx, _Head, _Tail...>
-    : public _Tuple_impl<_Idx + 1, _Tail...>,
-      private _Head_base<_Idx, _Head>
-    {
-      template<size_t, typename...> friend struct _Tuple_impl;
-
-      typedef _Tuple_impl<_Idx + 1, _Tail...> _Inherited;
-      typedef _Head_base<_Idx, _Head> _Base;
-
-      static constexpr _Head&
-      _M_head(_Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
-
-      static constexpr const _Head&
-      _M_head(const _Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
-
-      static constexpr _Inherited&
-      _M_tail(_Tuple_impl& __t) noexcept { return __t; }
-
-      static constexpr const _Inherited&
-      _M_tail(const _Tuple_impl& __t) noexcept { return __t; }
-
-      constexpr _Tuple_impl()
-      : _Inherited(), _Base() { }
-
-      explicit constexpr
-      _Tuple_impl(const _Head& __head, const _Tail&... __tail)
-      : _Inherited(__tail...), _Base(__head)
-      { }
-
-      template<typename _UHead, typename... _UTail,
-        typename = __enable_if_t<sizeof...(_Tail) == sizeof...(_UTail)>>
- explicit constexpr
- _Tuple_impl(_UHead&& __head, _UTail&&... __tail)
- : _Inherited(std::forward<_UTail>(__tail)...),
-   _Base(std::forward<_UHead>(__head))
- { }
-
-      constexpr _Tuple_impl(const _Tuple_impl&) = default;
-
-
-
-      _Tuple_impl& operator=(const _Tuple_impl&) = delete;
-
-      _Tuple_impl(_Tuple_impl&&) = default;
-
-      template<typename... _UElements>
- constexpr
- _Tuple_impl(const _Tuple_impl<_Idx, _UElements...>& __in)
- : _Inherited(_Tuple_impl<_Idx, _UElements...>::_M_tail(__in)),
-   _Base(_Tuple_impl<_Idx, _UElements...>::_M_head(__in))
- { }
-
-      template<typename _UHead, typename... _UTails>
- constexpr
- _Tuple_impl(_Tuple_impl<_Idx, _UHead, _UTails...>&& __in)
- : _Inherited(std::move
-       (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in))),
-   _Base(std::forward<_UHead>
-  (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in)))
- { }
-# 370 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a)
- : _Inherited(__tag, __a),
-   _Base(__tag, __use_alloc<_Head>(__a))
- { }
-
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
-      const _Head& __head, const _Tail&... __tail)
- : _Inherited(__tag, __a, __tail...),
-   _Base(__use_alloc<_Head, _Alloc, _Head>(__a), __head)
- { }
-
-      template<typename _Alloc, typename _UHead, typename... _UTail,
-        typename = __enable_if_t<sizeof...(_Tail) == sizeof...(_UTail)>>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
-      _UHead&& __head, _UTail&&... __tail)
- : _Inherited(__tag, __a, std::forward<_UTail>(__tail)...),
-   _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
-  std::forward<_UHead>(__head))
- { }
-
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
-      const _Tuple_impl& __in)
- : _Inherited(__tag, __a, _M_tail(__in)),
-   _Base(__use_alloc<_Head, _Alloc, _Head>(__a), _M_head(__in))
- { }
-
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
-      _Tuple_impl&& __in)
- : _Inherited(__tag, __a, std::move(_M_tail(__in))),
-   _Base(__use_alloc<_Head, _Alloc, _Head>(__a),
-  std::forward<_Head>(_M_head(__in)))
- { }
-
-      template<typename _Alloc, typename _UHead, typename... _UTails>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
-      const _Tuple_impl<_Idx, _UHead, _UTails...>& __in)
- : _Inherited(__tag, __a,
-       _Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in)),
-   _Base(__use_alloc<_Head, _Alloc, const _UHead&>(__a),
-  _Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in))
- { }
-
-      template<typename _Alloc, typename _UHead, typename... _UTails>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
-      _Tuple_impl<_Idx, _UHead, _UTails...>&& __in)
- : _Inherited(__tag, __a, std::move
-       (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in))),
-   _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
-  std::forward<_UHead>
-  (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in)))
- { }
-# 465 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename... _UElements>
- constexpr
- void
- _M_assign(const _Tuple_impl<_Idx, _UElements...>& __in)
- {
-   _M_head(*this) = _Tuple_impl<_Idx, _UElements...>::_M_head(__in);
-   _M_tail(*this)._M_assign(
-       _Tuple_impl<_Idx, _UElements...>::_M_tail(__in));
- }
-
-      template<typename _UHead, typename... _UTails>
- constexpr
- void
- _M_assign(_Tuple_impl<_Idx, _UHead, _UTails...>&& __in)
- {
-   _M_head(*this) = std::forward<_UHead>
-     (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in));
-   _M_tail(*this)._M_assign(
-       std::move(_Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in)));
- }
-# 525 "/usr/include/c++/14.2.0/tuple" 3
-    protected:
-      constexpr
-      void
-      _M_swap(_Tuple_impl& __in)
-      {
- using std::swap;
- swap(_M_head(*this), _M_head(__in));
- _Inherited::_M_swap(_M_tail(__in));
-      }
-# 544 "/usr/include/c++/14.2.0/tuple" 3
-    };
-
-
-  template<size_t _Idx, typename _Head>
-    struct _Tuple_impl<_Idx, _Head>
-    : private _Head_base<_Idx, _Head>
-    {
-      template<size_t, typename...> friend struct _Tuple_impl;
-
-      typedef _Head_base<_Idx, _Head> _Base;
-
-      static constexpr _Head&
-      _M_head(_Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
-
-      static constexpr const _Head&
-      _M_head(const _Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
-
-      constexpr
-      _Tuple_impl()
-      : _Base() { }
-
-      explicit constexpr
-      _Tuple_impl(const _Head& __head)
-      : _Base(__head)
-      { }
-
-      template<typename _UHead>
- explicit constexpr
- _Tuple_impl(_UHead&& __head)
- : _Base(std::forward<_UHead>(__head))
- { }
-
-      constexpr _Tuple_impl(const _Tuple_impl&) = default;
-
-
-
-      _Tuple_impl& operator=(const _Tuple_impl&) = delete;
-
-
-
-
-      constexpr
-      _Tuple_impl(_Tuple_impl&& __in)
-      noexcept(is_nothrow_move_constructible<_Head>::value)
-      : _Base(static_cast<_Base&&>(__in))
-      { }
-
-
-      template<typename _UHead>
- constexpr
- _Tuple_impl(const _Tuple_impl<_Idx, _UHead>& __in)
- : _Base(_Tuple_impl<_Idx, _UHead>::_M_head(__in))
- { }
-
-      template<typename _UHead>
- constexpr
- _Tuple_impl(_Tuple_impl<_Idx, _UHead>&& __in)
- : _Base(std::forward<_UHead>(_Tuple_impl<_Idx, _UHead>::_M_head(__in)))
- { }
-# 626 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a)
- : _Base(__tag, __use_alloc<_Head>(__a))
- { }
-
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t, const _Alloc& __a,
-      const _Head& __head)
- : _Base(__use_alloc<_Head, _Alloc, const _Head&>(__a), __head)
- { }
-
-      template<typename _Alloc, typename _UHead>
- constexpr
- _Tuple_impl(allocator_arg_t, const _Alloc& __a,
-      _UHead&& __head)
- : _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
-  std::forward<_UHead>(__head))
- { }
-
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t, const _Alloc& __a,
-      const _Tuple_impl& __in)
- : _Base(__use_alloc<_Head, _Alloc, const _Head&>(__a), _M_head(__in))
- { }
-
-      template<typename _Alloc>
- constexpr
- _Tuple_impl(allocator_arg_t, const _Alloc& __a,
-      _Tuple_impl&& __in)
- : _Base(__use_alloc<_Head, _Alloc, _Head>(__a),
-  std::forward<_Head>(_M_head(__in)))
- { }
-
-      template<typename _Alloc, typename _UHead>
- constexpr
- _Tuple_impl(allocator_arg_t, const _Alloc& __a,
-      const _Tuple_impl<_Idx, _UHead>& __in)
- : _Base(__use_alloc<_Head, _Alloc, const _UHead&>(__a),
-  _Tuple_impl<_Idx, _UHead>::_M_head(__in))
- { }
-
-      template<typename _Alloc, typename _UHead>
- constexpr
- _Tuple_impl(allocator_arg_t, const _Alloc& __a,
-      _Tuple_impl<_Idx, _UHead>&& __in)
- : _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
-  std::forward<_UHead>(_Tuple_impl<_Idx, _UHead>::_M_head(__in)))
- { }
-# 705 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename _UHead>
- constexpr
- void
- _M_assign(const _Tuple_impl<_Idx, _UHead>& __in)
- {
-   _M_head(*this) = _Tuple_impl<_Idx, _UHead>::_M_head(__in);
- }
-
-      template<typename _UHead>
- constexpr
- void
- _M_assign(_Tuple_impl<_Idx, _UHead>&& __in)
- {
-   _M_head(*this)
-     = std::forward<_UHead>(_Tuple_impl<_Idx, _UHead>::_M_head(__in));
- }
-# 751 "/usr/include/c++/14.2.0/tuple" 3
-    protected:
-      constexpr
-      void
-      _M_swap(_Tuple_impl& __in)
-      {
- using std::swap;
- swap(_M_head(*this), _M_head(__in));
-      }
-# 768 "/usr/include/c++/14.2.0/tuple" 3
-    };
-
-
-
-  template<bool, typename... _Types>
-    struct _TupleConstraints
-    {
-      template<typename... _UTypes>
- using __constructible = __and_<is_constructible<_Types, _UTypes>...>;
-
-      template<typename... _UTypes>
- using __convertible = __and_<is_convertible<_UTypes, _Types>...>;
-
-
-
-
-      template<typename... _UTypes>
- static constexpr bool __is_implicitly_constructible()
- {
-   return __and_<__constructible<_UTypes...>,
-   __convertible<_UTypes...>
-   >::value;
- }
-
-
-
-
-      template<typename... _UTypes>
- static constexpr bool __is_explicitly_constructible()
- {
-   return __and_<__constructible<_UTypes...>,
-   __not_<__convertible<_UTypes...>>
-   >::value;
- }
-
-      static constexpr bool __is_implicitly_default_constructible()
-      {
- return __and_<std::__is_implicitly_default_constructible<_Types>...
-        >::value;
-      }
-
-      static constexpr bool __is_explicitly_default_constructible()
-      {
- return __and_<is_default_constructible<_Types>...,
-        __not_<__and_<
-   std::__is_implicitly_default_constructible<_Types>...>
-        >>::value;
-      }
-    };
-
-
-
-  template<typename... _Types>
-    struct _TupleConstraints<false, _Types...>
-    {
-      template<typename... _UTypes>
- static constexpr bool __is_implicitly_constructible()
- { return false; }
-
-      template<typename... _UTypes>
- static constexpr bool __is_explicitly_constructible()
- { return false; }
-    };
-
-
-  template<typename... _Elements>
-    class tuple : public _Tuple_impl<0, _Elements...>
-    {
-      using _Inherited = _Tuple_impl<0, _Elements...>;
-
-
-      template<typename... _UTypes>
- static consteval bool
- __constructible()
- {
-   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
-     return __and_v<is_constructible<_Elements, _UTypes>...>;
-   else
-     return false;
- }
-
-      template<typename... _UTypes>
- static consteval bool
- __nothrow_constructible()
- {
-   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
-     return __and_v<is_nothrow_constructible<_Elements, _UTypes>...>;
-   else
-     return false;
- }
-
-      template<typename... _UTypes>
- static consteval bool
- __convertible()
- {
-   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
-     return __and_v<is_convertible<_UTypes, _Elements>...>;
-   else
-     return false;
- }
-
-
-
-      template<typename... _UTypes>
- static consteval bool
- __disambiguating_constraint()
- {
-   if constexpr (sizeof...(_Elements) != sizeof...(_UTypes))
-     return false;
-   else if constexpr (sizeof...(_Elements) == 1)
-     {
-       using _U0 = typename _Nth_type<0, _UTypes...>::type;
-       return !is_same_v<remove_cvref_t<_U0>, tuple>;
-     }
-   else if constexpr (sizeof...(_Elements) < 4)
-     {
-       using _U0 = typename _Nth_type<0, _UTypes...>::type;
-       if constexpr (!is_same_v<remove_cvref_t<_U0>, allocator_arg_t>)
-  return true;
-       else
-  {
-    using _T0 = typename _Nth_type<0, _Elements...>::type;
-    return is_same_v<remove_cvref_t<_T0>, allocator_arg_t>;
-  }
-     }
-   return true;
- }
-
-
-
-
-      template<typename _Tuple>
- static consteval bool
- __use_other_ctor()
- {
-   if constexpr (sizeof...(_Elements) != 1)
-     return false;
-   else if constexpr (is_same_v<remove_cvref_t<_Tuple>, tuple>)
-     return true;
-   else
-     {
-       using _Tp = typename _Nth_type<0, _Elements...>::type;
-       if constexpr (is_convertible_v<_Tuple, _Tp>)
-  return true;
-       else if constexpr (is_constructible_v<_Tp, _Tuple>)
-  return true;
-     }
-   return false;
- }
-
-      template<typename... _Up>
- static consteval bool
- __dangles()
- {
-
-   return (__reference_constructs_from_temporary(_Elements, _Up&&)
-      || ...);
-
-
-
- }
-# 961 "/usr/include/c++/14.2.0/tuple" 3
-    public:
-      constexpr
-      explicit(!(__is_implicitly_default_constructible_v<_Elements> && ...))
-      tuple()
-      noexcept((is_nothrow_default_constructible_v<_Elements> && ...))
-      requires (is_default_constructible_v<_Elements> && ...)
-      : _Inherited()
-      { }
-
-      constexpr explicit(!__convertible<const _Elements&...>())
-      tuple(const _Elements&... __elements)
-      noexcept(__nothrow_constructible<const _Elements&...>())
-      requires (__constructible<const _Elements&...>())
-      : _Inherited(__elements...)
-      { }
-
-      template<typename... _UTypes>
- requires (__disambiguating_constraint<_UTypes...>())
-   && (__constructible<_UTypes...>())
-   && (!__dangles<_UTypes...>())
- constexpr explicit(!__convertible<_UTypes...>())
- tuple(_UTypes&&... __u)
- noexcept(__nothrow_constructible<_UTypes...>())
- : _Inherited(std::forward<_UTypes>(__u)...)
- { }
-
-      template<typename... _UTypes>
- requires (__disambiguating_constraint<_UTypes...>())
-   && (__constructible<_UTypes...>())
-   && (__dangles<_UTypes...>())
- tuple(_UTypes&&...) = delete;
-
-      constexpr tuple(const tuple&) = default;
-
-      constexpr tuple(tuple&&) = default;
-
-      template<typename... _UTypes>
- requires (__constructible<const _UTypes&...>())
-   && (!__use_other_ctor<const tuple<_UTypes...>&>())
-   && (!__dangles<const _UTypes&...>())
- constexpr explicit(!__convertible<const _UTypes&...>())
- tuple(const tuple<_UTypes...>& __u)
- noexcept(__nothrow_constructible<const _UTypes&...>())
- : _Inherited(static_cast<const _Tuple_impl<0, _UTypes...>&>(__u))
- { }
-
-      template<typename... _UTypes>
- requires (__constructible<const _UTypes&...>())
-   && (!__use_other_ctor<const tuple<_UTypes...>&>())
-   && (__dangles<const _UTypes&...>())
- tuple(const tuple<_UTypes...>&) = delete;
-
-      template<typename... _UTypes>
- requires (__constructible<_UTypes...>())
-   && (!__use_other_ctor<tuple<_UTypes...>>())
-   && (!__dangles<_UTypes...>())
- constexpr explicit(!__convertible<_UTypes...>())
- tuple(tuple<_UTypes...>&& __u)
- noexcept(__nothrow_constructible<_UTypes...>())
- : _Inherited(static_cast<_Tuple_impl<0, _UTypes...>&&>(__u))
- { }
-
-      template<typename... _UTypes>
- requires (__constructible<_UTypes...>())
-   && (!__use_other_ctor<tuple<_UTypes...>>())
-   && (__dangles<_UTypes...>())
- tuple(tuple<_UTypes...>&&) = delete;
-# 1063 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<const _U1&, const _U2&>())
-   && (!__dangles<const _U1&, const _U2&>())
- constexpr explicit(!__convertible<const _U1&, const _U2&>())
- tuple(const pair<_U1, _U2>& __u)
- noexcept(__nothrow_constructible<const _U1&, const _U2&>())
- : _Inherited(__u.first, __u.second)
- { }
-
-      template<typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<const _U1&, const _U2&>())
-   && (__dangles<const _U1&, const _U2&>())
- tuple(const pair<_U1, _U2>&) = delete;
-
-      template<typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<_U1, _U2>())
-   && (!__dangles<_U1, _U2>())
- constexpr explicit(!__convertible<_U1, _U2>())
- tuple(pair<_U1, _U2>&& __u)
- noexcept(__nothrow_constructible<_U1, _U2>())
- : _Inherited(std::forward<_U1>(__u.first),
-       std::forward<_U2>(__u.second))
- { }
-
-      template<typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<_U1, _U2>())
-   && (__dangles<_U1, _U2>())
- tuple(pair<_U1, _U2>&&) = delete;
-# 1152 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename _Alloc>
- constexpr
- explicit(!(__is_implicitly_default_constructible_v<_Elements> && ...))
- tuple(allocator_arg_t __tag, const _Alloc& __a)
- requires (is_default_constructible_v<_Elements> && ...)
- : _Inherited(__tag, __a)
- { }
-
-      template<typename _Alloc>
- constexpr explicit(!__convertible<const _Elements&...>())
- tuple(allocator_arg_t __tag, const _Alloc& __a,
-       const _Elements&... __elements)
- requires (__constructible<const _Elements&...>())
- : _Inherited(__tag, __a, __elements...)
- { }
-
-      template<typename _Alloc, typename... _UTypes>
- requires (__disambiguating_constraint<_UTypes...>())
-   && (__constructible<_UTypes...>())
-   && (!__dangles<_UTypes...>())
- constexpr explicit(!__convertible<_UTypes...>())
- tuple(allocator_arg_t __tag, const _Alloc& __a, _UTypes&&... __u)
- : _Inherited(__tag, __a, std::forward<_UTypes>(__u)...)
- { }
-
-      template<typename _Alloc, typename... _UTypes>
- requires (__disambiguating_constraint<_UTypes...>())
-   && (__constructible<_UTypes...>())
-   && (__dangles<_UTypes...>())
- tuple(allocator_arg_t, const _Alloc&, _UTypes&&...) = delete;
-
-      template<typename _Alloc>
- constexpr
- tuple(allocator_arg_t __tag, const _Alloc& __a, const tuple& __u)
- : _Inherited(__tag, __a, static_cast<const _Inherited&>(__u))
- { }
-
-      template<typename _Alloc>
- requires (__constructible<_Elements...>())
- constexpr
- tuple(allocator_arg_t __tag, const _Alloc& __a, tuple&& __u)
- : _Inherited(__tag, __a, static_cast<_Inherited&&>(__u))
- { }
-
-      template<typename _Alloc, typename... _UTypes>
- requires (__constructible<const _UTypes&...>())
-   && (!__use_other_ctor<const tuple<_UTypes...>&>())
-   && (!__dangles<const _UTypes&...>())
- constexpr explicit(!__convertible<const _UTypes&...>())
- tuple(allocator_arg_t __tag, const _Alloc& __a,
-       const tuple<_UTypes...>& __u)
- : _Inherited(__tag, __a,
-       static_cast<const _Tuple_impl<0, _UTypes...>&>(__u))
- { }
-
-      template<typename _Alloc, typename... _UTypes>
- requires (__constructible<const _UTypes&...>())
-   && (!__use_other_ctor<const tuple<_UTypes...>&>())
-   && (__dangles<const _UTypes&...>())
- tuple(allocator_arg_t, const _Alloc&, const tuple<_UTypes...>&) = delete;
-
-      template<typename _Alloc, typename... _UTypes>
- requires (__constructible<_UTypes...>())
-   && (!__use_other_ctor<tuple<_UTypes...>>())
-   && (!__dangles<_UTypes...>())
- constexpr explicit(!__use_other_ctor<tuple<_UTypes...>>())
- tuple(allocator_arg_t __tag, const _Alloc& __a, tuple<_UTypes...>&& __u)
- : _Inherited(__tag, __a, static_cast<_Tuple_impl<0, _UTypes...>&&>(__u))
- { }
-
-      template<typename _Alloc, typename... _UTypes>
- requires (__constructible<_UTypes...>())
-   && (!__use_other_ctor<tuple<_UTypes...>>())
-   && (__dangles<_UTypes...>())
- tuple(allocator_arg_t, const _Alloc&, tuple<_UTypes...>&&) = delete;
-# 1262 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename _Alloc, typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<const _U1&, const _U2&>())
-   && (!__dangles<const _U1&, const _U2&>())
- constexpr explicit(!__convertible<const _U1&, const _U2&>())
- tuple(allocator_arg_t __tag, const _Alloc& __a,
-       const pair<_U1, _U2>& __u)
- noexcept(__nothrow_constructible<const _U1&, const _U2&>())
- : _Inherited(__tag, __a, __u.first, __u.second)
- { }
-
-      template<typename _Alloc, typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<const _U1&, const _U2&>())
-   && (__dangles<const _U1&, const _U2&>())
- tuple(allocator_arg_t, const _Alloc&, const pair<_U1, _U2>&) = delete;
-
-      template<typename _Alloc, typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<_U1, _U2>())
-   && (!__dangles<_U1, _U2>())
- constexpr explicit(!__convertible<_U1, _U2>())
- tuple(allocator_arg_t __tag, const _Alloc& __a, pair<_U1, _U2>&& __u)
- noexcept(__nothrow_constructible<_U1, _U2>())
- : _Inherited(__tag, __a, std::move(__u.first), std::move(__u.second))
- { }
-
-      template<typename _Alloc, typename _U1, typename _U2>
- requires (sizeof...(_Elements) == 2)
-   && (__constructible<_U1, _U2>())
-   && (__dangles<_U1, _U2>())
- tuple(allocator_arg_t, const _Alloc&, pair<_U1, _U2>&&) = delete;
-# 1654 "/usr/include/c++/14.2.0/tuple" 3
-    private:
-      template<typename... _UTypes>
- static consteval bool
- __assignable()
- {
-   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
-     return __and_v<is_assignable<_Elements&, _UTypes>...>;
-   else
-     return false;
- }
-
-      template<typename... _UTypes>
- static consteval bool
- __nothrow_assignable()
- {
-   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
-     return __and_v<is_nothrow_assignable<_Elements&, _UTypes>...>;
-   else
-     return false;
- }
-# 1707 "/usr/include/c++/14.2.0/tuple" 3
-    public:
-
-      tuple& operator=(const tuple& __u) = delete;
-
-      constexpr tuple&
-      operator=(const tuple& __u)
-      noexcept(__nothrow_assignable<const _Elements&...>())
-      requires (__assignable<const _Elements&...>())
-      {
- this->_M_assign(__u);
- return *this;
-      }
-
-      constexpr tuple&
-      operator=(tuple&& __u)
-      noexcept(__nothrow_assignable<_Elements...>())
-      requires (__assignable<_Elements...>())
-      {
- this->_M_assign(std::move(__u));
- return *this;
-      }
-
-      template<typename... _UTypes>
- requires (__assignable<const _UTypes&...>())
- constexpr tuple&
- operator=(const tuple<_UTypes...>& __u)
- noexcept(__nothrow_assignable<const _UTypes&...>())
- {
-   this->_M_assign(__u);
-   return *this;
- }
-
-      template<typename... _UTypes>
- requires (__assignable<_UTypes...>())
- constexpr tuple&
- operator=(tuple<_UTypes...>&& __u)
- noexcept(__nothrow_assignable<_UTypes...>())
- {
-   this->_M_assign(std::move(__u));
-   return *this;
- }
-# 1785 "/usr/include/c++/14.2.0/tuple" 3
-      template<typename _U1, typename _U2>
- requires (__assignable<const _U1&, const _U2&>())
- constexpr tuple&
- operator=(const pair<_U1, _U2>& __u)
- noexcept(__nothrow_assignable<const _U1&, const _U2&>())
- {
-   this->_M_head(*this) = __u.first;
-   this->_M_tail(*this)._M_head(*this) = __u.second;
-   return *this;
- }
-
-      template<typename _U1, typename _U2>
- requires (__assignable<_U1, _U2>())
- constexpr tuple&
- operator=(pair<_U1, _U2>&& __u)
- noexcept(__nothrow_assignable<_U1, _U2>())
- {
-   this->_M_head(*this) = std::forward<_U1>(__u.first);
-   this->_M_tail(*this)._M_head(*this) = std::forward<_U2>(__u.second);
-   return *this;
- }
-# 1947 "/usr/include/c++/14.2.0/tuple" 3
-      constexpr
-      void
-      swap(tuple& __in)
-      noexcept(__and_<__is_nothrow_swappable<_Elements>...>::value)
-      { _Inherited::_M_swap(__in); }
-# 1966 "/usr/include/c++/14.2.0/tuple" 3
-    };
-
-
-  template<typename... _UTypes>
-    tuple(_UTypes...) -> tuple<_UTypes...>;
-  template<typename _T1, typename _T2>
-    tuple(pair<_T1, _T2>) -> tuple<_T1, _T2>;
-  template<typename _Alloc, typename... _UTypes>
-    tuple(allocator_arg_t, _Alloc, _UTypes...) -> tuple<_UTypes...>;
-  template<typename _Alloc, typename _T1, typename _T2>
-    tuple(allocator_arg_t, _Alloc, pair<_T1, _T2>) -> tuple<_T1, _T2>;
-  template<typename _Alloc, typename... _UTypes>
-    tuple(allocator_arg_t, _Alloc, tuple<_UTypes...>) -> tuple<_UTypes...>;
-
-
-
-  template<>
-    class tuple<>
-    {
-    public:
-      constexpr
-      void swap(tuple&) noexcept { }
-
-
-
-
-
-      tuple() = default;
-
-      template<typename _Alloc>
- constexpr
- tuple(allocator_arg_t, const _Alloc&) noexcept { }
-      template<typename _Alloc>
- constexpr
- tuple(allocator_arg_t, const _Alloc&, const tuple&) noexcept { }
-    };
-# 2402 "/usr/include/c++/14.2.0/tuple" 3
-  template<typename... _Elements>
-    struct tuple_size<tuple<_Elements...>>
-    : public integral_constant<size_t, sizeof...(_Elements)> { };
-
-
-  template<typename... _Types>
-    inline constexpr size_t tuple_size_v<tuple<_Types...>>
-      = sizeof...(_Types);
-
-  template<typename... _Types>
-    inline constexpr size_t tuple_size_v<const tuple<_Types...>>
-      = sizeof...(_Types);
-
-
-
-  template<size_t __i, typename... _Types>
-    struct tuple_element<__i, tuple<_Types...>>
-    {
-      static_assert(__i < sizeof...(_Types), "tuple index must be in range");
-
-      using type = typename _Nth_type<__i, _Types...>::type;
-    };
-
-  template<size_t __i, typename _Head, typename... _Tail>
-    constexpr _Head&
-    __get_helper(_Tuple_impl<__i, _Head, _Tail...>& __t) noexcept
-    { return _Tuple_impl<__i, _Head, _Tail...>::_M_head(__t); }
-
-  template<size_t __i, typename _Head, typename... _Tail>
-    constexpr const _Head&
-    __get_helper(const _Tuple_impl<__i, _Head, _Tail...>& __t) noexcept
-    { return _Tuple_impl<__i, _Head, _Tail...>::_M_head(__t); }
-
-
-  template<size_t __i, typename... _Types>
-    __enable_if_t<(__i >= sizeof...(_Types))>
-    __get_helper(const tuple<_Types...>&) = delete;
-
-
-  template<size_t __i, typename... _Elements>
-    constexpr __tuple_element_t<__i, tuple<_Elements...>>&
-    get(tuple<_Elements...>& __t) noexcept
-    { return std::__get_helper<__i>(__t); }
-
-
-  template<size_t __i, typename... _Elements>
-    constexpr const __tuple_element_t<__i, tuple<_Elements...>>&
-    get(const tuple<_Elements...>& __t) noexcept
-    { return std::__get_helper<__i>(__t); }
-
-
-  template<size_t __i, typename... _Elements>
-    constexpr __tuple_element_t<__i, tuple<_Elements...>>&&
-    get(tuple<_Elements...>&& __t) noexcept
-    {
-      typedef __tuple_element_t<__i, tuple<_Elements...>> __element_type;
-      return std::forward<__element_type>(std::__get_helper<__i>(__t));
-    }
-
-
-  template<size_t __i, typename... _Elements>
-    constexpr const __tuple_element_t<__i, tuple<_Elements...>>&&
-    get(const tuple<_Elements...>&& __t) noexcept
-    {
-      typedef __tuple_element_t<__i, tuple<_Elements...>> __element_type;
-      return std::forward<const __element_type>(std::__get_helper<__i>(__t));
-    }
-
-
-
-  template<size_t __i, typename... _Elements>
-    constexpr __enable_if_t<(__i >= sizeof...(_Elements))>
-    get(const tuple<_Elements...>&) = delete;
-
-
-
-
-  template <typename _Tp, typename... _Types>
-    constexpr _Tp&
-    get(tuple<_Types...>& __t) noexcept
-    {
-      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
-      static_assert(__idx < sizeof...(_Types),
-   "the type T in std::get<T> must occur exactly once in the tuple");
-      return std::__get_helper<__idx>(__t);
-    }
-
-
-  template <typename _Tp, typename... _Types>
-    constexpr _Tp&&
-    get(tuple<_Types...>&& __t) noexcept
-    {
-      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
-      static_assert(__idx < sizeof...(_Types),
-   "the type T in std::get<T> must occur exactly once in the tuple");
-      return std::forward<_Tp>(std::__get_helper<__idx>(__t));
-    }
-
-
-  template <typename _Tp, typename... _Types>
-    constexpr const _Tp&
-    get(const tuple<_Types...>& __t) noexcept
-    {
-      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
-      static_assert(__idx < sizeof...(_Types),
-   "the type T in std::get<T> must occur exactly once in the tuple");
-      return std::__get_helper<__idx>(__t);
-    }
-
-
-
-  template <typename _Tp, typename... _Types>
-    constexpr const _Tp&&
-    get(const tuple<_Types...>&& __t) noexcept
-    {
-      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
-      static_assert(__idx < sizeof...(_Types),
-   "the type T in std::get<T> must occur exactly once in the tuple");
-      return std::forward<const _Tp>(std::__get_helper<__idx>(__t));
-    }
-
-
-
-  template<typename _Tp, typename _Up, size_t __i, size_t __size>
-    struct __tuple_compare
-    {
-      static constexpr bool
-      __eq(const _Tp& __t, const _Up& __u)
-      {
- return bool(std::get<__i>(__t) == std::get<__i>(__u))
-   && __tuple_compare<_Tp, _Up, __i + 1, __size>::__eq(__t, __u);
-      }
-
-      static constexpr bool
-      __less(const _Tp& __t, const _Up& __u)
-      {
- return bool(std::get<__i>(__t) < std::get<__i>(__u))
-   || (!bool(std::get<__i>(__u) < std::get<__i>(__t))
-       && __tuple_compare<_Tp, _Up, __i + 1, __size>::__less(__t, __u));
-      }
-    };
-
-  template<typename _Tp, typename _Up, size_t __size>
-    struct __tuple_compare<_Tp, _Up, __size, __size>
-    {
-      static constexpr bool
-      __eq(const _Tp&, const _Up&) { return true; }
-
-      static constexpr bool
-      __less(const _Tp&, const _Up&) { return false; }
-    };
-
-  template<typename... _TElements, typename... _UElements>
-    constexpr bool
-    operator==(const tuple<_TElements...>& __t,
-        const tuple<_UElements...>& __u)
-    {
-      static_assert(sizeof...(_TElements) == sizeof...(_UElements),
-   "tuple objects can only be compared if they have equal sizes.");
-      using __compare = __tuple_compare<tuple<_TElements...>,
-     tuple<_UElements...>,
-     0, sizeof...(_TElements)>;
-      return __compare::__eq(__t, __u);
-    }
-
-
-  template<typename _Cat, typename _Tp, typename _Up>
-    constexpr _Cat
-    __tuple_cmp(const _Tp&, const _Up&, index_sequence<>)
-    { return _Cat::equivalent; }
-
-  template<typename _Cat, typename _Tp, typename _Up,
-    size_t _Idx0, size_t... _Idxs>
-    constexpr _Cat
-    __tuple_cmp(const _Tp& __t, const _Up& __u,
-  index_sequence<_Idx0, _Idxs...>)
-    {
-      auto __c
- = __detail::__synth3way(std::get<_Idx0>(__t), std::get<_Idx0>(__u));
-      if (__c != 0)
- return __c;
-      return std::__tuple_cmp<_Cat>(__t, __u, index_sequence<_Idxs...>());
-    }
-
-  template<typename... _Tps, typename... _Ups>
-    constexpr
-    common_comparison_category_t<__detail::__synth3way_t<_Tps, _Ups>...>
-    operator<=>(const tuple<_Tps...>& __t, const tuple<_Ups...>& __u)
-    {
-      using _Cat
- = common_comparison_category_t<__detail::__synth3way_t<_Tps, _Ups>...>;
-      return std::__tuple_cmp<_Cat>(__t, __u, index_sequence_for<_Tps...>());
-    }
-# 2636 "/usr/include/c++/14.2.0/tuple" 3
-  template<typename... _Elements>
-    constexpr tuple<typename __decay_and_strip<_Elements>::__type...>
-    make_tuple(_Elements&&... __args)
-    {
-      typedef tuple<typename __decay_and_strip<_Elements>::__type...>
- __result_type;
-      return __result_type(std::forward<_Elements>(__args)...);
-    }
-
-
-
-
-  template<typename... _Elements>
-    constexpr tuple<_Elements&&...>
-    forward_as_tuple(_Elements&&... __args) noexcept
-    { return tuple<_Elements&&...>(std::forward<_Elements>(__args)...); }
-
-
-  template<size_t, typename, typename, size_t>
-    struct __make_tuple_impl;
-
-  template<size_t _Idx, typename _Tuple, typename... _Tp, size_t _Nm>
-    struct __make_tuple_impl<_Idx, tuple<_Tp...>, _Tuple, _Nm>
-    : __make_tuple_impl<_Idx + 1,
-   tuple<_Tp..., __tuple_element_t<_Idx, _Tuple>>,
-   _Tuple, _Nm>
-    { };
-
-  template<size_t _Nm, typename _Tuple, typename... _Tp>
-    struct __make_tuple_impl<_Nm, tuple<_Tp...>, _Tuple, _Nm>
-    {
-      typedef tuple<_Tp...> __type;
-    };
-
-  template<typename _Tuple>
-    struct __do_make_tuple
-    : __make_tuple_impl<0, tuple<>, _Tuple, tuple_size<_Tuple>::value>
-    { };
-
-
-  template<typename _Tuple>
-    struct __make_tuple
-    : public __do_make_tuple<__remove_cvref_t<_Tuple>>
-    { };
-
-
-  template<typename...>
-    struct __combine_tuples;
-
-  template<>
-    struct __combine_tuples<>
-    {
-      typedef tuple<> __type;
-    };
-
-  template<typename... _Ts>
-    struct __combine_tuples<tuple<_Ts...>>
-    {
-      typedef tuple<_Ts...> __type;
-    };
-
-  template<typename... _T1s, typename... _T2s, typename... _Rem>
-    struct __combine_tuples<tuple<_T1s...>, tuple<_T2s...>, _Rem...>
-    {
-      typedef typename __combine_tuples<tuple<_T1s..., _T2s...>,
-     _Rem...>::__type __type;
-    };
-
-
-  template<typename... _Tpls>
-    struct __tuple_cat_result
-    {
-      typedef typename __combine_tuples
-        <typename __make_tuple<_Tpls>::__type...>::__type __type;
-    };
-
-
-
-  template<typename...>
-    struct __make_1st_indices;
-
-  template<>
-    struct __make_1st_indices<>
-    {
-      typedef _Index_tuple<> __type;
-    };
-
-  template<typename _Tp, typename... _Tpls>
-    struct __make_1st_indices<_Tp, _Tpls...>
-    {
-      typedef typename _Build_index_tuple<tuple_size<
- typename remove_reference<_Tp>::type>::value>::__type __type;
-    };
-
-
-
-
-  template<typename _Ret, typename _Indices, typename... _Tpls>
-    struct __tuple_concater;
-
-  template<typename _Ret, size_t... _Is, typename _Tp, typename... _Tpls>
-    struct __tuple_concater<_Ret, _Index_tuple<_Is...>, _Tp, _Tpls...>
-    {
-      template<typename... _Us>
-        static constexpr _Ret
-        _S_do(_Tp&& __tp, _Tpls&&... __tps, _Us&&... __us)
-        {
-   typedef typename __make_1st_indices<_Tpls...>::__type __idx;
-   typedef __tuple_concater<_Ret, __idx, _Tpls...> __next;
-   return __next::_S_do(std::forward<_Tpls>(__tps)...,
-          std::forward<_Us>(__us)...,
-          std::get<_Is>(std::forward<_Tp>(__tp))...);
- }
-    };
-
-  template<typename _Ret>
-    struct __tuple_concater<_Ret, _Index_tuple<>>
-    {
-      template<typename... _Us>
- static constexpr _Ret
- _S_do(_Us&&... __us)
-        {
-   return _Ret(std::forward<_Us>(__us)...);
- }
-    };
-
-  template<typename... _Tps>
-    struct __is_tuple_like_impl<tuple<_Tps...>> : true_type
-    { };
-
-
-
-
-
-
-  template<typename... _Tpls, typename = typename
-           enable_if<__and_<__is_tuple_like<_Tpls>...>::value>::type>
-
-    constexpr auto
-    tuple_cat(_Tpls&&... __tpls)
-    -> typename __tuple_cat_result<_Tpls...>::__type
-    {
-      typedef typename __tuple_cat_result<_Tpls...>::__type __ret;
-      typedef typename __make_1st_indices<_Tpls...>::__type __idx;
-      typedef __tuple_concater<__ret, __idx, _Tpls...> __concater;
-      return __concater::_S_do(std::forward<_Tpls>(__tpls)...);
-    }
-
-
-
-
-  template<typename... _Elements>
-    constexpr tuple<_Elements&...>
-    tie(_Elements&... __args) noexcept
-    { return tuple<_Elements&...>(__args...); }
-
-
-  template<typename... _Elements>
-    constexpr
-    inline
-
-
-    typename enable_if<__and_<__is_swappable<_Elements>...>::value
-      >::type
-
-
-
-    swap(tuple<_Elements...>& __x, tuple<_Elements...>& __y)
-    noexcept(noexcept(__x.swap(__y)))
-    { __x.swap(__y); }
-# 2818 "/usr/include/c++/14.2.0/tuple" 3
-  template<typename... _Elements>
-    constexpr
-    typename enable_if<!__and_<__is_swappable<_Elements>...>::value>::type
-    swap(tuple<_Elements...>&, tuple<_Elements...>&) = delete;
-
-
-
-
-
-
-  struct _Swallow_assign
-  {
-    template<class _Tp>
-      constexpr const _Swallow_assign&
-      operator=(const _Tp&) const
-      { return *this; }
-  };
-# 2853 "/usr/include/c++/14.2.0/tuple" 3
-  inline constexpr _Swallow_assign ignore{};
-
-
-  template<typename... _Types, typename _Alloc>
-    struct uses_allocator<tuple<_Types...>, _Alloc> : true_type { };
-# 2868 "/usr/include/c++/14.2.0/tuple" 3
-  template<class _T1, class _T2>
-    template<typename... _Args1, typename... _Args2>
-      constexpr
-      inline
-      pair<_T1, _T2>::
-      pair(piecewise_construct_t,
-    tuple<_Args1...> __first, tuple<_Args2...> __second)
-      : pair(__first, __second,
-      typename _Build_index_tuple<sizeof...(_Args1)>::__type(),
-      typename _Build_index_tuple<sizeof...(_Args2)>::__type())
-      { }
-
-  template<class _T1, class _T2>
-    template<typename... _Args1, size_t... _Indexes1,
-      typename... _Args2, size_t... _Indexes2>
-      constexpr inline
-      pair<_T1, _T2>::
-      pair(tuple<_Args1...>& __tuple1, tuple<_Args2...>& __tuple2,
-    _Index_tuple<_Indexes1...>, _Index_tuple<_Indexes2...>)
-      : first(std::forward<_Args1>(std::get<_Indexes1>(__tuple1))...),
- second(std::forward<_Args2>(std::get<_Indexes2>(__tuple2))...)
-      { }
-
-
-
-
-
-
-  template<template<typename...> class _Trait, typename _Tp, typename _Tuple>
-    inline constexpr bool __unpack_std_tuple = false;
-
-  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
-    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, tuple<_Up...>>
-      = _Trait<_Tp, _Up...>::value;
-
-  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
-    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, tuple<_Up...>&>
-      = _Trait<_Tp, _Up&...>::value;
-
-  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
-    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, const tuple<_Up...>>
-      = _Trait<_Tp, const _Up...>::value;
-
-  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
-    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, const tuple<_Up...>&>
-      = _Trait<_Tp, const _Up&...>::value;
-
-
-
-  template <typename _Fn, typename _Tuple, size_t... _Idx>
-    constexpr decltype(auto)
-    __apply_impl(_Fn&& __f, _Tuple&& __t, index_sequence<_Idx...>)
-    {
-      return std::__invoke(std::forward<_Fn>(__f),
-      std::get<_Idx>(std::forward<_Tuple>(__t))...);
-    }
-
-
-
-
-  template <typename _Fn, typename _Tuple>
-
-    constexpr decltype(auto)
-    apply(_Fn&& __f, _Tuple&& __t)
-    noexcept(__unpack_std_tuple<is_nothrow_invocable, _Fn, _Tuple>)
-    {
-      using _Indices
- = make_index_sequence<tuple_size_v<remove_reference_t<_Tuple>>>;
-      return std::__apply_impl(std::forward<_Fn>(__f),
-          std::forward<_Tuple>(__t),
-          _Indices{});
-    }
-
-
-
-  template <typename _Tp, typename _Tuple, size_t... _Idx>
-    constexpr _Tp
-    __make_from_tuple_impl(_Tuple&& __t, index_sequence<_Idx...>)
-    { return _Tp(std::get<_Idx>(std::forward<_Tuple>(__t))...); }
-
-
-
-
-  template <typename _Tp, typename _Tuple>
-
-    constexpr _Tp
-    make_from_tuple(_Tuple&& __t)
-    noexcept(__unpack_std_tuple<is_nothrow_constructible, _Tp, _Tuple>)
-    {
-      constexpr size_t __n = tuple_size_v<remove_reference_t<_Tuple>>;
-
-      if constexpr (__n == 1)
- {
-   using _Elt = decltype(std::get<0>(std::declval<_Tuple>()));
-   static_assert(!__reference_constructs_from_temporary(_Tp, _Elt));
- }
-
-      return __make_from_tuple_impl<_Tp>(std::forward<_Tuple>(__t),
-      make_index_sequence<__n>{});
-    }
-# 3030 "/usr/include/c++/14.2.0/tuple" 3
-
-}
-# 40 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 2 3
-
-
-
-namespace std __attribute__ ((__visibility__ ("default")))
-{
-
-
-  template<typename _Tp>
-    concept _Std_pair = __is_pair<remove_cv_t<_Tp>>;
-
-
-
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc& __a,
-         _Args&&... __args) noexcept
-    requires (! _Std_pair<_Tp>)
-    {
-      if constexpr (uses_allocator_v<remove_cv_t<_Tp>, _Alloc>)
- {
-   if constexpr (is_constructible_v<_Tp, allocator_arg_t,
-        const _Alloc&, _Args...>)
-     {
-       return tuple<allocator_arg_t, const _Alloc&, _Args&&...>(
-    allocator_arg, __a, std::forward<_Args>(__args)...);
-     }
-   else
-     {
-       static_assert(is_constructible_v<_Tp, _Args..., const _Alloc&>,
-    "construction with an allocator must be possible"
-    " if uses_allocator is true");
-
-       return tuple<_Args&&..., const _Alloc&>(
-    std::forward<_Args>(__args)..., __a);
-     }
- }
-      else
- {
-   static_assert(is_constructible_v<_Tp, _Args...>);
-
-   return tuple<_Args&&...>(std::forward<_Args>(__args)...);
- }
-    }
-
-  template<_Std_pair _Tp, typename _Alloc, typename _Tuple1, typename _Tuple2>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc& __a, piecewise_construct_t,
-         _Tuple1&& __x, _Tuple2&& __y) noexcept;
-
-  template<_Std_pair _Tp, typename _Alloc>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc&) noexcept;
-
-  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc&, _Up&&, _Vp&&) noexcept;
-
-  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc&,
-         const pair<_Up, _Vp>&) noexcept;
-
-  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc&, pair<_Up, _Vp>&&) noexcept;
-# 118 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
-  template<_Std_pair _Tp, typename _Alloc, typename _Tuple1, typename _Tuple2>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc& __a, piecewise_construct_t,
-         _Tuple1&& __x, _Tuple2&& __y) noexcept
-    {
-      using _Tp1 = typename _Tp::first_type;
-      using _Tp2 = typename _Tp::second_type;
-
-      return std::make_tuple(piecewise_construct,
-   std::apply([&__a](auto&&... __args1) {
-       return std::uses_allocator_construction_args<_Tp1>(
-    __a, std::forward<decltype(__args1)>(__args1)...);
-   }, std::forward<_Tuple1>(__x)),
-   std::apply([&__a](auto&&... __args2) {
-       return std::uses_allocator_construction_args<_Tp2>(
-    __a, std::forward<decltype(__args2)>(__args2)...);
-   }, std::forward<_Tuple2>(__y)));
-    }
-
-  template<_Std_pair _Tp, typename _Alloc>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc& __a) noexcept
-    {
-      using _Tp1 = typename _Tp::first_type;
-      using _Tp2 = typename _Tp::second_type;
-
-      return std::make_tuple(piecewise_construct,
-   std::uses_allocator_construction_args<_Tp1>(__a),
-   std::uses_allocator_construction_args<_Tp2>(__a));
-    }
-
-  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc& __a, _Up&& __u, _Vp&& __v)
-      noexcept
-    {
-      using _Tp1 = typename _Tp::first_type;
-      using _Tp2 = typename _Tp::second_type;
-
-      return std::make_tuple(piecewise_construct,
-   std::uses_allocator_construction_args<_Tp1>(__a,
-     std::forward<_Up>(__u)),
-   std::uses_allocator_construction_args<_Tp2>(__a,
-     std::forward<_Vp>(__v)));
-    }
-
-  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc& __a,
-         const pair<_Up, _Vp>& __pr) noexcept
-    {
-      using _Tp1 = typename _Tp::first_type;
-      using _Tp2 = typename _Tp::second_type;
-
-      return std::make_tuple(piecewise_construct,
-   std::uses_allocator_construction_args<_Tp1>(__a, __pr.first),
-   std::uses_allocator_construction_args<_Tp2>(__a, __pr.second));
-    }
-
-  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
-    constexpr auto
-    uses_allocator_construction_args(const _Alloc& __a,
-         pair<_Up, _Vp>&& __pr) noexcept
-    {
-      using _Tp1 = typename _Tp::first_type;
-      using _Tp2 = typename _Tp::second_type;
-
-
-
-
-      return std::make_tuple(piecewise_construct,
-   std::uses_allocator_construction_args<_Tp1>(__a,
-     std::get<0>(std::move(__pr))),
-   std::uses_allocator_construction_args<_Tp2>(__a,
-     std::get<1>(std::move(__pr))));
-    }
-# 225 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    constexpr _Tp
-    make_obj_using_allocator(const _Alloc& __a, _Args&&... __args)
-    {
-      return std::make_from_tuple<_Tp>(
-   std::uses_allocator_construction_args<_Tp>(__a,
-     std::forward<_Args>(__args)...));
-    }
-
-  template<typename _Tp, typename _Alloc, typename... _Args>
-    constexpr _Tp*
-    uninitialized_construct_using_allocator(_Tp* __p, const _Alloc& __a,
-         _Args&&... __args)
-    {
-      return std::apply([&](auto&&... __xs) {
- return std::construct_at(__p, std::forward<decltype(__xs)>(__xs)...);
-      }, std::uses_allocator_construction_args<_Tp>(__a,
- std::forward<_Args>(__args)...));
-    }
-
-
-}
-# 42 "/usr/include/c++/14.2.0/bits/memory_resource.h" 2 3
-# 50 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-namespace std __attribute__ ((__visibility__ ("default")))
-{
-
-namespace pmr
-{
-
-
-
-
-
-
-  class memory_resource
-  {
-    static constexpr size_t _S_max_align = alignof(max_align_t);
-
-  public:
-    memory_resource() = default;
-    memory_resource(const memory_resource&) = default;
-    virtual ~memory_resource();
-
-    memory_resource& operator=(const memory_resource&) = default;
-
-    [[nodiscard]]
-    void*
-    allocate(size_t __bytes, size_t __alignment = _S_max_align)
-    __attribute__((__returns_nonnull__,__alloc_size__(2),__alloc_align__(3)))
-    { return ::operator new(__bytes, do_allocate(__bytes, __alignment)); }
-
-    void
-    deallocate(void* __p, size_t __bytes, size_t __alignment = _S_max_align)
-    __attribute__((__nonnull__))
-    { return do_deallocate(__p, __bytes, __alignment); }
-
-    [[nodiscard]]
-    bool
-    is_equal(const memory_resource& __other) const noexcept
-    { return do_is_equal(__other); }
-
-  private:
-    virtual void*
-    do_allocate(size_t __bytes, size_t __alignment) = 0;
-
-    virtual void
-    do_deallocate(void* __p, size_t __bytes, size_t __alignment) = 0;
-
-    virtual bool
-    do_is_equal(const memory_resource& __other) const noexcept = 0;
-  };
-
-  [[nodiscard]]
-  inline bool
-  operator==(const memory_resource& __a, const memory_resource& __b) noexcept
-  { return &__a == &__b || __a.is_equal(__b); }
-# 119 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-  template<typename _Tp>
-    class polymorphic_allocator
-    {
-
-
-      template<typename _Up>
- struct __not_pair { using type = void; };
-
-      template<typename _Up1, typename _Up2>
- struct __not_pair<pair<_Up1, _Up2>> { };
-
-    public:
-      using value_type = _Tp;
-
-      polymorphic_allocator() noexcept
-      {
- extern memory_resource* get_default_resource() noexcept
-   __attribute__((__returns_nonnull__));
- _M_resource = get_default_resource();
-      }
-
-      polymorphic_allocator(memory_resource* __r) noexcept
-      __attribute__((__nonnull__))
-      : _M_resource(__r)
-      { ; }
-
-      polymorphic_allocator(const polymorphic_allocator& __other) = default;
-
-      template<typename _Up>
- polymorphic_allocator(const polymorphic_allocator<_Up>& __x) noexcept
- : _M_resource(__x.resource())
- { }
-
-      polymorphic_allocator&
-      operator=(const polymorphic_allocator&) = delete;
-
-      [[nodiscard]]
-      _Tp*
-      allocate(size_t __n)
-      __attribute__((__returns_nonnull__))
-      {
- if ((__gnu_cxx::__int_traits<size_t>::__max / sizeof(_Tp)) < __n)
-   std::__throw_bad_array_new_length();
- return static_cast<_Tp*>(_M_resource->allocate(__n * sizeof(_Tp),
-             alignof(_Tp)));
-      }
-
-      void
-      deallocate(_Tp* __p, size_t __n) noexcept
-      __attribute__((__nonnull__))
-      { _M_resource->deallocate(__p, __n * sizeof(_Tp), alignof(_Tp)); }
-
-
-      [[nodiscard]] void*
-      allocate_bytes(size_t __nbytes,
-       size_t __alignment = alignof(max_align_t))
-      { return _M_resource->allocate(__nbytes, __alignment); }
-
-      void
-      deallocate_bytes(void* __p, size_t __nbytes,
-         size_t __alignment = alignof(max_align_t))
-      { _M_resource->deallocate(__p, __nbytes, __alignment); }
-
-      template<typename _Up>
- [[nodiscard]] _Up*
- allocate_object(size_t __n = 1)
- {
-   if ((__gnu_cxx::__int_traits<size_t>::__max / sizeof(_Up)) < __n)
-     std::__throw_bad_array_new_length();
-   return static_cast<_Up*>(allocate_bytes(__n * sizeof(_Up),
-        alignof(_Up)));
- }
-
-      template<typename _Up>
- void
- deallocate_object(_Up* __p, size_t __n = 1)
- { deallocate_bytes(__p, __n * sizeof(_Up), alignof(_Up)); }
-
-      template<typename _Up, typename... _CtorArgs>
- [[nodiscard]] _Up*
- new_object(_CtorArgs&&... __ctor_args)
- {
-   _Up* __p = allocate_object<_Up>();
-   try
-     {
-       construct(__p, std::forward<_CtorArgs>(__ctor_args)...);
-     }
-   catch(...)
-     {
-       deallocate_object(__p);
-       throw;
-     }
-   return __p;
- }
-
-      template<typename _Up>
- void
- delete_object(_Up* __p)
- {
-   __p->~_Up();
-   deallocate_object(__p);
- }
-# 297 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-      template<typename _Tp1, typename... _Args>
- __attribute__((__nonnull__))
- void
- construct(_Tp1* __p, _Args&&... __args)
- {
-   std::uninitialized_construct_using_allocator(__p, *this,
-       std::forward<_Args>(__args)...);
- }
-
-
-      template<typename _Up>
- __attribute__ ((__deprecated__ ("use '" "allocator_traits::destroy" "' instead")))
- __attribute__((__nonnull__))
- void
- destroy(_Up* __p)
- { __p->~_Up(); }
-
-      polymorphic_allocator
-      select_on_container_copy_construction() const noexcept
-      { return polymorphic_allocator(); }
-
-      memory_resource*
-      resource() const noexcept
-      __attribute__((__returns_nonnull__))
-      { return _M_resource; }
-
-
-
-      [[nodiscard]]
-      friend bool
-      operator==(const polymorphic_allocator& __a,
-   const polymorphic_allocator& __b) noexcept
-      { return *__a.resource() == *__b.resource(); }
-# 339 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-    private:
-# 366 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-      memory_resource* _M_resource;
-    };
-
-  template<typename _Tp1, typename _Tp2>
-    [[nodiscard]]
-    inline bool
-    operator==(const polymorphic_allocator<_Tp1>& __a,
-        const polymorphic_allocator<_Tp2>& __b) noexcept
-    { return *__a.resource() == *__b.resource(); }
-# 385 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-}
-
-  template<typename _Alloc> struct allocator_traits;
-
-
-  template<typename _Tp>
-    struct allocator_traits<pmr::polymorphic_allocator<_Tp>>
-    {
-
-      using allocator_type = pmr::polymorphic_allocator<_Tp>;
-
-
-      using value_type = _Tp;
-
-
-      using pointer = _Tp*;
-
-
-      using const_pointer = const _Tp*;
-
-
-      using void_pointer = void*;
-
-
-      using const_void_pointer = const void*;
-
-
-      using difference_type = std::ptrdiff_t;
-
-
-      using size_type = std::size_t;
-
-
-
-
-
-      using propagate_on_container_copy_assignment = false_type;
-      using propagate_on_container_move_assignment = false_type;
-      using propagate_on_container_swap = false_type;
-
-      static allocator_type
-      select_on_container_copy_construction(const allocator_type&) noexcept
-      { return allocator_type(); }
-
-
-
-      using is_always_equal = false_type;
-
-      template<typename _Up>
- using rebind_alloc = pmr::polymorphic_allocator<_Up>;
-
-      template<typename _Up>
- using rebind_traits = allocator_traits<pmr::polymorphic_allocator<_Up>>;
-# 446 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-      [[nodiscard]] static pointer
-      allocate(allocator_type& __a, size_type __n)
-      { return __a.allocate(__n); }
-# 461 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-      [[nodiscard]] static pointer
-      allocate(allocator_type& __a, size_type __n, const_void_pointer)
-      { return __a.allocate(__n); }
-# 473 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-      static void
-      deallocate(allocator_type& __a, pointer __p, size_type __n)
-      { __a.deallocate(__p, __n); }
-# 488 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-      template<typename _Up, typename... _Args>
- static void
- construct(allocator_type& __a, _Up* __p, _Args&&... __args)
- { __a.construct(__p, std::forward<_Args>(__args)...); }
-# 500 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
-      template<typename _Up>
- static constexpr void
- destroy(allocator_type&, _Up* __p)
- noexcept(is_nothrow_destructible<_Up>::value)
- { __p->~_Up(); }
-
-
-
-
-
-      static constexpr size_type
-      max_size(const allocator_type&) noexcept
-      { return size_t(-1) / sizeof(value_type); }
-    };
-
-
-}
-# 68 "/usr/include/c++/14.2.0/string" 2 3
-namespace std __attribute__ ((__visibility__ ("default")))
-{
-
-  namespace pmr {
-    template<typename _CharT, typename _Traits = char_traits<_CharT>>
-      using basic_string = std::basic_string<_CharT, _Traits,
-          polymorphic_allocator<_CharT>>;
-    using string = basic_string<char>;
-
-    using u8string = basic_string<char8_t>;
-
-    using u16string = basic_string<char16_t>;
-    using u32string = basic_string<char32_t>;
-    using wstring = basic_string<wchar_t>;
-  }
-
-}
-
-
-
+# 88 "/usr/include/c++/14.2.0/string" 3
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
@@ -32038,6 +30285,21 @@ namespace __gnu_cxx __attribute__ ((__visibility__ ("default")))
 #pragma GCC visibility push(default)
 
 # 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
+# 145 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 3 4
+typedef long int ptrdiff_t;
+# 425 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 3 4
+typedef struct {
+  long long __max_align_ll __attribute__((__aligned__(__alignof__(long long))));
+  long double __max_align_ld __attribute__((__aligned__(__alignof__(long double))));
+# 436 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 3 4
+} max_align_t;
+
+
+
+
+
+
+  typedef decltype(nullptr) nullptr_t;
 # 39 "/usr/include/c++/14.2.0/bits/cxxabi_init_exception.h" 2 3
 # 50 "/usr/include/c++/14.2.0/bits/cxxabi_init_exception.h" 3
 namespace std
@@ -32536,1596 +30798,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
        
 # 38 "/usr/include/c++/14.2.0/bits/ios_base.h" 3
 
-# 1 "/usr/include/c++/14.2.0/ext/atomicity.h" 1 3
-# 32 "/usr/include/c++/14.2.0/ext/atomicity.h" 3
-       
-# 33 "/usr/include/c++/14.2.0/ext/atomicity.h" 3
 
-
-# 1 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 1 3
-# 30 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 3
-#pragma GCC visibility push(default)
-# 157 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 3
-# 1 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 1 3
-# 35 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
-# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 1 3 4
-# 31 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-# 1 "/usr/include/sched.h" 1 3 4
-# 29 "/usr/include/sched.h" 3 4
-# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
-# 30 "/usr/include/sched.h" 2 3 4
-# 43 "/usr/include/sched.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/sched.h" 1 3 4
-# 80 "/usr/include/x86_64-linux-gnu/bits/sched.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h" 1 3 4
-# 23 "/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h" 3 4
-struct sched_param
-{
-  int sched_priority;
-};
-# 81 "/usr/include/x86_64-linux-gnu/bits/sched.h" 2 3 4
-
-extern "C" {
-
-
-
-extern int clone (int (*__fn) (void *__arg), void *__child_stack,
-    int __flags, void *__arg, ...) noexcept (true);
-
-
-extern int unshare (int __flags) noexcept (true);
-
-
-extern int sched_getcpu (void) noexcept (true);
-
-
-extern int getcpu (unsigned int *, unsigned int *) noexcept (true);
-
-
-extern int setns (int __fd, int __nstype) noexcept (true);
-
-
-}
-# 44 "/usr/include/sched.h" 2 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/cpu-set.h" 1 3 4
-# 32 "/usr/include/x86_64-linux-gnu/bits/cpu-set.h" 3 4
-typedef unsigned long int __cpu_mask;
-
-
-
-
-
-
-typedef struct
-{
-  __cpu_mask __bits[1024 / (8 * sizeof (__cpu_mask))];
-} cpu_set_t;
-# 115 "/usr/include/x86_64-linux-gnu/bits/cpu-set.h" 3 4
-extern "C" {
-
-extern int __sched_cpucount (size_t __setsize, const cpu_set_t *__setp)
-     noexcept (true);
-extern cpu_set_t *__sched_cpualloc (size_t __count) noexcept (true) ;
-extern void __sched_cpufree (cpu_set_t *__set) noexcept (true);
-
-}
-# 45 "/usr/include/sched.h" 2 3 4
-
-
-
-
-
-
-extern "C" {
-
-
-extern int sched_setparam (__pid_t __pid, const struct sched_param *__param)
-     noexcept (true);
-
-
-extern int sched_getparam (__pid_t __pid, struct sched_param *__param) noexcept (true);
-
-
-extern int sched_setscheduler (__pid_t __pid, int __policy,
-          const struct sched_param *__param) noexcept (true);
-
-
-extern int sched_getscheduler (__pid_t __pid) noexcept (true);
-
-
-extern int sched_yield (void) noexcept (true);
-
-
-extern int sched_get_priority_max (int __algorithm) noexcept (true);
-
-
-extern int sched_get_priority_min (int __algorithm) noexcept (true);
-
-
-
-extern int sched_rr_get_interval (__pid_t __pid, struct timespec *__t) noexcept (true);
-# 130 "/usr/include/sched.h" 3 4
-extern int sched_setaffinity (__pid_t __pid, size_t __cpusetsize,
-         const cpu_set_t *__cpuset) noexcept (true);
-
-
-extern int sched_getaffinity (__pid_t __pid, size_t __cpusetsize,
-         cpu_set_t *__cpuset) noexcept (true);
-
-
-}
-# 32 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
-# 1 "/usr/include/time.h" 1 3 4
-# 29 "/usr/include/time.h" 3 4
-# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
-# 30 "/usr/include/time.h" 2 3 4
-
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/time.h" 1 3 4
-# 73 "/usr/include/x86_64-linux-gnu/bits/time.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/timex.h" 1 3 4
-# 26 "/usr/include/x86_64-linux-gnu/bits/timex.h" 3 4
-struct timex
-{
-# 58 "/usr/include/x86_64-linux-gnu/bits/timex.h" 3 4
-  unsigned int modes;
-  __syscall_slong_t offset;
-  __syscall_slong_t freq;
-  __syscall_slong_t maxerror;
-  __syscall_slong_t esterror;
-  int status;
-  __syscall_slong_t constant;
-  __syscall_slong_t precision;
-  __syscall_slong_t tolerance;
-  struct timeval time;
-  __syscall_slong_t tick;
-  __syscall_slong_t ppsfreq;
-  __syscall_slong_t jitter;
-  int shift;
-  __syscall_slong_t stabil;
-  __syscall_slong_t jitcnt;
-  __syscall_slong_t calcnt;
-  __syscall_slong_t errcnt;
-  __syscall_slong_t stbcnt;
-
-  int tai;
-
-
-  int :32; int :32; int :32; int :32;
-  int :32; int :32; int :32; int :32;
-  int :32; int :32; int :32;
-
-};
-# 74 "/usr/include/x86_64-linux-gnu/bits/time.h" 2 3 4
-
-extern "C" {
-
-
-extern int clock_adjtime (__clockid_t __clock_id, struct timex *__utx) noexcept (true) __attribute__ ((__nonnull__ (2)));
-# 90 "/usr/include/x86_64-linux-gnu/bits/time.h" 3 4
-}
-# 34 "/usr/include/time.h" 2 3 4
-
-
-
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h" 1 3 4
-
-
-
-
-
-
-struct tm
-{
-  int tm_sec;
-  int tm_min;
-  int tm_hour;
-  int tm_mday;
-  int tm_mon;
-  int tm_year;
-  int tm_wday;
-  int tm_yday;
-  int tm_isdst;
-
-
-  long int tm_gmtoff;
-  const char *tm_zone;
-
-
-
-
-};
-# 40 "/usr/include/time.h" 2 3 4
-# 48 "/usr/include/time.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h" 1 3 4
-
-
-
-
-
-
-
-struct itimerspec
-  {
-    struct timespec it_interval;
-    struct timespec it_value;
-  };
-# 49 "/usr/include/time.h" 2 3 4
-struct sigevent;
-# 68 "/usr/include/time.h" 3 4
-extern "C" {
-
-
-
-extern clock_t clock (void) noexcept (true);
-
-
-
-extern time_t time (time_t *__timer) noexcept (true);
-
-
-extern double difftime (time_t __time1, time_t __time0);
-
-
-extern time_t mktime (struct tm *__tp) noexcept (true);
-# 99 "/usr/include/time.h" 3 4
-extern size_t strftime (char *__restrict __s, size_t __maxsize,
-   const char *__restrict __format,
-   const struct tm *__restrict __tp)
-   noexcept (true) __attribute__ ((__nonnull__ (1, 3, 4)));
-
-
-
-
-extern char *strptime (const char *__restrict __s,
-         const char *__restrict __fmt, struct tm *__tp)
-     noexcept (true);
-
-
-
-
-
-
-extern size_t strftime_l (char *__restrict __s, size_t __maxsize,
-     const char *__restrict __format,
-     const struct tm *__restrict __tp,
-     locale_t __loc) noexcept (true);
-
-
-
-extern char *strptime_l (const char *__restrict __s,
-    const char *__restrict __fmt, struct tm *__tp,
-    locale_t __loc) noexcept (true);
-
-
-
-
-
-
-extern struct tm *gmtime (const time_t *__timer) noexcept (true);
-
-
-
-extern struct tm *localtime (const time_t *__timer) noexcept (true);
-# 154 "/usr/include/time.h" 3 4
-extern struct tm *gmtime_r (const time_t *__restrict __timer,
-       struct tm *__restrict __tp) noexcept (true);
-
-
-
-extern struct tm *localtime_r (const time_t *__restrict __timer,
-          struct tm *__restrict __tp) noexcept (true);
-# 179 "/usr/include/time.h" 3 4
-extern char *asctime (const struct tm *__tp) noexcept (true);
-
-
-
-extern char *ctime (const time_t *__timer) noexcept (true);
-# 197 "/usr/include/time.h" 3 4
-extern char *asctime_r (const struct tm *__restrict __tp,
-   char *__restrict __buf) noexcept (true);
-
-
-
-extern char *ctime_r (const time_t *__restrict __timer,
-        char *__restrict __buf) noexcept (true);
-# 217 "/usr/include/time.h" 3 4
-extern char *__tzname[2];
-extern int __daylight;
-extern long int __timezone;
-
-
-
-
-extern char *tzname[2];
-
-
-
-extern void tzset (void) noexcept (true);
-
-
-
-extern int daylight;
-extern long int timezone;
-# 246 "/usr/include/time.h" 3 4
-extern time_t timegm (struct tm *__tp) noexcept (true);
-# 263 "/usr/include/time.h" 3 4
-extern time_t timelocal (struct tm *__tp) noexcept (true);
-
-
-
-
-
-
-
-extern int dysize (int __year) noexcept (true) __attribute__ ((__const__));
-# 281 "/usr/include/time.h" 3 4
-extern int nanosleep (const struct timespec *__requested_time,
-        struct timespec *__remaining);
-
-
-extern int clock_getres (clockid_t __clock_id, struct timespec *__res) noexcept (true);
-
-
-extern int clock_gettime (clockid_t __clock_id, struct timespec *__tp)
-     noexcept (true) __attribute__ ((__nonnull__ (2)));
-
-
-extern int clock_settime (clockid_t __clock_id, const struct timespec *__tp)
-     noexcept (true) __attribute__ ((__nonnull__ (2)));
-# 323 "/usr/include/time.h" 3 4
-extern int clock_nanosleep (clockid_t __clock_id, int __flags,
-       const struct timespec *__req,
-       struct timespec *__rem);
-# 338 "/usr/include/time.h" 3 4
-extern int clock_getcpuclockid (pid_t __pid, clockid_t *__clock_id) noexcept (true);
-
-
-
-
-extern int timer_create (clockid_t __clock_id,
-    struct sigevent *__restrict __evp,
-    timer_t *__restrict __timerid) noexcept (true);
-
-
-extern int timer_delete (timer_t __timerid) noexcept (true);
-
-
-
-extern int timer_settime (timer_t __timerid, int __flags,
-     const struct itimerspec *__restrict __value,
-     struct itimerspec *__restrict __ovalue) noexcept (true);
-
-
-extern int timer_gettime (timer_t __timerid, struct itimerspec *__value)
-     noexcept (true);
-# 376 "/usr/include/time.h" 3 4
-extern int timer_getoverrun (timer_t __timerid) noexcept (true);
-
-
-
-
-
-
-extern int timespec_get (struct timespec *__ts, int __base)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-# 399 "/usr/include/time.h" 3 4
-extern int timespec_getres (struct timespec *__ts, int __base)
-     noexcept (true);
-# 425 "/usr/include/time.h" 3 4
-extern int getdate_err;
-# 434 "/usr/include/time.h" 3 4
-extern struct tm *getdate (const char *__string);
-# 448 "/usr/include/time.h" 3 4
-extern int getdate_r (const char *__restrict __string,
-        struct tm *__restrict __resbufp);
-
-
-}
-# 33 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
-
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 1 3 4
-# 26 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
-# 27 "/usr/include/x86_64-linux-gnu/bits/setjmp.h" 2 3 4
-
-
-
-
-typedef long int __jmp_buf[8];
-# 37 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
-# 38 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
-
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 1 3 4
-# 26 "/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h" 3 4
-struct __jmp_buf_tag
-  {
-
-
-
-
-    __jmp_buf __jmpbuf;
-    int __mask_was_saved;
-    __sigset_t __saved_mask;
-  };
-# 41 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
-
-# 1 "/usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h" 1 3 4
-# 23 "/usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h" 3 4
-extern "C" {
-extern long int __sysconf (int __name) noexcept (true);
-}
-# 43 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 2 3 4
-
-
-
-enum
-{
-  PTHREAD_CREATE_JOINABLE,
-
-  PTHREAD_CREATE_DETACHED
-
-};
-
-
-
-enum
-{
-  PTHREAD_MUTEX_TIMED_NP,
-  PTHREAD_MUTEX_RECURSIVE_NP,
-  PTHREAD_MUTEX_ERRORCHECK_NP,
-  PTHREAD_MUTEX_ADAPTIVE_NP
-
-  ,
-  PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_TIMED_NP,
-  PTHREAD_MUTEX_RECURSIVE = PTHREAD_MUTEX_RECURSIVE_NP,
-  PTHREAD_MUTEX_ERRORCHECK = PTHREAD_MUTEX_ERRORCHECK_NP,
-  PTHREAD_MUTEX_DEFAULT = PTHREAD_MUTEX_NORMAL
-
-
-
-  , PTHREAD_MUTEX_FAST_NP = PTHREAD_MUTEX_TIMED_NP
-
-};
-
-
-
-
-enum
-{
-  PTHREAD_MUTEX_STALLED,
-  PTHREAD_MUTEX_STALLED_NP = PTHREAD_MUTEX_STALLED,
-  PTHREAD_MUTEX_ROBUST,
-  PTHREAD_MUTEX_ROBUST_NP = PTHREAD_MUTEX_ROBUST
-};
-
-
-
-
-
-enum
-{
-  PTHREAD_PRIO_NONE,
-  PTHREAD_PRIO_INHERIT,
-  PTHREAD_PRIO_PROTECT
-};
-# 113 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-enum
-{
-  PTHREAD_RWLOCK_PREFER_READER_NP,
-  PTHREAD_RWLOCK_PREFER_WRITER_NP,
-  PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP,
-  PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_READER_NP
-};
-# 133 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-enum
-{
-  PTHREAD_INHERIT_SCHED,
-
-  PTHREAD_EXPLICIT_SCHED
-
-};
-
-
-
-enum
-{
-  PTHREAD_SCOPE_SYSTEM,
-
-  PTHREAD_SCOPE_PROCESS
-
-};
-
-
-
-enum
-{
-  PTHREAD_PROCESS_PRIVATE,
-
-  PTHREAD_PROCESS_SHARED
-
-};
-# 168 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-struct _pthread_cleanup_buffer
-{
-  void (*__routine) (void *);
-  void *__arg;
-  int __canceltype;
-  struct _pthread_cleanup_buffer *__prev;
-};
-
-
-enum
-{
-  PTHREAD_CANCEL_ENABLE,
-
-  PTHREAD_CANCEL_DISABLE
-
-};
-enum
-{
-  PTHREAD_CANCEL_DEFERRED,
-
-  PTHREAD_CANCEL_ASYNCHRONOUS
-
-};
-# 206 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern "C" {
-
-
-
-
-extern int pthread_create (pthread_t *__restrict __newthread,
-      const pthread_attr_t *__restrict __attr,
-      void *(*__start_routine) (void *),
-      void *__restrict __arg) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
-
-
-
-
-
-extern void pthread_exit (void *__retval) __attribute__ ((__noreturn__));
-
-
-
-
-
-
-
-extern int pthread_join (pthread_t __th, void **__thread_return);
-
-
-
-
-extern int pthread_tryjoin_np (pthread_t __th, void **__thread_return) noexcept (true);
-# 242 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_timedjoin_np (pthread_t __th, void **__thread_return,
-     const struct timespec *__abstime);
-# 252 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_clockjoin_np (pthread_t __th, void **__thread_return,
-                                 clockid_t __clockid,
-     const struct timespec *__abstime);
-# 278 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_detach (pthread_t __th) noexcept (true);
-
-
-
-extern pthread_t pthread_self (void) noexcept (true) __attribute__ ((__const__));
-
-
-extern int pthread_equal (pthread_t __thread1, pthread_t __thread2)
-  noexcept (true) __attribute__ ((__const__));
-
-
-
-
-
-
-
-extern int pthread_attr_init (pthread_attr_t *__attr) noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_attr_destroy (pthread_attr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_attr_getdetachstate (const pthread_attr_t *__attr,
-     int *__detachstate)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_attr_setdetachstate (pthread_attr_t *__attr,
-     int __detachstate)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_attr_getguardsize (const pthread_attr_t *__attr,
-          size_t *__guardsize)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_attr_setguardsize (pthread_attr_t *__attr,
-          size_t __guardsize)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_attr_getschedparam (const pthread_attr_t *__restrict __attr,
-           struct sched_param *__restrict __param)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_attr_setschedparam (pthread_attr_t *__restrict __attr,
-           const struct sched_param *__restrict
-           __param) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_attr_getschedpolicy (const pthread_attr_t *__restrict
-     __attr, int *__restrict __policy)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_attr_setschedpolicy (pthread_attr_t *__attr, int __policy)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_attr_getinheritsched (const pthread_attr_t *__restrict
-      __attr, int *__restrict __inherit)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_attr_setinheritsched (pthread_attr_t *__attr,
-      int __inherit)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_attr_getscope (const pthread_attr_t *__restrict __attr,
-      int *__restrict __scope)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_attr_setscope (pthread_attr_t *__attr, int __scope)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_attr_getstackaddr (const pthread_attr_t *__restrict
-          __attr, void **__restrict __stackaddr)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2))) __attribute__ ((__deprecated__));
-
-
-
-
-
-extern int pthread_attr_setstackaddr (pthread_attr_t *__attr,
-          void *__stackaddr)
-     noexcept (true) __attribute__ ((__nonnull__ (1))) __attribute__ ((__deprecated__));
-
-
-extern int pthread_attr_getstacksize (const pthread_attr_t *__restrict
-          __attr, size_t *__restrict __stacksize)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-
-
-extern int pthread_attr_setstacksize (pthread_attr_t *__attr,
-          size_t __stacksize)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_attr_getstack (const pthread_attr_t *__restrict __attr,
-      void **__restrict __stackaddr,
-      size_t *__restrict __stacksize)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2, 3)));
-
-
-
-
-extern int pthread_attr_setstack (pthread_attr_t *__attr, void *__stackaddr,
-      size_t __stacksize) noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-
-extern int pthread_attr_setaffinity_np (pthread_attr_t *__attr,
-     size_t __cpusetsize,
-     const cpu_set_t *__cpuset)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
-
-
-
-extern int pthread_attr_getaffinity_np (const pthread_attr_t *__attr,
-     size_t __cpusetsize,
-     cpu_set_t *__cpuset)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
-
-
-extern int pthread_getattr_default_np (pthread_attr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_attr_setsigmask_np (pthread_attr_t *__attr,
-           const __sigset_t *sigmask);
-
-
-
-
-extern int pthread_attr_getsigmask_np (const pthread_attr_t *__attr,
-           __sigset_t *sigmask);
-
-
-
-
-
-
-
-extern int pthread_setattr_default_np (const pthread_attr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-extern int pthread_getattr_np (pthread_t __th, pthread_attr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (2)));
-
-
-
-
-
-
-
-extern int pthread_setschedparam (pthread_t __target_thread, int __policy,
-      const struct sched_param *__param)
-     noexcept (true) __attribute__ ((__nonnull__ (3)));
-
-
-extern int pthread_getschedparam (pthread_t __target_thread,
-      int *__restrict __policy,
-      struct sched_param *__restrict __param)
-     noexcept (true) __attribute__ ((__nonnull__ (2, 3)));
-
-
-extern int pthread_setschedprio (pthread_t __target_thread, int __prio)
-     noexcept (true);
-
-
-
-
-extern int pthread_getname_np (pthread_t __target_thread, char *__buf,
-          size_t __buflen)
-     noexcept (true) __attribute__ ((__nonnull__ (2)));
-
-
-extern int pthread_setname_np (pthread_t __target_thread, const char *__name)
-     noexcept (true) __attribute__ ((__nonnull__ (2)));
-
-
-
-
-
-extern int pthread_getconcurrency (void) noexcept (true);
-
-
-extern int pthread_setconcurrency (int __level) noexcept (true);
-
-
-
-extern int pthread_yield (void) noexcept (true);
-
-extern int pthread_yield (void) noexcept (true) __asm__ ("" "sched_yield")
-  __attribute__ ((__deprecated__ ("pthread_yield is deprecated, use sched_yield instead")))
-                                                      ;
-
-
-
-
-
-
-
-extern int pthread_setaffinity_np (pthread_t __th, size_t __cpusetsize,
-       const cpu_set_t *__cpuset)
-     noexcept (true) __attribute__ ((__nonnull__ (3)));
-
-
-extern int pthread_getaffinity_np (pthread_t __th, size_t __cpusetsize,
-       cpu_set_t *__cpuset)
-     noexcept (true) __attribute__ ((__nonnull__ (3)));
-# 518 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_once (pthread_once_t *__once_control,
-    void (*__init_routine) (void)) __attribute__ ((__nonnull__ (1, 2)));
-# 530 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_setcancelstate (int __state, int *__oldstate);
-
-
-
-extern int pthread_setcanceltype (int __type, int *__oldtype);
-
-
-extern int pthread_cancel (pthread_t __th);
-
-
-
-
-extern void pthread_testcancel (void);
-
-
-
-
-struct __cancel_jmp_buf_tag
-{
-  __jmp_buf __cancel_jmp_buf;
-  int __mask_was_saved;
-};
-
-typedef struct
-{
-  struct __cancel_jmp_buf_tag __cancel_jmp_buf[1];
-  void *__pad[4];
-} __pthread_unwind_buf_t __attribute__ ((__aligned__));
-# 566 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-struct __pthread_cleanup_frame
-{
-  void (*__cancel_routine) (void *);
-  void *__cancel_arg;
-  int __do_it;
-  int __cancel_type;
-};
-
-
-
-
-class __pthread_cleanup_class
-{
-  void (*__cancel_routine) (void *);
-  void *__cancel_arg;
-  int __do_it;
-  int __cancel_type;
-
- public:
-  __pthread_cleanup_class (void (*__fct) (void *), void *__arg)
-    : __cancel_routine (__fct), __cancel_arg (__arg), __do_it (1) { }
-  ~__pthread_cleanup_class () { if (__do_it) __cancel_routine (__cancel_arg); }
-  void __setdoit (int __newval) { __do_it = __newval; }
-  void __defer () { pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED,
-        &__cancel_type); }
-  void __restore () const { pthread_setcanceltype (__cancel_type, 0); }
-};
-# 775 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int __sigsetjmp_cancel (struct __cancel_jmp_buf_tag __env[1], int __savemask) noexcept (true) __asm__ ("" "__sigsetjmp")
-
-
-                     __attribute__ ((__returns_twice__));
-# 790 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_mutex_init (pthread_mutex_t *__mutex,
-          const pthread_mutexattr_t *__mutexattr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutex_destroy (pthread_mutex_t *__mutex)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutex_trylock (pthread_mutex_t *__mutex)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutex_lock (pthread_mutex_t *__mutex)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-extern int pthread_mutex_timedlock (pthread_mutex_t *__restrict __mutex,
-        const struct timespec *__restrict
-        __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-# 826 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_mutex_clocklock (pthread_mutex_t *__restrict __mutex,
-        clockid_t __clockid,
-        const struct timespec *__restrict
-        __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
-# 844 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_mutex_unlock (pthread_mutex_t *__mutex)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_mutex_getprioceiling (const pthread_mutex_t *
-      __restrict __mutex,
-      int *__restrict __prioceiling)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-
-extern int pthread_mutex_setprioceiling (pthread_mutex_t *__restrict __mutex,
-      int __prioceiling,
-      int *__restrict __old_ceiling)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
-
-
-
-
-extern int pthread_mutex_consistent (pthread_mutex_t *__mutex)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutex_consistent_np (pthread_mutex_t *) noexcept (true) __asm__ ("" "pthread_mutex_consistent")
-                                __attribute__ ((__nonnull__ (1)))
-  __attribute__ ((__deprecated__ ("pthread_mutex_consistent_np is deprecated, use pthread_mutex_consistent")))
-                                                                         ;
-# 883 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_mutexattr_init (pthread_mutexattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutexattr_destroy (pthread_mutexattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutexattr_getpshared (const pthread_mutexattr_t *
-      __restrict __attr,
-      int *__restrict __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_mutexattr_setpshared (pthread_mutexattr_t *__attr,
-      int __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_mutexattr_gettype (const pthread_mutexattr_t *__restrict
-          __attr, int *__restrict __kind)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-
-
-extern int pthread_mutexattr_settype (pthread_mutexattr_t *__attr, int __kind)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_mutexattr_getprotocol (const pthread_mutexattr_t *
-       __restrict __attr,
-       int *__restrict __protocol)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-
-extern int pthread_mutexattr_setprotocol (pthread_mutexattr_t *__attr,
-       int __protocol)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *
-          __restrict __attr,
-          int *__restrict __prioceiling)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr,
-          int __prioceiling)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_mutexattr_getrobust (const pthread_mutexattr_t *__attr,
-     int *__robustness)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_mutexattr_getrobust_np (pthread_mutexattr_t *, int *) noexcept (true) __asm__ ("" "pthread_mutexattr_getrobust")
-
-                                   __attribute__ ((__nonnull__ (1)))
-  __attribute__ ((__deprecated__ ("pthread_mutexattr_getrobust_np is deprecated, use pthread_mutexattr_getrobust")))
-                                                                               ;
-
-
-
-
-
-
-extern int pthread_mutexattr_setrobust (pthread_mutexattr_t *__attr,
-     int __robustness)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_mutexattr_setrobust_np (pthread_mutexattr_t *, int) noexcept (true) __asm__ ("" "pthread_mutexattr_setrobust")
-
-                                   __attribute__ ((__nonnull__ (1)))
-  __attribute__ ((__deprecated__ ("pthread_mutexattr_setrobust_np is deprecated, use pthread_mutexattr_setrobust")))
-                                                                               ;
-# 976 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_rwlock_init (pthread_rwlock_t *__restrict __rwlock,
-    const pthread_rwlockattr_t *__restrict
-    __attr) noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_rwlock_destroy (pthread_rwlock_t *__rwlock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_rwlock_rdlock (pthread_rwlock_t *__rwlock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_rwlock_tryrdlock (pthread_rwlock_t *__rwlock)
-  noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-extern int pthread_rwlock_timedrdlock (pthread_rwlock_t *__restrict __rwlock,
-           const struct timespec *__restrict
-           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-# 1013 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_rwlock_clockrdlock (pthread_rwlock_t *__restrict __rwlock,
-           clockid_t __clockid,
-           const struct timespec *__restrict
-           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
-# 1032 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_rwlock_wrlock (pthread_rwlock_t *__rwlock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_rwlock_trywrlock (pthread_rwlock_t *__rwlock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-extern int pthread_rwlock_timedwrlock (pthread_rwlock_t *__restrict __rwlock,
-           const struct timespec *__restrict
-           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-# 1060 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_rwlock_clockwrlock (pthread_rwlock_t *__restrict __rwlock,
-           clockid_t __clockid,
-           const struct timespec *__restrict
-           __abstime) noexcept (true) __attribute__ ((__nonnull__ (1, 3)));
-# 1080 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_rwlock_unlock (pthread_rwlock_t *__rwlock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-
-extern int pthread_rwlockattr_init (pthread_rwlockattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_rwlockattr_destroy (pthread_rwlockattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_rwlockattr_getpshared (const pthread_rwlockattr_t *
-       __restrict __attr,
-       int *__restrict __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_rwlockattr_setpshared (pthread_rwlockattr_t *__attr,
-       int __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_rwlockattr_getkind_np (const pthread_rwlockattr_t *
-       __restrict __attr,
-       int *__restrict __pref)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_rwlockattr_setkind_np (pthread_rwlockattr_t *__attr,
-       int __pref) noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-
-
-
-extern int pthread_cond_init (pthread_cond_t *__restrict __cond,
-         const pthread_condattr_t *__restrict __cond_attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_cond_destroy (pthread_cond_t *__cond)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_cond_signal (pthread_cond_t *__cond)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_cond_broadcast (pthread_cond_t *__cond)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-
-
-extern int pthread_cond_wait (pthread_cond_t *__restrict __cond,
-         pthread_mutex_t *__restrict __mutex)
-     __attribute__ ((__nonnull__ (1, 2)));
-# 1154 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_cond_timedwait (pthread_cond_t *__restrict __cond,
-       pthread_mutex_t *__restrict __mutex,
-       const struct timespec *__restrict __abstime)
-     __attribute__ ((__nonnull__ (1, 2, 3)));
-# 1180 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_cond_clockwait (pthread_cond_t *__restrict __cond,
-       pthread_mutex_t *__restrict __mutex,
-       __clockid_t __clock_id,
-       const struct timespec *__restrict __abstime)
-     __attribute__ ((__nonnull__ (1, 2, 4)));
-# 1203 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_condattr_init (pthread_condattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_condattr_destroy (pthread_condattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_condattr_getpshared (const pthread_condattr_t *
-     __restrict __attr,
-     int *__restrict __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_condattr_setpshared (pthread_condattr_t *__attr,
-     int __pshared) noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_condattr_getclock (const pthread_condattr_t *
-          __restrict __attr,
-          __clockid_t *__restrict __clock_id)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_condattr_setclock (pthread_condattr_t *__attr,
-          __clockid_t __clock_id)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-# 1239 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_spin_init (pthread_spinlock_t *__lock, int __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_spin_destroy (pthread_spinlock_t *__lock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_spin_lock (pthread_spinlock_t *__lock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_spin_trylock (pthread_spinlock_t *__lock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_spin_unlock (pthread_spinlock_t *__lock)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-
-
-
-extern int pthread_barrier_init (pthread_barrier_t *__restrict __barrier,
-     const pthread_barrierattr_t *__restrict
-     __attr, unsigned int __count)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_barrier_destroy (pthread_barrier_t *__barrier)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_barrier_wait (pthread_barrier_t *__barrier)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-
-extern int pthread_barrierattr_init (pthread_barrierattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_barrierattr_destroy (pthread_barrierattr_t *__attr)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_barrierattr_getpshared (const pthread_barrierattr_t *
-        __restrict __attr,
-        int *__restrict __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1, 2)));
-
-
-extern int pthread_barrierattr_setpshared (pthread_barrierattr_t *__attr,
-        int __pshared)
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-# 1306 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_key_create (pthread_key_t *__key,
-          void (*__destr_function) (void *))
-     noexcept (true) __attribute__ ((__nonnull__ (1)));
-
-
-extern int pthread_key_delete (pthread_key_t __key) noexcept (true);
-
-
-extern void *pthread_getspecific (pthread_key_t __key) noexcept (true);
-
-
-extern int pthread_setspecific (pthread_key_t __key,
-    const void *__pointer)
-  noexcept (true) __attribute__ ((__access__ (__none__, 2)));
-
-
-
-
-extern int pthread_getcpuclockid (pthread_t __thread_id,
-      __clockid_t *__clock_id)
-     noexcept (true) __attribute__ ((__nonnull__ (2)));
-# 1341 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-extern int pthread_atfork (void (*__prepare) (void),
-      void (*__parent) (void),
-      void (*__child) (void)) noexcept (true);
-# 1355 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include-fixed/pthread.h" 3 4
-}
-# 36 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 2 3
-# 47 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
-typedef pthread_t __gthread_t;
-typedef pthread_key_t __gthread_key_t;
-typedef pthread_once_t __gthread_once_t;
-typedef pthread_mutex_t __gthread_mutex_t;
-
-
-
-typedef pthread_mutex_t __gthread_recursive_mutex_t;
-typedef pthread_cond_t __gthread_cond_t;
-typedef struct timespec __gthread_time_t;
-# 108 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 312 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
-static inline int
-__gthread_active_p (void)
-{
-  return 1;
-}
-# 672 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
-static inline int
-__gthread_create (__gthread_t *__threadid, void *(*__func) (void*),
-    void *__args)
-{
-  return pthread_create (__threadid, __null, __func, __args);
-}
-
-static inline int
-__gthread_join (__gthread_t __threadid, void **__value_ptr)
-{
-  return pthread_join (__threadid, __value_ptr);
-}
-
-static inline int
-__gthread_detach (__gthread_t __threadid)
-{
-  return pthread_detach (__threadid);
-}
-
-static inline int
-__gthread_equal (__gthread_t __t1, __gthread_t __t2)
-{
-  return pthread_equal (__t1, __t2);
-}
-
-static inline __gthread_t
-__gthread_self (void)
-{
-  return pthread_self ();
-}
-
-static inline int
-__gthread_yield (void)
-{
-  return sched_yield ();
-}
-
-static inline int
-__gthread_once (__gthread_once_t *__once, void (*__func) (void))
-{
-  if (__gthread_active_p ())
-    return pthread_once (__once, __func);
-  else
-    return -1;
-}
-
-static inline int
-__gthread_key_create (__gthread_key_t *__key, void (*__dtor) (void *))
-{
-  return pthread_key_create (__key, __dtor);
-}
-
-static inline int
-__gthread_key_delete (__gthread_key_t __key)
-{
-  return pthread_key_delete (__key);
-}
-
-static inline void *
-__gthread_getspecific (__gthread_key_t __key)
-{
-  return pthread_getspecific (__key);
-}
-
-static inline int
-__gthread_setspecific (__gthread_key_t __key, const void *__ptr)
-{
-  return pthread_setspecific (__key, __ptr);
-}
-
-static inline void
-__gthread_mutex_init_function (__gthread_mutex_t *__mutex)
-{
-  if (__gthread_active_p ())
-    pthread_mutex_init (__mutex, __null);
-}
-
-static inline int
-__gthread_mutex_destroy (__gthread_mutex_t *__mutex)
-{
-  if (__gthread_active_p ())
-    return pthread_mutex_destroy (__mutex);
-  else
-    return 0;
-}
-
-static inline int
-__gthread_mutex_lock (__gthread_mutex_t *__mutex)
-{
-  if (__gthread_active_p ())
-    return pthread_mutex_lock (__mutex);
-  else
-    return 0;
-}
-
-static inline int
-__gthread_mutex_trylock (__gthread_mutex_t *__mutex)
-{
-  if (__gthread_active_p ())
-    return pthread_mutex_trylock (__mutex);
-  else
-    return 0;
-}
-
-
-static inline int
-__gthread_mutex_timedlock (__gthread_mutex_t *__mutex,
-      const __gthread_time_t *__abs_timeout)
-{
-  if (__gthread_active_p ())
-    return pthread_mutex_timedlock (__mutex, __abs_timeout);
-  else
-    return 0;
-}
-
-
-static inline int
-__gthread_mutex_unlock (__gthread_mutex_t *__mutex)
-{
-  if (__gthread_active_p ())
-    return pthread_mutex_unlock (__mutex);
-  else
-    return 0;
-}
-# 821 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
-static inline int
-__gthread_recursive_mutex_lock (__gthread_recursive_mutex_t *__mutex)
-{
-  return __gthread_mutex_lock (__mutex);
-}
-
-static inline int
-__gthread_recursive_mutex_trylock (__gthread_recursive_mutex_t *__mutex)
-{
-  return __gthread_mutex_trylock (__mutex);
-}
-
-
-static inline int
-__gthread_recursive_mutex_timedlock (__gthread_recursive_mutex_t *__mutex,
-         const __gthread_time_t *__abs_timeout)
-{
-  return __gthread_mutex_timedlock (__mutex, __abs_timeout);
-}
-
-
-static inline int
-__gthread_recursive_mutex_unlock (__gthread_recursive_mutex_t *__mutex)
-{
-  return __gthread_mutex_unlock (__mutex);
-}
-
-static inline int
-__gthread_recursive_mutex_destroy (__gthread_recursive_mutex_t *__mutex)
-{
-  return __gthread_mutex_destroy (__mutex);
-}
-# 863 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr-default.h" 3
-static inline int
-__gthread_cond_broadcast (__gthread_cond_t *__cond)
-{
-  return pthread_cond_broadcast (__cond);
-}
-
-static inline int
-__gthread_cond_signal (__gthread_cond_t *__cond)
-{
-  return pthread_cond_signal (__cond);
-}
-
-static inline int
-__gthread_cond_wait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex)
-{
-  return pthread_cond_wait (__cond, __mutex);
-}
-
-static inline int
-__gthread_cond_timedwait (__gthread_cond_t *__cond, __gthread_mutex_t *__mutex,
-     const __gthread_time_t *__abs_timeout)
-{
-  return pthread_cond_timedwait (__cond, __mutex, __abs_timeout);
-}
-
-static inline int
-__gthread_cond_wait_recursive (__gthread_cond_t *__cond,
-          __gthread_recursive_mutex_t *__mutex)
-{
-  return __gthread_cond_wait (__cond, __mutex);
-}
-
-static inline int
-__gthread_cond_destroy (__gthread_cond_t* __cond)
-{
-  return pthread_cond_destroy (__cond);
-}
-# 158 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/gthr.h" 2 3
-
-
-#pragma GCC visibility pop
-# 36 "/usr/include/c++/14.2.0/ext/atomicity.h" 2 3
-# 1 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/atomic_word.h" 1 3
-# 32 "/usr/include/c++/14.2.0/x86_64-unknown-linux-gnu/bits/atomic_word.h" 3
-typedef int _Atomic_word;
-# 37 "/usr/include/c++/14.2.0/ext/atomicity.h" 2 3
-
-# 1 "/usr/include/x86_64-linux-gnu/sys/single_threaded.h" 1 3 4
-# 24 "/usr/include/x86_64-linux-gnu/sys/single_threaded.h" 3 4
-extern "C" {
-
-
-
-
-extern char __libc_single_threaded;
-
-}
-# 39 "/usr/include/c++/14.2.0/ext/atomicity.h" 2 3
-
-
-namespace __gnu_cxx __attribute__ ((__visibility__ ("default")))
-{
-
-
-  __attribute__((__always_inline__))
-  inline bool
-  __is_single_threaded() noexcept
-  {
-
-
-
-    return ::__libc_single_threaded;
-
-
-
-  }
-
-
-
-
-
-
-  inline _Atomic_word
-  __attribute__((__always_inline__))
-  __exchange_and_add(volatile _Atomic_word* __mem, int __val)
-  { return __atomic_fetch_add(__mem, __val, 4); }
-
-  inline void
-  __attribute__((__always_inline__))
-  __atomic_add(volatile _Atomic_word* __mem, int __val)
-  { __atomic_fetch_add(__mem, __val, 4); }
-# 80 "/usr/include/c++/14.2.0/ext/atomicity.h" 3
-  inline _Atomic_word
-  __attribute__((__always_inline__))
-  __exchange_and_add_single(_Atomic_word* __mem, int __val)
-  {
-    _Atomic_word __result = *__mem;
-    *__mem += __val;
-    return __result;
-  }
-
-  inline void
-  __attribute__((__always_inline__))
-  __atomic_add_single(_Atomic_word* __mem, int __val)
-  { *__mem += __val; }
-
-  inline _Atomic_word
-  __attribute__ ((__always_inline__))
-  __exchange_and_add_dispatch(_Atomic_word* __mem, int __val)
-  {
-    if (__is_single_threaded())
-      return __exchange_and_add_single(__mem, __val);
-    else
-      return __exchange_and_add(__mem, __val);
-  }
-
-  inline void
-  __attribute__ ((__always_inline__))
-  __atomic_add_dispatch(_Atomic_word* __mem, int __val)
-  {
-    if (__is_single_threaded())
-      __atomic_add_single(__mem, __val);
-    else
-      __atomic_add(__mem, __val);
-  }
-
-
-}
-# 40 "/usr/include/c++/14.2.0/bits/ios_base.h" 2 3
 
 # 1 "/usr/include/c++/14.2.0/bits/locale_classes.h" 1 3
 # 37 "/usr/include/c++/14.2.0/bits/locale_classes.h" 3
@@ -34211,7 +30884,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
 
-    __attribute ((__abi_tag__ ("cxx11")))
+   
     string
     name() const;
 # 272 "/usr/include/c++/14.2.0/bits/locale_classes.h" 3
@@ -34270,7 +30943,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
     _M_coalesce(const locale& __base, const locale& __add, category __cat);
 
 
-    static const id* const _S_twinned_facets[];
+
 
   };
 # 391 "/usr/include/c++/14.2.0/bits/locale_classes.h" 3
@@ -34517,7 +31190,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
   };
 # 673 "/usr/include/c++/14.2.0/bits/locale_classes.h" 3
   template<typename _CharT>
-    class __cxx11:: collate : public locale::facet
+    class collate : public locale::facet
     {
     public:
 
@@ -34607,7 +31280,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
   template<typename _CharT>
-    class __cxx11:: collate_byname : public collate<_CharT>
+    class collate_byname : public collate<_CharT>
     {
     public:
 
@@ -35126,30 +31799,35 @@ namespace std __attribute__ ((__visibility__ ("default")))
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
+# 69 "/usr/include/c++/14.2.0/stdexcept" 3
+  typedef basic_string<char> __cow_string;
 
 
-
-
-  struct __cow_string
+  struct __sso_string
   {
-    union {
+    struct __str
+    {
       const char* _M_p;
-      char _M_bytes[sizeof(const char*)];
+      size_t _M_string_length;
+      char _M_local_buf[16];
     };
 
-    __cow_string();
-    __cow_string(const std::string&);
-    __cow_string(const char*, size_t);
-    __cow_string(const __cow_string&) noexcept;
-    __cow_string& operator=(const __cow_string&) noexcept;
-    ~__cow_string();
+    union {
+      __str _M_s;
+      char _M_bytes[sizeof(__str)];
+    };
 
-    __cow_string(__cow_string&&) noexcept;
-    __cow_string& operator=(__cow_string&&) noexcept;
+    __sso_string() noexcept;
+    __sso_string(const std::string&);
+    __sso_string(const char*, size_t);
+    __sso_string(const __sso_string&);
+    __sso_string& operator=(const __sso_string&);
+    ~__sso_string();
+
+    __sso_string(__sso_string&&) noexcept;
+    __sso_string& operator=(__sso_string&&) noexcept;
 
   };
-
-  typedef basic_string<char> __sso_string;
 # 113 "/usr/include/c++/14.2.0/stdexcept" 3
   class logic_error : public exception
   {
@@ -35169,11 +31847,11 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
 
-    logic_error(const logic_error&) noexcept;
-    logic_error& operator=(const logic_error&) noexcept;
 
 
 
+    logic_error(const logic_error&) = default;
+    logic_error& operator=(const logic_error&) = default;
 
 
     virtual ~logic_error() noexcept;
@@ -35275,11 +31953,11 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
 
-    runtime_error(const runtime_error&) noexcept;
-    runtime_error& operator=(const runtime_error&) noexcept;
 
 
 
+    runtime_error(const runtime_error&) = default;
+    runtime_error& operator=(const runtime_error&) = default;
 
 
     virtual ~runtime_error() noexcept;
@@ -35398,23 +32076,15 @@ inline namespace _V2 {
 
     virtual const char*
     name() const noexcept = 0;
-
-
-
-
-
-
-  private:
-    __attribute ((__abi_tag__ ("cxx11")))
-    virtual __cow_string
-    _M_message(int) const;
-
-  public:
-
-    __attribute ((__abi_tag__ ("cxx11")))
+# 136 "/usr/include/c++/14.2.0/system_error" 3
     virtual string
     message(int) const = 0;
-# 144 "/usr/include/c++/14.2.0/system_error" 3
+
+  private:
+    virtual __sso_string
+    _M_message(int) const;
+
+
   public:
 
     virtual error_condition
@@ -35520,7 +32190,7 @@ namespace __adl_only
     default_error_condition() const noexcept;
 
 
-    __attribute ((__abi_tag__ ("cxx11")))
+   
     string
     message() const
     { return category().message(value()); }
@@ -35608,7 +32278,7 @@ namespace __adl_only
     category() const noexcept { return *_M_cat; }
 
 
-    __attribute ((__abi_tag__ ("cxx11")))
+   
     string
     message() const
     { return category().message(value()); }
@@ -35947,19 +32617,15 @@ namespace std __attribute__ ((__visibility__ ("default")))
   {
 # 272 "/usr/include/c++/14.2.0/bits/ios_base.h" 3
   public:
-# 281 "/usr/include/c++/14.2.0/bits/ios_base.h" 3
-    class __attribute ((__abi_tag__ ("cxx11"))) failure : public system_error
+# 302 "/usr/include/c++/14.2.0/bits/ios_base.h" 3
+    class failure : public exception
     {
     public:
-      explicit
-      failure(const string& __str);
 
 
       explicit
-      failure(const string&, const error_code&);
+      failure(const string& __str) throw();
 
-      explicit
-      failure(const char*, const error_code& = io_errc::stream);
 
 
       virtual
@@ -35967,6 +32633,27 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
       virtual const char*
       what() const throw();
+
+
+
+
+
+      explicit
+      failure(const string& __s, const error_code&) noexcept
+      : failure(__s)
+      { }
+
+      explicit
+      failure(const char* __s, const error_code& = error_code{})
+      : failure(string(__s))
+      { }
+
+
+      error_code code() const noexcept { return error_code{}; }
+
+
+    private:
+      string _M_msg;
     };
 # 367 "/usr/include/c++/14.2.0/bits/ios_base.h" 3
     typedef _Ios_Fmtflags fmtflags;
@@ -38564,7 +35251,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
  }
     }
 
-namespace __cxx11 {
+
 # 1677 "/usr/include/c++/14.2.0/bits/locale_facets.h" 3
   template<typename _CharT>
     class numpunct : public locale::facet
@@ -38707,7 +35394,7 @@ namespace __cxx11 {
       ~numpunct_byname() { }
     };
 
-}
+
 
 
 # 1959 "/usr/include/c++/14.2.0/bits/locale_facets.h" 3
@@ -38788,13 +35475,13 @@ namespace __cxx11 {
 
       virtual ~num_get() { }
 
-      __attribute ((__abi_tag__ ("cxx11")))
+     
       iter_type
       _M_extract_float(iter_type, iter_type, ios_base&, ios_base::iostate&,
          string&) const;
 
       template<typename _ValueT>
- __attribute ((__abi_tag__ ("cxx11")))
+
  iter_type
  _M_extract_int(iter_type, iter_type, ios_base&, ios_base::iostate&,
          _ValueT&) const;
@@ -39223,7 +35910,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
   template<typename _CharT, typename _InIter>
-    __attribute ((__abi_tag__ ("cxx11")))
+   
     _InIter
     num_get<_CharT, _InIter>::
     _M_extract_float(_InIter __beg, _InIter __end, ios_base& __io,
@@ -39449,7 +36136,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
   template<typename _CharT, typename _InIter>
     template<typename _ValueT>
-      __attribute ((__abi_tag__ ("cxx11")))
+     
       _InIter
       num_get<_CharT, _InIter>::
       _M_extract_int(_InIter __beg, _InIter __end, ios_base& __io,
@@ -40308,8 +36995,8 @@ namespace std __attribute__ ((__visibility__ ("default")))
 
 
 
-  extern template class __cxx11:: numpunct<char>;
-  extern template class __cxx11:: numpunct_byname<char>;
+  extern template class numpunct<char>;
+  extern template class numpunct_byname<char>;
   extern template class num_get<char>;
   extern template class num_put<char>;
   extern template class ctype_byname<char>;
@@ -40363,8 +37050,8 @@ namespace std __attribute__ ((__visibility__ ("default")))
     has_facet<num_get<char> >(const locale&);
 
 
-  extern template class __cxx11:: numpunct<wchar_t>;
-  extern template class __cxx11:: numpunct_byname<wchar_t>;
+  extern template class numpunct<wchar_t>;
+  extern template class numpunct_byname<wchar_t>;
   extern template class num_get<wchar_t>;
   extern template class num_put<wchar_t>;
   extern template class ctype_byname<wchar_t>;
@@ -41302,72 +37989,6 @@ namespace std __attribute__ ((__visibility__ ("default")))
     {
       __os << __x;
       return std::move(__os);
-    }
-
-
-  template<typename _CharT, typename _Traits>
-    class __syncbuf_base : public basic_streambuf<_CharT, _Traits>
-    {
-    public:
-      static bool*
-      _S_get(basic_streambuf<_CharT, _Traits>* __buf [[maybe_unused]]) noexcept
-      {
-
- if (auto __p = dynamic_cast<__syncbuf_base*>(__buf))
-   return &__p->_M_emit_on_sync;
-
- return nullptr;
-      }
-
-    protected:
-      __syncbuf_base(basic_streambuf<_CharT, _Traits>* __w = nullptr)
-      : _M_wrapped(__w)
-      { }
-
-      basic_streambuf<_CharT, _Traits>* _M_wrapped = nullptr;
-      bool _M_emit_on_sync = false;
-      bool _M_needs_sync = false;
-    };
-
-  template<typename _CharT, typename _Traits>
-    inline basic_ostream<_CharT, _Traits>&
-    emit_on_flush(basic_ostream<_CharT, _Traits>& __os)
-    {
-      if (bool* __flag = __syncbuf_base<_CharT, _Traits>::_S_get(__os.rdbuf()))
- *__flag = true;
-      return __os;
-    }
-
-  template<typename _CharT, typename _Traits>
-    inline basic_ostream<_CharT, _Traits>&
-    noemit_on_flush(basic_ostream<_CharT, _Traits>& __os)
-    {
-      if (bool* __flag = __syncbuf_base<_CharT, _Traits>::_S_get(__os.rdbuf()))
- *__flag = false;
-      return __os;
-    }
-
-  template<typename _CharT, typename _Traits>
-    inline basic_ostream<_CharT, _Traits>&
-    flush_emit(basic_ostream<_CharT, _Traits>& __os)
-    {
-      struct _Restore
-      {
- ~_Restore() { *_M_flag = _M_prev; }
-
- bool _M_prev = false;
- bool* _M_flag = &_M_prev;
-      } __restore;
-
-      if (bool* __flag = __syncbuf_base<_CharT, _Traits>::_S_get(__os.rdbuf()))
- {
-   __restore._M_prev = *__flag;
-   __restore._M_flag = __flag;
-   *__flag = true;
- }
-
-      __os.flush();
-      return __os;
     }
 # 1014 "/usr/include/c++/14.2.0/ostream" 3
 
@@ -43283,7 +39904,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
-namespace __cxx11 {
+
 # 78 "/usr/include/c++/14.2.0/sstream" 3
   template<typename _CharT, typename _Traits, typename _Alloc>
     class basic_stringbuf : public basic_streambuf<_CharT, _Traits>
@@ -43343,57 +39964,7 @@ namespace __cxx11 {
       basic_stringbuf(basic_stringbuf&& __rhs)
       : basic_stringbuf(std::move(__rhs), __xfer_bufptrs(__rhs, this))
       { __rhs._M_sync(const_cast<char_type*>(__rhs._M_string.data()), 0, 0); }
-
-
-      explicit
-      basic_stringbuf(const allocator_type& __a)
-      : basic_stringbuf(ios_base::in | std::ios_base::out, __a)
-      { }
-
-      basic_stringbuf(ios_base::openmode __mode,
-        const allocator_type& __a)
-      : __streambuf_type(), _M_mode(__mode), _M_string(__a)
-      { }
-
-      explicit
-      basic_stringbuf(__string_type&& __s,
-        ios_base::openmode __mode = ios_base::in
-        | ios_base::out)
-      : __streambuf_type(), _M_mode(__mode), _M_string(std::move(__s))
-      { _M_stringbuf_init(__mode); }
-
-      template<typename _SAlloc>
- basic_stringbuf(const basic_string<_CharT, _Traits, _SAlloc>& __s,
-   const allocator_type& __a)
- : basic_stringbuf(__s, ios_base::in | std::ios_base::out, __a)
- { }
-
-      template<typename _SAlloc>
- basic_stringbuf(const basic_string<_CharT, _Traits, _SAlloc>& __s,
-   ios_base::openmode __mode,
-   const allocator_type& __a)
- : __streambuf_type(), _M_mode(__mode),
-   _M_string(__s.data(), __s.size(), __a)
- { _M_stringbuf_init(__mode); }
-
-      template<typename _SAlloc>
- explicit
- basic_stringbuf(const basic_string<_CharT, _Traits, _SAlloc>& __s,
-   ios_base::openmode __mode = ios_base::in
-          | ios_base::out)
- : basic_stringbuf(__s, __mode, allocator_type{})
- { }
-
-      basic_stringbuf(basic_stringbuf&& __rhs, const allocator_type& __a)
-      : basic_stringbuf(std::move(__rhs), __a, __xfer_bufptrs(__rhs, this))
-      { __rhs._M_sync(const_cast<char_type*>(__rhs._M_string.data()), 0, 0); }
-
-      allocator_type get_allocator() const noexcept
-      { return _M_string.get_allocator(); }
-
-
-
-
+# 209 "/usr/include/c++/14.2.0/sstream" 3
       basic_stringbuf&
       operator=(const basic_stringbuf&) = delete;
 
@@ -43423,7 +39994,7 @@ namespace __cxx11 {
       }
 # 248 "/usr/include/c++/14.2.0/sstream" 3
       __string_type
-      str() const &
+      str() const
       {
  __string_type __ret(_M_string.get_allocator());
  if (char_type* __hi = _M_high_mark())
@@ -43432,35 +40003,8 @@ namespace __cxx11 {
    __ret = _M_string;
  return __ret;
       }
-
-
-
-
-      template<__allocator_like _SAlloc>
- basic_string<_CharT, _Traits, _SAlloc>
- str(const _SAlloc& __sa) const
- {
-   auto __sv = view();
-   return { __sv.data(), __sv.size(), __sa };
- }
-
-
-      __string_type
-      str() &&
-      {
- if (char_type* __hi = _M_high_mark())
-   {
-
-     _M_string._M_set_length(_M_high_mark() - this->pbase());
-   }
- auto __str = std::move(_M_string);
- _M_string.clear();
- _M_sync(_M_string.data(), 0, 0);
- return __str;
-      }
-
-
-     
+# 286 "/usr/include/c++/14.2.0/sstream" 3
+      [[__gnu__::__always_inline__]]
       basic_string_view<char_type, traits_type>
       view() const noexcept
       {
@@ -43478,27 +40022,7 @@ namespace __cxx11 {
  _M_string.assign(__s.data(), __s.size());
  _M_stringbuf_init(_M_mode);
       }
-
-
-
-      template<__allocator_like _SAlloc>
- requires (!is_same_v<_SAlloc, _Alloc>)
- void
- str(const basic_string<_CharT, _Traits, _SAlloc>& __s)
- {
-   _M_string.assign(__s.data(), __s.size());
-   _M_stringbuf_init(_M_mode);
- }
-
-
-      void
-      str(__string_type&& __s)
-      {
- _M_string = std::move(__s);
- _M_stringbuf_init(_M_mode);
-      }
-
-
+# 333 "/usr/include/c++/14.2.0/sstream" 3
     protected:
 
       void
@@ -43607,73 +40131,20 @@ namespace __cxx11 {
    }
  return 0;
       }
-
-
-
-
-
+# 505 "/usr/include/c++/14.2.0/sstream" 3
       struct __xfer_bufptrs
       {
- __xfer_bufptrs(const basic_stringbuf& __from, basic_stringbuf* __to)
- : _M_to{__to}, _M_goff{-1, -1, -1}, _M_poff{-1, -1, -1}
- {
-   const _CharT* const __str = __from._M_string.data();
-   const _CharT* __end = nullptr;
-   if (__from.eback())
-     {
-       _M_goff[0] = __from.eback() - __str;
-       _M_goff[1] = __from.gptr() - __str;
-       _M_goff[2] = __from.egptr() - __str;
-       __end = __from.egptr();
-     }
-   if (__from.pbase())
-     {
-       _M_poff[0] = __from.pbase() - __str;
-       _M_poff[1] = __from.pptr() - __from.pbase();
-       _M_poff[2] = __from.epptr() - __str;
-       if (!__end || __from.pptr() > __end)
-  __end = __from.pptr();
-     }
-
-
-   if (__end)
-     {
-
-
-       auto& __mut_from = const_cast<basic_stringbuf&>(__from);
-       __mut_from._M_string._M_length(__end - __str);
-     }
- }
-
- ~__xfer_bufptrs()
- {
-   char_type* __str = const_cast<char_type*>(_M_to->_M_string.data());
-   if (_M_goff[0] != -1)
-     _M_to->setg(__str+_M_goff[0], __str+_M_goff[1], __str+_M_goff[2]);
-   if (_M_poff[0] != -1)
-     _M_to->_M_pbump(__str+_M_poff[0], __str+_M_poff[2], _M_poff[1]);
- }
-
- basic_stringbuf* _M_to;
- off_type _M_goff[3];
- off_type _M_poff[3];
+ __xfer_bufptrs(const basic_stringbuf&, basic_stringbuf*) { }
       };
-# 513 "/usr/include/c++/14.2.0/sstream" 3
+
+
+
+
       basic_stringbuf(basic_stringbuf&& __rhs, __xfer_bufptrs&&)
       : __streambuf_type(static_cast<const __streambuf_type&>(__rhs)),
       _M_mode(__rhs._M_mode), _M_string(std::move(__rhs._M_string))
       { }
-
-
-
-
-      basic_stringbuf(basic_stringbuf&& __rhs, const allocator_type& __a,
-        __xfer_bufptrs&&)
-      : __streambuf_type(static_cast<const __streambuf_type&>(__rhs)),
-      _M_mode(__rhs._M_mode), _M_string(std::move(__rhs._M_string), __a)
-      { }
-
-
+# 528 "/usr/include/c++/14.2.0/sstream" 3
     };
 # 546 "/usr/include/c++/14.2.0/sstream" 3
   template<typename _CharT, typename _Traits, typename _Alloc>
@@ -43731,41 +40202,7 @@ namespace __cxx11 {
       : __istream_type(std::move(__rhs)),
       _M_stringbuf(std::move(__rhs._M_stringbuf))
       { __istream_type::set_rdbuf(&_M_stringbuf); }
-
-
-      basic_istringstream(ios_base::openmode __mode, const allocator_type& __a)
-      : __istream_type(), _M_stringbuf(__mode | ios_base::in, __a)
-      { this->init(std::__addressof(_M_stringbuf)); }
-
-      explicit
-      basic_istringstream(__string_type&& __str,
-     ios_base::openmode __mode = ios_base::in)
-      : __istream_type(), _M_stringbuf(std::move(__str), __mode | ios_base::in)
-      { this->init(std::__addressof(_M_stringbuf)); }
-
-      template<typename _SAlloc>
- basic_istringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-       const allocator_type& __a)
- : basic_istringstream(__str, ios_base::in, __a)
- { }
-
-      template<typename _SAlloc>
- basic_istringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-       ios_base::openmode __mode,
-       const allocator_type& __a)
- : __istream_type(), _M_stringbuf(__str, __mode | ios_base::in, __a)
- { this->init(std::__addressof(_M_stringbuf)); }
-
-      template<typename _SAlloc>
- explicit
- basic_istringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-       ios_base::openmode __mode = ios_base::in)
- : basic_istringstream(__str, __mode, allocator_type())
- { }
-
-
-
-
+# 671 "/usr/include/c++/14.2.0/sstream" 3
       basic_istringstream&
       operator=(const basic_istringstream&) = delete;
 
@@ -43793,24 +40230,10 @@ namespace __cxx11 {
 
 
       __string_type
-      str() const &
+      str() const
       { return _M_stringbuf.str(); }
-
-
-
-
-      template<__allocator_like _SAlloc>
- basic_string<_CharT, _Traits, _SAlloc>
- str(const _SAlloc& __sa) const
- { return _M_stringbuf.str(__sa); }
-
-
-      __string_type
-      str() &&
-      { return std::move(_M_stringbuf).str(); }
-
-
-     
+# 723 "/usr/include/c++/14.2.0/sstream" 3
+      [[__gnu__::__always_inline__]]
       basic_string_view<char_type, traits_type>
       view() const noexcept
       { return _M_stringbuf.view(); }
@@ -43818,20 +40241,7 @@ namespace __cxx11 {
       void
       str(const __string_type& __s)
       { _M_stringbuf.str(__s); }
-
-
-
-      template<__allocator_like _SAlloc>
- requires (!is_same_v<_SAlloc, _Alloc>)
- void
- str(const basic_string<_CharT, _Traits, _SAlloc>& __s)
- { _M_stringbuf.str(__s); }
-
-
-      void
-      str(__string_type&& __s)
-      { _M_stringbuf.str(std::move(__s)); }
-
+# 752 "/usr/include/c++/14.2.0/sstream" 3
     };
 # 770 "/usr/include/c++/14.2.0/sstream" 3
   template <typename _CharT, typename _Traits, typename _Alloc>
@@ -43889,41 +40299,7 @@ namespace __cxx11 {
       : __ostream_type(std::move(__rhs)),
       _M_stringbuf(std::move(__rhs._M_stringbuf))
       { __ostream_type::set_rdbuf(&_M_stringbuf); }
-
-
-      basic_ostringstream(ios_base::openmode __mode, const allocator_type& __a)
-      : __ostream_type(), _M_stringbuf(__mode | ios_base::out, __a)
-      { this->init(std::__addressof(_M_stringbuf)); }
-
-      explicit
-      basic_ostringstream(__string_type&& __str,
-     ios_base::openmode __mode = ios_base::out)
-      : __ostream_type(), _M_stringbuf(std::move(__str), __mode | ios_base::out)
-      { this->init(std::__addressof(_M_stringbuf)); }
-
-      template<typename _SAlloc>
- basic_ostringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-       const allocator_type& __a)
- : basic_ostringstream(__str, ios_base::out, __a)
- { }
-
-      template<typename _SAlloc>
- basic_ostringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-       ios_base::openmode __mode,
-       const allocator_type& __a)
- : __ostream_type(), _M_stringbuf(__str, __mode | ios_base::out, __a)
- { this->init(std::__addressof(_M_stringbuf)); }
-
-      template<typename _SAlloc>
- explicit
- basic_ostringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-       ios_base::openmode __mode = ios_base::out)
- : basic_ostringstream(__str, __mode, allocator_type())
- { }
-
-
-
-
+# 895 "/usr/include/c++/14.2.0/sstream" 3
       basic_ostringstream&
       operator=(const basic_ostringstream&) = delete;
 
@@ -43951,24 +40327,10 @@ namespace __cxx11 {
 
 
       __string_type
-      str() const &
+      str() const
       { return _M_stringbuf.str(); }
-
-
-
-
-      template<__allocator_like _SAlloc>
- basic_string<_CharT, _Traits, _SAlloc>
- str(const _SAlloc& __sa) const
- { return _M_stringbuf.str(__sa); }
-
-
-      __string_type
-      str() &&
-      { return std::move(_M_stringbuf).str(); }
-
-
-     
+# 947 "/usr/include/c++/14.2.0/sstream" 3
+      [[__gnu__::__always_inline__]]
       basic_string_view<char_type, traits_type>
       view() const noexcept
       { return _M_stringbuf.view(); }
@@ -43976,20 +40338,7 @@ namespace __cxx11 {
       void
       str(const __string_type& __s)
       { _M_stringbuf.str(__s); }
-
-
-
-      template<__allocator_like _SAlloc>
- requires (!is_same_v<_SAlloc, _Alloc>)
- void
- str(const basic_string<_CharT, _Traits, _SAlloc>& __s)
- { _M_stringbuf.str(__s); }
-
-
-      void
-      str(__string_type&& __s)
-      { _M_stringbuf.str(std::move(__s)); }
-
+# 976 "/usr/include/c++/14.2.0/sstream" 3
     };
 # 994 "/usr/include/c++/14.2.0/sstream" 3
   template <typename _CharT, typename _Traits, typename _Alloc>
@@ -44047,43 +40396,7 @@ namespace __cxx11 {
       : __iostream_type(std::move(__rhs)),
       _M_stringbuf(std::move(__rhs._M_stringbuf))
       { __iostream_type::set_rdbuf(&_M_stringbuf); }
-
-
-      basic_stringstream(ios_base::openmode __mode, const allocator_type& __a)
-      : __iostream_type(), _M_stringbuf(__mode, __a)
-      { this->init(&_M_stringbuf); }
-
-      explicit
-      basic_stringstream(__string_type&& __str,
-    ios_base::openmode __mode = ios_base::in
-           | ios_base::out)
-      : __iostream_type(), _M_stringbuf(std::move(__str), __mode)
-      { this->init(std::__addressof(_M_stringbuf)); }
-
-      template<typename _SAlloc>
- basic_stringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-      const allocator_type& __a)
- : basic_stringstream(__str, ios_base::in | ios_base::out, __a)
- { }
-
-      template<typename _SAlloc>
- basic_stringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-      ios_base::openmode __mode,
-      const allocator_type& __a)
- : __iostream_type(), _M_stringbuf(__str, __mode, __a)
- { this->init(std::__addressof(_M_stringbuf)); }
-
-      template<typename _SAlloc>
- explicit
- basic_stringstream(const basic_string<_CharT, _Traits, _SAlloc>& __str,
-      ios_base::openmode __mode = ios_base::in
-             | ios_base::out)
- : basic_stringstream(__str, __mode, allocator_type())
- { }
-
-
-
-
+# 1117 "/usr/include/c++/14.2.0/sstream" 3
       basic_stringstream&
       operator=(const basic_stringstream&) = delete;
 
@@ -44111,24 +40424,10 @@ namespace __cxx11 {
 
 
       __string_type
-      str() const &
+      str() const
       { return _M_stringbuf.str(); }
-
-
-
-
-      template<__allocator_like _SAlloc>
- basic_string<_CharT, _Traits, _SAlloc>
- str(const _SAlloc& __sa) const
- { return _M_stringbuf.str(__sa); }
-
-
-      __string_type
-      str() &&
-      { return std::move(_M_stringbuf).str(); }
-
-
-     
+# 1169 "/usr/include/c++/14.2.0/sstream" 3
+      [[__gnu__::__always_inline__]]
       basic_string_view<char_type, traits_type>
       view() const noexcept
       { return _M_stringbuf.view(); }
@@ -44136,20 +40435,7 @@ namespace __cxx11 {
       void
       str(const __string_type& __s)
       { _M_stringbuf.str(__s); }
-
-
-
-      template<__allocator_like _SAlloc>
- requires (!is_same_v<_SAlloc, _Alloc>)
- void
- str(const basic_string<_CharT, _Traits, _SAlloc>& __s)
- { _M_stringbuf.str(__s); }
-
-
-      void
-      str(__string_type&& __s)
-      { _M_stringbuf.str(std::move(__s)); }
-
+# 1198 "/usr/include/c++/14.2.0/sstream" 3
     };
 
 
@@ -44183,7 +40469,7 @@ namespace __cxx11 {
     { __x.swap(__y); }
 
 
-}
+
 
 }
 
@@ -44247,25 +40533,7 @@ namespace std __attribute__ ((__visibility__ ("default")))
  return traits_type::not_eof(__c);
 
       const __size_type __capacity = _M_string.capacity();
-
-
-      if (size_t(this->epptr() - this->pbase()) < __capacity)
- {
-
-   char_type* __base = const_cast<char_type*>(_M_string.data());
-   _M_pbump(__base, __base + __capacity, this->pptr() - this->pbase());
-   if (_M_mode & ios_base::in)
-     {
-       const __size_type __nget = this->gptr() - this->eback();
-       const __size_type __eget = this->egptr() - this->eback();
-       this->setg(__base, __base + __nget, __base + __eget + 1);
-     }
-   *this->pptr() = traits_type::to_char_type(__c);
-   this->pbump(1);
-   return __c;
- }
-
-
+# 110 "/usr/include/c++/14.2.0/bits/sstream.tcc" 3
       const __size_type __max_size = _M_string.max_size();
       const bool __testput = this->pptr() < this->epptr();
       if (__builtin_expect(!__testput && __capacity == __max_size, false))
@@ -49338,7 +45606,3004 @@ namespace std __attribute__ ((__visibility__ ("default")))
 # 84 "/usr/include/c++/14.2.0/vector" 2 3
 
 
+# 1 "/usr/include/c++/14.2.0/bits/memory_resource.h" 1 3
+# 33 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+       
+# 34 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
 
+
+
+
+# 1 "/usr/include/c++/14.2.0/cstddef" 1 3
+# 42 "/usr/include/c++/14.2.0/cstddef" 3
+       
+# 43 "/usr/include/c++/14.2.0/cstddef" 3
+
+
+
+
+
+
+
+# 1 "/usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stddef.h" 1 3 4
+# 51 "/usr/include/c++/14.2.0/cstddef" 2 3
+
+
+# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
+# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
+       
+# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
+# 54 "/usr/include/c++/14.2.0/cstddef" 2 3
+
+extern "C++"
+{
+
+namespace std
+{
+
+  using ::max_align_t;
+}
+
+
+
+namespace std
+{
+
+
+  enum class byte : unsigned char {};
+
+  template<typename _IntegerType> struct __byte_operand { };
+  template<> struct __byte_operand<bool> { using __type = byte; };
+  template<> struct __byte_operand<char> { using __type = byte; };
+  template<> struct __byte_operand<signed char> { using __type = byte; };
+  template<> struct __byte_operand<unsigned char> { using __type = byte; };
+  template<> struct __byte_operand<wchar_t> { using __type = byte; };
+
+  template<> struct __byte_operand<char8_t> { using __type = byte; };
+
+  template<> struct __byte_operand<char16_t> { using __type = byte; };
+  template<> struct __byte_operand<char32_t> { using __type = byte; };
+  template<> struct __byte_operand<short> { using __type = byte; };
+  template<> struct __byte_operand<unsigned short> { using __type = byte; };
+  template<> struct __byte_operand<int> { using __type = byte; };
+  template<> struct __byte_operand<unsigned int> { using __type = byte; };
+  template<> struct __byte_operand<long> { using __type = byte; };
+  template<> struct __byte_operand<unsigned long> { using __type = byte; };
+  template<> struct __byte_operand<long long> { using __type = byte; };
+  template<> struct __byte_operand<unsigned long long> { using __type = byte; };
+
+  template<> struct __byte_operand<__int128>
+  { using __type = byte; };
+  template<> struct __byte_operand<unsigned __int128>
+  { using __type = byte; };
+# 109 "/usr/include/c++/14.2.0/cstddef" 3
+  template<typename _IntegerType>
+    struct __byte_operand<const _IntegerType>
+    : __byte_operand<_IntegerType> { };
+  template<typename _IntegerType>
+    struct __byte_operand<volatile _IntegerType>
+    : __byte_operand<_IntegerType> { };
+  template<typename _IntegerType>
+    struct __byte_operand<const volatile _IntegerType>
+    : __byte_operand<_IntegerType> { };
+
+  template<typename _IntegerType>
+    using __byte_op_t = typename __byte_operand<_IntegerType>::__type;
+
+  template<typename _IntegerType>
+    [[__gnu__::__always_inline__]]
+    constexpr __byte_op_t<_IntegerType>
+    operator<<(byte __b, _IntegerType __shift) noexcept
+    { return (byte)(unsigned char)((unsigned)__b << __shift); }
+
+  template<typename _IntegerType>
+    [[__gnu__::__always_inline__]]
+    constexpr __byte_op_t<_IntegerType>
+    operator>>(byte __b, _IntegerType __shift) noexcept
+    { return (byte)(unsigned char)((unsigned)__b >> __shift); }
+
+  [[__gnu__::__always_inline__]]
+  constexpr byte
+  operator|(byte __l, byte __r) noexcept
+  { return (byte)(unsigned char)((unsigned)__l | (unsigned)__r); }
+
+  [[__gnu__::__always_inline__]]
+  constexpr byte
+  operator&(byte __l, byte __r) noexcept
+  { return (byte)(unsigned char)((unsigned)__l & (unsigned)__r); }
+
+  [[__gnu__::__always_inline__]]
+  constexpr byte
+  operator^(byte __l, byte __r) noexcept
+  { return (byte)(unsigned char)((unsigned)__l ^ (unsigned)__r); }
+
+  [[__gnu__::__always_inline__]]
+  constexpr byte
+  operator~(byte __b) noexcept
+  { return (byte)(unsigned char)~(unsigned)__b; }
+
+  template<typename _IntegerType>
+    [[__gnu__::__always_inline__]]
+    constexpr __byte_op_t<_IntegerType>&
+    operator<<=(byte& __b, _IntegerType __shift) noexcept
+    { return __b = __b << __shift; }
+
+  template<typename _IntegerType>
+    [[__gnu__::__always_inline__]]
+    constexpr __byte_op_t<_IntegerType>&
+    operator>>=(byte& __b, _IntegerType __shift) noexcept
+    { return __b = __b >> __shift; }
+
+  [[__gnu__::__always_inline__]]
+  constexpr byte&
+  operator|=(byte& __l, byte __r) noexcept
+  { return __l = __l | __r; }
+
+  [[__gnu__::__always_inline__]]
+  constexpr byte&
+  operator&=(byte& __l, byte __r) noexcept
+  { return __l = __l & __r; }
+
+  [[__gnu__::__always_inline__]]
+  constexpr byte&
+  operator^=(byte& __l, byte __r) noexcept
+  { return __l = __l ^ __r; }
+
+  template<typename _IntegerType>
+    [[nodiscard,__gnu__::__always_inline__]]
+    constexpr _IntegerType
+    to_integer(__byte_op_t<_IntegerType> __b) noexcept
+    { return _IntegerType(__b); }
+
+
+}
+
+}
+# 39 "/usr/include/c++/14.2.0/bits/memory_resource.h" 2 3
+
+# 1 "/usr/include/c++/14.2.0/bits/uses_allocator.h" 1 3
+# 40 "/usr/include/c++/14.2.0/bits/uses_allocator.h" 3
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+
+
+
+  struct __erased_type { };
+
+
+
+
+  template<typename _Alloc, typename _Tp>
+    using __is_erased_or_convertible
+      = __or_<is_convertible<_Alloc, _Tp>, is_same<_Tp, __erased_type>>;
+
+
+  struct allocator_arg_t { explicit allocator_arg_t() = default; };
+
+  inline constexpr allocator_arg_t allocator_arg =
+    allocator_arg_t();
+
+  template<typename _Tp, typename _Alloc, typename = __void_t<>>
+    struct __uses_allocator_helper
+    : false_type { };
+
+  template<typename _Tp, typename _Alloc>
+    struct __uses_allocator_helper<_Tp, _Alloc,
+       __void_t<typename _Tp::allocator_type>>
+    : __is_erased_or_convertible<_Alloc, typename _Tp::allocator_type>::type
+    { };
+
+
+  template<typename _Tp, typename _Alloc>
+    struct uses_allocator
+    : __uses_allocator_helper<_Tp, _Alloc>::type
+    { };
+
+  struct __uses_alloc_base { };
+
+  struct __uses_alloc0 : __uses_alloc_base
+  {
+    struct _Sink { void constexpr operator=(const void*) { } } _M_a;
+  };
+
+  template<typename _Alloc>
+    struct __uses_alloc1 : __uses_alloc_base { const _Alloc* _M_a; };
+
+  template<typename _Alloc>
+    struct __uses_alloc2 : __uses_alloc_base { const _Alloc* _M_a; };
+
+  template<bool, typename _Tp, typename _Alloc, typename... _Args>
+    struct __uses_alloc;
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    struct __uses_alloc<true, _Tp, _Alloc, _Args...>
+    : __conditional_t<
+        is_constructible<_Tp, allocator_arg_t, const _Alloc&, _Args...>::value,
+        __uses_alloc1<_Alloc>,
+        __uses_alloc2<_Alloc>>
+    {
+
+
+      static_assert(__or_<
+   is_constructible<_Tp, allocator_arg_t, const _Alloc&, _Args...>,
+   is_constructible<_Tp, _Args..., const _Alloc&>>::value,
+   "construction with an allocator must be possible"
+   " if uses_allocator is true");
+    };
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    struct __uses_alloc<false, _Tp, _Alloc, _Args...>
+    : __uses_alloc0 { };
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    using __uses_alloc_t =
+      __uses_alloc<uses_allocator<_Tp, _Alloc>::value, _Tp, _Alloc, _Args...>;
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    constexpr
+    inline __uses_alloc_t<_Tp, _Alloc, _Args...>
+    __use_alloc(const _Alloc& __a)
+    {
+      __uses_alloc_t<_Tp, _Alloc, _Args...> __ret;
+      __ret._M_a = std::__addressof(__a);
+      return __ret;
+    }
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    void
+    __use_alloc(const _Alloc&&) = delete;
+
+
+  template <typename _Tp, typename _Alloc>
+    inline constexpr bool uses_allocator_v =
+      uses_allocator<_Tp, _Alloc>::value;
+
+
+  template<template<typename...> class _Predicate,
+    typename _Tp, typename _Alloc, typename... _Args>
+    struct __is_uses_allocator_predicate
+    : __conditional_t<uses_allocator<_Tp, _Alloc>::value,
+      __or_<_Predicate<_Tp, allocator_arg_t, _Alloc, _Args...>,
+     _Predicate<_Tp, _Args..., _Alloc>>,
+      _Predicate<_Tp, _Args...>> { };
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    struct __is_uses_allocator_constructible
+    : __is_uses_allocator_predicate<is_constructible, _Tp, _Alloc, _Args...>
+    { };
+
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    inline constexpr bool __is_uses_allocator_constructible_v =
+      __is_uses_allocator_constructible<_Tp, _Alloc, _Args...>::value;
+
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    struct __is_nothrow_uses_allocator_constructible
+    : __is_uses_allocator_predicate<is_nothrow_constructible,
+        _Tp, _Alloc, _Args...>
+    { };
+
+
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    inline constexpr bool
+    __is_nothrow_uses_allocator_constructible_v =
+      __is_nothrow_uses_allocator_constructible<_Tp, _Alloc, _Args...>::value;
+
+
+  template<typename _Tp, typename... _Args>
+    void __uses_allocator_construct_impl(__uses_alloc0, _Tp* __ptr,
+      _Args&&... __args)
+    { ::new ((void*)__ptr) _Tp(std::forward<_Args>(__args)...); }
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    void __uses_allocator_construct_impl(__uses_alloc1<_Alloc> __a, _Tp* __ptr,
+      _Args&&... __args)
+    {
+      ::new ((void*)__ptr) _Tp(allocator_arg, *__a._M_a,
+          std::forward<_Args>(__args)...);
+    }
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    void __uses_allocator_construct_impl(__uses_alloc2<_Alloc> __a, _Tp* __ptr,
+      _Args&&... __args)
+    { ::new ((void*)__ptr) _Tp(std::forward<_Args>(__args)..., *__a._M_a); }
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    void __uses_allocator_construct(const _Alloc& __a, _Tp* __ptr,
+        _Args&&... __args)
+    {
+      std::__uses_allocator_construct_impl(
+   std::__use_alloc<_Tp, _Alloc, _Args...>(__a), __ptr,
+   std::forward<_Args>(__args)...);
+    }
+
+
+
+}
+# 41 "/usr/include/c++/14.2.0/bits/memory_resource.h" 2 3
+# 1 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 1 3
+# 33 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
+       
+# 34 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
+
+# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
+# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
+       
+# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
+# 36 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 2 3
+
+
+
+# 1 "/usr/include/c++/14.2.0/tuple" 1 3
+# 32 "/usr/include/c++/14.2.0/tuple" 3
+       
+# 33 "/usr/include/c++/14.2.0/tuple" 3
+# 44 "/usr/include/c++/14.2.0/tuple" 3
+# 1 "/usr/include/c++/14.2.0/bits/ranges_util.h" 1 3
+# 39 "/usr/include/c++/14.2.0/bits/ranges_util.h" 3
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+namespace ranges
+{
+
+
+  namespace __detail
+  {
+    template<typename _Range>
+      concept __simple_view = view<_Range> && range<const _Range>
+ && same_as<iterator_t<_Range>, iterator_t<const _Range>>
+ && same_as<sentinel_t<_Range>, sentinel_t<const _Range>>;
+
+    template<typename _It>
+      concept __has_arrow = input_iterator<_It>
+ && (is_pointer_v<_It> || requires(_It __it) { __it.operator->(); });
+
+    using std::__detail::__different_from;
+  }
+
+
+  template<typename _Derived>
+    requires is_class_v<_Derived> && same_as<_Derived, remove_cv_t<_Derived>>
+    class view_interface
+    {
+    private:
+      constexpr _Derived& _M_derived() noexcept
+      {
+ static_assert(derived_from<_Derived, view_interface<_Derived>>);
+ static_assert(view<_Derived>);
+ return static_cast<_Derived&>(*this);
+      }
+
+      constexpr const _Derived& _M_derived() const noexcept
+      {
+ static_assert(derived_from<_Derived, view_interface<_Derived>>);
+ static_assert(view<_Derived>);
+ return static_cast<const _Derived&>(*this);
+      }
+
+      static constexpr bool
+      _S_bool(bool) noexcept;
+
+      template<typename _Tp>
+ static constexpr bool
+ _S_empty(_Tp& __t)
+ noexcept(noexcept(_S_bool(ranges::begin(__t) == ranges::end(__t))))
+ { return ranges::begin(__t) == ranges::end(__t); }
+
+      template<typename _Tp>
+ static constexpr auto
+ _S_size(_Tp& __t)
+ noexcept(noexcept(ranges::end(__t) - ranges::begin(__t)))
+ { return ranges::end(__t) - ranges::begin(__t); }
+
+    public:
+      constexpr bool
+      empty()
+      noexcept(noexcept(_S_empty(_M_derived())))
+      requires forward_range<_Derived> && (!sized_range<_Derived>)
+      { return _S_empty(_M_derived()); }
+
+      constexpr bool
+      empty()
+      noexcept(noexcept(ranges::size(_M_derived()) == 0))
+      requires sized_range<_Derived>
+      { return ranges::size(_M_derived()) == 0; }
+
+      constexpr bool
+      empty() const
+      noexcept(noexcept(_S_empty(_M_derived())))
+      requires forward_range<const _Derived> && (!sized_range<const _Derived>)
+      { return _S_empty(_M_derived()); }
+
+      constexpr bool
+      empty() const
+      noexcept(noexcept(ranges::size(_M_derived()) == 0))
+      requires sized_range<const _Derived>
+      { return ranges::size(_M_derived()) == 0; }
+
+      constexpr explicit
+      operator bool() noexcept(noexcept(ranges::empty(_M_derived())))
+      requires requires { ranges::empty(_M_derived()); }
+      { return !ranges::empty(_M_derived()); }
+
+      constexpr explicit
+      operator bool() const noexcept(noexcept(ranges::empty(_M_derived())))
+      requires requires { ranges::empty(_M_derived()); }
+      { return !ranges::empty(_M_derived()); }
+
+      constexpr auto
+      data() noexcept(noexcept(ranges::begin(_M_derived())))
+      requires contiguous_iterator<iterator_t<_Derived>>
+      { return std::to_address(ranges::begin(_M_derived())); }
+
+      constexpr auto
+      data() const noexcept(noexcept(ranges::begin(_M_derived())))
+      requires range<const _Derived>
+ && contiguous_iterator<iterator_t<const _Derived>>
+      { return std::to_address(ranges::begin(_M_derived())); }
+
+      constexpr auto
+      size() noexcept(noexcept(_S_size(_M_derived())))
+      requires forward_range<_Derived>
+ && sized_sentinel_for<sentinel_t<_Derived>, iterator_t<_Derived>>
+      { return _S_size(_M_derived()); }
+
+      constexpr auto
+      size() const noexcept(noexcept(_S_size(_M_derived())))
+      requires forward_range<const _Derived>
+ && sized_sentinel_for<sentinel_t<const _Derived>,
+         iterator_t<const _Derived>>
+      { return _S_size(_M_derived()); }
+
+      constexpr decltype(auto)
+      front() requires forward_range<_Derived>
+      {
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
+ return *ranges::begin(_M_derived());
+      }
+
+      constexpr decltype(auto)
+      front() const requires forward_range<const _Derived>
+      {
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
+ return *ranges::begin(_M_derived());
+      }
+
+      constexpr decltype(auto)
+      back()
+      requires bidirectional_range<_Derived> && common_range<_Derived>
+      {
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
+ return *ranges::prev(ranges::end(_M_derived()));
+      }
+
+      constexpr decltype(auto)
+      back() const
+      requires bidirectional_range<const _Derived>
+ && common_range<const _Derived>
+      {
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(!empty()), false)) std::__glibcxx_assert_fail(); } while (false);
+ return *ranges::prev(ranges::end(_M_derived()));
+      }
+
+      template<random_access_range _Range = _Derived>
+ constexpr decltype(auto)
+ operator[](range_difference_t<_Range> __n)
+ { return ranges::begin(_M_derived())[__n]; }
+
+      template<random_access_range _Range = const _Derived>
+ constexpr decltype(auto)
+ operator[](range_difference_t<_Range> __n) const
+ { return ranges::begin(_M_derived())[__n]; }
+# 212 "/usr/include/c++/14.2.0/bits/ranges_util.h" 3
+    };
+
+  namespace __detail
+  {
+    template<typename _From, typename _To>
+      concept __uses_nonqualification_pointer_conversion
+ = is_pointer_v<_From> && is_pointer_v<_To>
+   && !convertible_to<remove_pointer_t<_From>(*)[],
+        remove_pointer_t<_To>(*)[]>;
+
+    template<typename _From, typename _To>
+      concept __convertible_to_non_slicing = convertible_to<_From, _To>
+ && !__uses_nonqualification_pointer_conversion<decay_t<_From>,
+             decay_t<_To>>;
+
+
+
+
+
+    template<typename _Tp>
+      concept __pair_like
+ = !is_reference_v<_Tp> && requires(_Tp __t)
+ {
+   typename tuple_size<_Tp>::type;
+   requires derived_from<tuple_size<_Tp>, integral_constant<size_t, 2>>;
+   typename tuple_element_t<0, remove_const_t<_Tp>>;
+   typename tuple_element_t<1, remove_const_t<_Tp>>;
+   { get<0>(__t) } -> convertible_to<const tuple_element_t<0, _Tp>&>;
+   { get<1>(__t) } -> convertible_to<const tuple_element_t<1, _Tp>&>;
+ };
+
+
+    template<typename _Tp, typename _Up, typename _Vp>
+      concept __pair_like_convertible_from
+ = !range<_Tp> && !is_reference_v<_Vp> && __pair_like<_Tp>
+ && constructible_from<_Tp, _Up, _Vp>
+ && __convertible_to_non_slicing<_Up, tuple_element_t<0, _Tp>>
+ && convertible_to<_Vp, tuple_element_t<1, _Tp>>;
+
+  }
+
+  namespace views { struct _Drop; }
+
+  enum class subrange_kind : bool { unsized, sized };
+
+
+  template<input_or_output_iterator _It, sentinel_for<_It> _Sent = _It,
+    subrange_kind _Kind = sized_sentinel_for<_Sent, _It>
+      ? subrange_kind::sized : subrange_kind::unsized>
+    requires (_Kind == subrange_kind::sized || !sized_sentinel_for<_Sent, _It>)
+    class subrange : public view_interface<subrange<_It, _Sent, _Kind>>
+    {
+    private:
+      static constexpr bool _S_store_size
+ = _Kind == subrange_kind::sized && !sized_sentinel_for<_Sent, _It>;
+
+      friend struct views::_Drop;
+
+      _It _M_begin = _It();
+      [[no_unique_address]] _Sent _M_end = _Sent();
+
+      using __size_type
+ = __detail::__make_unsigned_like_t<iter_difference_t<_It>>;
+
+      template<typename _Tp, bool = _S_store_size>
+ struct _Size
+ {
+   [[__gnu__::__always_inline__]]
+   constexpr _Size(_Tp = {}) { }
+ };
+
+      template<typename _Tp>
+ struct _Size<_Tp, true>
+ {
+   [[__gnu__::__always_inline__]]
+   constexpr _Size(_Tp __s = {}) : _M_size(__s) { }
+
+   _Tp _M_size;
+ };
+
+      [[no_unique_address]] _Size<__size_type> _M_size = {};
+
+    public:
+      subrange() requires default_initializable<_It> = default;
+
+      constexpr
+      subrange(__detail::__convertible_to_non_slicing<_It> auto __i, _Sent __s)
+      noexcept(is_nothrow_constructible_v<_It, decltype(__i)>
+        && is_nothrow_constructible_v<_Sent, _Sent&>)
+ requires (!_S_store_size)
+      : _M_begin(std::move(__i)), _M_end(__s)
+      { }
+
+      constexpr
+      subrange(__detail::__convertible_to_non_slicing<_It> auto __i, _Sent __s,
+        __size_type __n)
+      noexcept(is_nothrow_constructible_v<_It, decltype(__i)>
+        && is_nothrow_constructible_v<_Sent, _Sent&>)
+ requires (_Kind == subrange_kind::sized)
+      : _M_begin(std::move(__i)), _M_end(__s), _M_size(__n)
+      { }
+
+      template<__detail::__different_from<subrange> _Rng>
+ requires borrowed_range<_Rng>
+   && __detail::__convertible_to_non_slicing<iterator_t<_Rng>, _It>
+   && convertible_to<sentinel_t<_Rng>, _Sent>
+ constexpr
+ subrange(_Rng&& __r)
+ noexcept(noexcept(subrange(__r, ranges::size(__r))))
+ requires _S_store_size && sized_range<_Rng>
+ : subrange(__r, ranges::size(__r))
+ { }
+
+      template<__detail::__different_from<subrange> _Rng>
+ requires borrowed_range<_Rng>
+   && __detail::__convertible_to_non_slicing<iterator_t<_Rng>, _It>
+   && convertible_to<sentinel_t<_Rng>, _Sent>
+ constexpr
+ subrange(_Rng&& __r)
+ noexcept(noexcept(subrange(ranges::begin(__r), ranges::end(__r))))
+ requires (!_S_store_size)
+ : subrange(ranges::begin(__r), ranges::end(__r))
+ { }
+
+      template<borrowed_range _Rng>
+ requires __detail::__convertible_to_non_slicing<iterator_t<_Rng>, _It>
+   && convertible_to<sentinel_t<_Rng>, _Sent>
+ constexpr
+ subrange(_Rng&& __r, __size_type __n)
+ noexcept(noexcept(subrange(ranges::begin(__r), ranges::end(__r), __n)))
+ requires (_Kind == subrange_kind::sized)
+ : subrange{ranges::begin(__r), ranges::end(__r), __n}
+ { }
+
+      template<__detail::__different_from<subrange> _PairLike>
+ requires __detail::__pair_like_convertible_from<_PairLike, const _It&,
+       const _Sent&>
+ constexpr
+ operator _PairLike() const
+ { return _PairLike(_M_begin, _M_end); }
+
+      constexpr _It
+      begin() const requires copyable<_It>
+      { return _M_begin; }
+
+      [[nodiscard]] constexpr _It
+      begin() requires (!copyable<_It>)
+      { return std::move(_M_begin); }
+
+      constexpr _Sent end() const { return _M_end; }
+
+      constexpr bool empty() const { return _M_begin == _M_end; }
+
+      constexpr __size_type
+      size() const requires (_Kind == subrange_kind::sized)
+      {
+ if constexpr (_S_store_size)
+   return _M_size._M_size;
+ else
+   return __detail::__to_unsigned_like(_M_end - _M_begin);
+      }
+
+      [[nodiscard]] constexpr subrange
+      next(iter_difference_t<_It> __n = 1) const &
+ requires forward_iterator<_It>
+      {
+ auto __tmp = *this;
+ __tmp.advance(__n);
+ return __tmp;
+      }
+
+      [[nodiscard]] constexpr subrange
+      next(iter_difference_t<_It> __n = 1) &&
+      {
+ advance(__n);
+ return std::move(*this);
+      }
+
+      [[nodiscard]] constexpr subrange
+      prev(iter_difference_t<_It> __n = 1) const
+ requires bidirectional_iterator<_It>
+      {
+ auto __tmp = *this;
+ __tmp.advance(-__n);
+ return __tmp;
+      }
+
+      constexpr subrange&
+      advance(iter_difference_t<_It> __n)
+      {
+
+
+ if constexpr (bidirectional_iterator<_It>)
+   if (__n < 0)
+     {
+       ranges::advance(_M_begin, __n);
+       if constexpr (_S_store_size)
+  _M_size._M_size += __detail::__to_unsigned_like(-__n);
+       return *this;
+     }
+
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__n >= 0), false)) std::__glibcxx_assert_fail(); } while (false);
+ auto __d = __n - ranges::advance(_M_begin, __n, _M_end);
+ if constexpr (_S_store_size)
+   _M_size._M_size -= __detail::__to_unsigned_like(__d);
+ return *this;
+      }
+    };
+
+  template<input_or_output_iterator _It, sentinel_for<_It> _Sent>
+    subrange(_It, _Sent) -> subrange<_It, _Sent>;
+
+  template<input_or_output_iterator _It, sentinel_for<_It> _Sent>
+    subrange(_It, _Sent,
+      __detail::__make_unsigned_like_t<iter_difference_t<_It>>)
+      -> subrange<_It, _Sent, subrange_kind::sized>;
+
+  template<borrowed_range _Rng>
+    subrange(_Rng&&)
+      -> subrange<iterator_t<_Rng>, sentinel_t<_Rng>,
+   (sized_range<_Rng>
+    || sized_sentinel_for<sentinel_t<_Rng>, iterator_t<_Rng>>)
+   ? subrange_kind::sized : subrange_kind::unsized>;
+
+  template<borrowed_range _Rng>
+    subrange(_Rng&&,
+      __detail::__make_unsigned_like_t<range_difference_t<_Rng>>)
+      -> subrange<iterator_t<_Rng>, sentinel_t<_Rng>, subrange_kind::sized>;
+
+  template<size_t _Num, class _It, class _Sent, subrange_kind _Kind>
+    requires (_Num < 2)
+    constexpr auto
+    get(const subrange<_It, _Sent, _Kind>& __r)
+    {
+      if constexpr (_Num == 0)
+ return __r.begin();
+      else
+ return __r.end();
+    }
+
+  template<size_t _Num, class _It, class _Sent, subrange_kind _Kind>
+    requires (_Num < 2)
+    constexpr auto
+    get(subrange<_It, _Sent, _Kind>&& __r)
+    {
+      if constexpr (_Num == 0)
+ return __r.begin();
+      else
+ return __r.end();
+    }
+
+  template<typename _It, typename _Sent, subrange_kind _Kind>
+    inline constexpr bool
+      enable_borrowed_range<subrange<_It, _Sent, _Kind>> = true;
+
+  template<range _Range>
+    using borrowed_subrange_t = __conditional_t<borrowed_range<_Range>,
+      subrange<iterator_t<_Range>>,
+      dangling>;
+
+
+  template<typename _Iter, typename _Sent, subrange_kind _Kind>
+    inline constexpr bool __detail::__is_subrange<subrange<_Iter, _Sent, _Kind>> = true;
+}
+# 485 "/usr/include/c++/14.2.0/bits/ranges_util.h" 3
+namespace ranges
+{
+  struct __find_fn
+  {
+    template<input_iterator _Iter, sentinel_for<_Iter> _Sent, typename _Tp,
+      typename _Proj = identity>
+      requires indirect_binary_predicate<ranges::equal_to,
+      projected<_Iter, _Proj>, const _Tp*>
+      constexpr _Iter
+      operator()(_Iter __first, _Sent __last,
+   const _Tp& __value, _Proj __proj = {}) const
+      {
+ while (__first != __last
+     && !(std::__invoke(__proj, *__first) == __value))
+   ++__first;
+ return __first;
+      }
+
+    template<input_range _Range, typename _Tp, typename _Proj = identity>
+      requires indirect_binary_predicate<ranges::equal_to,
+      projected<iterator_t<_Range>, _Proj>,
+      const _Tp*>
+      constexpr borrowed_iterator_t<_Range>
+      operator()(_Range&& __r, const _Tp& __value, _Proj __proj = {}) const
+      {
+ return (*this)(ranges::begin(__r), ranges::end(__r),
+         __value, std::move(__proj));
+      }
+  };
+
+  inline constexpr __find_fn find{};
+
+  struct __find_if_fn
+  {
+    template<input_iterator _Iter, sentinel_for<_Iter> _Sent,
+      typename _Proj = identity,
+      indirect_unary_predicate<projected<_Iter, _Proj>> _Pred>
+      constexpr _Iter
+      operator()(_Iter __first, _Sent __last,
+   _Pred __pred, _Proj __proj = {}) const
+      {
+ while (__first != __last
+     && !(bool)std::__invoke(__pred, std::__invoke(__proj, *__first)))
+   ++__first;
+ return __first;
+      }
+
+    template<input_range _Range, typename _Proj = identity,
+      indirect_unary_predicate<projected<iterator_t<_Range>, _Proj>>
+        _Pred>
+      constexpr borrowed_iterator_t<_Range>
+      operator()(_Range&& __r, _Pred __pred, _Proj __proj = {}) const
+      {
+ return (*this)(ranges::begin(__r), ranges::end(__r),
+         std::move(__pred), std::move(__proj));
+      }
+  };
+
+  inline constexpr __find_if_fn find_if{};
+
+  struct __find_if_not_fn
+  {
+    template<input_iterator _Iter, sentinel_for<_Iter> _Sent,
+      typename _Proj = identity,
+      indirect_unary_predicate<projected<_Iter, _Proj>> _Pred>
+      constexpr _Iter
+      operator()(_Iter __first, _Sent __last,
+   _Pred __pred, _Proj __proj = {}) const
+      {
+ while (__first != __last
+     && (bool)std::__invoke(__pred, std::__invoke(__proj, *__first)))
+   ++__first;
+ return __first;
+      }
+
+    template<input_range _Range, typename _Proj = identity,
+      indirect_unary_predicate<projected<iterator_t<_Range>, _Proj>>
+        _Pred>
+      constexpr borrowed_iterator_t<_Range>
+      operator()(_Range&& __r, _Pred __pred, _Proj __proj = {}) const
+      {
+ return (*this)(ranges::begin(__r), ranges::end(__r),
+         std::move(__pred), std::move(__proj));
+      }
+  };
+
+  inline constexpr __find_if_not_fn find_if_not{};
+
+  template<typename _Iter1, typename _Iter2>
+    struct in_in_result
+    {
+      [[no_unique_address]] _Iter1 in1;
+      [[no_unique_address]] _Iter2 in2;
+
+      template<typename _IIter1, typename _IIter2>
+ requires convertible_to<const _Iter1&, _IIter1>
+   && convertible_to<const _Iter2&, _IIter2>
+ constexpr
+ operator in_in_result<_IIter1, _IIter2>() const &
+ { return {in1, in2}; }
+
+      template<typename _IIter1, typename _IIter2>
+ requires convertible_to<_Iter1, _IIter1>
+   && convertible_to<_Iter2, _IIter2>
+ constexpr
+ operator in_in_result<_IIter1, _IIter2>() &&
+ { return {std::move(in1), std::move(in2)}; }
+    };
+
+  template<typename _Iter1, typename _Iter2>
+    using mismatch_result = in_in_result<_Iter1, _Iter2>;
+
+  struct __mismatch_fn
+  {
+    template<input_iterator _Iter1, sentinel_for<_Iter1> _Sent1,
+      input_iterator _Iter2, sentinel_for<_Iter2> _Sent2,
+      typename _Pred = ranges::equal_to,
+      typename _Proj1 = identity, typename _Proj2 = identity>
+      requires indirectly_comparable<_Iter1, _Iter2, _Pred, _Proj1, _Proj2>
+      constexpr mismatch_result<_Iter1, _Iter2>
+      operator()(_Iter1 __first1, _Sent1 __last1,
+   _Iter2 __first2, _Sent2 __last2, _Pred __pred = {},
+   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
+      {
+ while (__first1 != __last1 && __first2 != __last2
+        && (bool)std::__invoke(__pred,
+          std::__invoke(__proj1, *__first1),
+          std::__invoke(__proj2, *__first2)))
+ {
+   ++__first1;
+   ++__first2;
+ }
+ return { std::move(__first1), std::move(__first2) };
+      }
+
+    template<input_range _Range1, input_range _Range2,
+      typename _Pred = ranges::equal_to,
+      typename _Proj1 = identity, typename _Proj2 = identity>
+      requires indirectly_comparable<iterator_t<_Range1>, iterator_t<_Range2>,
+         _Pred, _Proj1, _Proj2>
+      constexpr mismatch_result<iterator_t<_Range1>, iterator_t<_Range2>>
+      operator()(_Range1&& __r1, _Range2&& __r2, _Pred __pred = {},
+   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
+      {
+ return (*this)(ranges::begin(__r1), ranges::end(__r1),
+         ranges::begin(__r2), ranges::end(__r2),
+         std::move(__pred),
+         std::move(__proj1), std::move(__proj2));
+      }
+  };
+
+  inline constexpr __mismatch_fn mismatch{};
+
+  struct __search_fn
+  {
+    template<forward_iterator _Iter1, sentinel_for<_Iter1> _Sent1,
+      forward_iterator _Iter2, sentinel_for<_Iter2> _Sent2,
+      typename _Pred = ranges::equal_to,
+      typename _Proj1 = identity, typename _Proj2 = identity>
+      requires indirectly_comparable<_Iter1, _Iter2, _Pred, _Proj1, _Proj2>
+      constexpr subrange<_Iter1>
+      operator()(_Iter1 __first1, _Sent1 __last1,
+   _Iter2 __first2, _Sent2 __last2, _Pred __pred = {},
+   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
+      {
+ if (__first1 == __last1 || __first2 == __last2)
+   return {__first1, __first1};
+
+ for (;;)
+   {
+     for (;;)
+       {
+  if (__first1 == __last1)
+    return {__first1, __first1};
+  if (std::__invoke(__pred,
+      std::__invoke(__proj1, *__first1),
+      std::__invoke(__proj2, *__first2)))
+    break;
+  ++__first1;
+       }
+     auto __cur1 = __first1;
+     auto __cur2 = __first2;
+     for (;;)
+       {
+  if (++__cur2 == __last2)
+    return {__first1, ++__cur1};
+  if (++__cur1 == __last1)
+    return {__cur1, __cur1};
+  if (!(bool)std::__invoke(__pred,
+      std::__invoke(__proj1, *__cur1),
+      std::__invoke(__proj2, *__cur2)))
+    {
+      ++__first1;
+      break;
+    }
+       }
+   }
+      }
+
+    template<forward_range _Range1, forward_range _Range2,
+      typename _Pred = ranges::equal_to,
+      typename _Proj1 = identity, typename _Proj2 = identity>
+      requires indirectly_comparable<iterator_t<_Range1>, iterator_t<_Range2>,
+         _Pred, _Proj1, _Proj2>
+      constexpr borrowed_subrange_t<_Range1>
+      operator()(_Range1&& __r1, _Range2&& __r2, _Pred __pred = {},
+   _Proj1 __proj1 = {}, _Proj2 __proj2 = {}) const
+      {
+ return (*this)(ranges::begin(__r1), ranges::end(__r1),
+         ranges::begin(__r2), ranges::end(__r2),
+         std::move(__pred),
+         std::move(__proj1), std::move(__proj2));
+      }
+  };
+
+  inline constexpr __search_fn search{};
+
+  struct __min_fn
+  {
+    template<typename _Tp, typename _Proj = identity,
+      indirect_strict_weak_order<projected<const _Tp*, _Proj>>
+        _Comp = ranges::less>
+      constexpr const _Tp&
+      operator()(const _Tp& __a, const _Tp& __b,
+   _Comp __comp = {}, _Proj __proj = {}) const
+      {
+ if (std::__invoke(__comp,
+     std::__invoke(__proj, __b),
+     std::__invoke(__proj, __a)))
+   return __b;
+ else
+   return __a;
+      }
+
+    template<input_range _Range, typename _Proj = identity,
+      indirect_strict_weak_order<projected<iterator_t<_Range>, _Proj>>
+        _Comp = ranges::less>
+      requires indirectly_copyable_storable<iterator_t<_Range>,
+         range_value_t<_Range>*>
+      constexpr range_value_t<_Range>
+      operator()(_Range&& __r, _Comp __comp = {}, _Proj __proj = {}) const
+      {
+ auto __first = ranges::begin(__r);
+ auto __last = ranges::end(__r);
+ do { if (std::__is_constant_evaluated()) if (__builtin_expect(!bool(__first != __last), false)) std::__glibcxx_assert_fail(); } while (false);
+ auto __result = *__first;
+ while (++__first != __last)
+   {
+     auto __tmp = *__first;
+     if (std::__invoke(__comp,
+         std::__invoke(__proj, __tmp),
+         std::__invoke(__proj, __result)))
+       __result = std::move(__tmp);
+   }
+ return __result;
+      }
+
+    template<copyable _Tp, typename _Proj = identity,
+      indirect_strict_weak_order<projected<const _Tp*, _Proj>>
+        _Comp = ranges::less>
+      constexpr _Tp
+      operator()(initializer_list<_Tp> __r,
+   _Comp __comp = {}, _Proj __proj = {}) const
+      {
+ return (*this)(ranges::subrange(__r),
+         std::move(__comp), std::move(__proj));
+      }
+  };
+
+  inline constexpr __min_fn min{};
+
+  struct __adjacent_find_fn
+  {
+    template<forward_iterator _Iter, sentinel_for<_Iter> _Sent,
+      typename _Proj = identity,
+      indirect_binary_predicate<projected<_Iter, _Proj>,
+           projected<_Iter, _Proj>> _Pred
+        = ranges::equal_to>
+      constexpr _Iter
+      operator()(_Iter __first, _Sent __last,
+   _Pred __pred = {}, _Proj __proj = {}) const
+      {
+ if (__first == __last)
+   return __first;
+ auto __next = __first;
+ for (; ++__next != __last; __first = __next)
+   {
+     if (std::__invoke(__pred,
+         std::__invoke(__proj, *__first),
+         std::__invoke(__proj, *__next)))
+       return __first;
+   }
+ return __next;
+      }
+
+    template<forward_range _Range, typename _Proj = identity,
+      indirect_binary_predicate<
+        projected<iterator_t<_Range>, _Proj>,
+        projected<iterator_t<_Range>, _Proj>> _Pred = ranges::equal_to>
+      constexpr borrowed_iterator_t<_Range>
+      operator()(_Range&& __r, _Pred __pred = {}, _Proj __proj = {}) const
+      {
+ return (*this)(ranges::begin(__r), ranges::end(__r),
+         std::move(__pred), std::move(__proj));
+      }
+  };
+
+  inline constexpr __adjacent_find_fn adjacent_find{};
+
+}
+
+  using ranges::get;
+
+  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
+    struct tuple_size<ranges::subrange<_Iter, _Sent, _Kind>>
+    : integral_constant<size_t, 2>
+    { };
+
+  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
+    struct tuple_element<0, ranges::subrange<_Iter, _Sent, _Kind>>
+    { using type = _Iter; };
+
+  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
+    struct tuple_element<1, ranges::subrange<_Iter, _Sent, _Kind>>
+    { using type = _Sent; };
+
+  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
+    struct tuple_element<0, const ranges::subrange<_Iter, _Sent, _Kind>>
+    { using type = _Iter; };
+
+  template<typename _Iter, typename _Sent, ranges::subrange_kind _Kind>
+    struct tuple_element<1, const ranges::subrange<_Iter, _Sent, _Kind>>
+    { using type = _Sent; };
+
+
+}
+# 45 "/usr/include/c++/14.2.0/tuple" 2 3
+# 54 "/usr/include/c++/14.2.0/tuple" 3
+# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
+# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
+       
+# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
+# 55 "/usr/include/c++/14.2.0/tuple" 2 3
+
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+
+
+
+
+
+
+  template<typename... _Elements>
+    class tuple;
+
+  template<typename _Tp>
+    struct __is_empty_non_tuple : is_empty<_Tp> { };
+
+
+  template<typename _El0, typename... _El>
+    struct __is_empty_non_tuple<tuple<_El0, _El...>> : false_type { };
+
+
+  template<typename _Tp>
+    using __empty_not_final
+    = __conditional_t<__is_final(_Tp), false_type,
+        __is_empty_non_tuple<_Tp>>;
+
+  template<size_t _Idx, typename _Head,
+    bool = __empty_not_final<_Head>::value>
+    struct _Head_base;
+
+
+  template<size_t _Idx, typename _Head>
+    struct _Head_base<_Idx, _Head, true>
+    {
+      constexpr _Head_base()
+      : _M_head_impl() { }
+
+      constexpr _Head_base(const _Head& __h)
+      : _M_head_impl(__h) { }
+
+      constexpr _Head_base(const _Head_base&) = default;
+      constexpr _Head_base(_Head_base&&) = default;
+
+      template<typename _UHead>
+ constexpr _Head_base(_UHead&& __h)
+ : _M_head_impl(std::forward<_UHead>(__h)) { }
+
+      constexpr
+      _Head_base(allocator_arg_t, __uses_alloc0)
+      : _M_head_impl() { }
+
+      template<typename _Alloc>
+ constexpr
+ _Head_base(allocator_arg_t, __uses_alloc1<_Alloc> __a)
+ : _M_head_impl(allocator_arg, *__a._M_a) { }
+
+      template<typename _Alloc>
+ constexpr
+ _Head_base(allocator_arg_t, __uses_alloc2<_Alloc> __a)
+ : _M_head_impl(*__a._M_a) { }
+
+      template<typename _UHead>
+ constexpr
+ _Head_base(__uses_alloc0, _UHead&& __uhead)
+ : _M_head_impl(std::forward<_UHead>(__uhead)) { }
+
+      template<typename _Alloc, typename _UHead>
+ constexpr
+ _Head_base(__uses_alloc1<_Alloc> __a, _UHead&& __uhead)
+ : _M_head_impl(allocator_arg, *__a._M_a, std::forward<_UHead>(__uhead))
+ { }
+
+      template<typename _Alloc, typename _UHead>
+ constexpr
+ _Head_base(__uses_alloc2<_Alloc> __a, _UHead&& __uhead)
+ : _M_head_impl(std::forward<_UHead>(__uhead), *__a._M_a) { }
+
+      static constexpr _Head&
+      _M_head(_Head_base& __b) noexcept { return __b._M_head_impl; }
+
+      static constexpr const _Head&
+      _M_head(const _Head_base& __b) noexcept { return __b._M_head_impl; }
+
+      [[__no_unique_address__]] _Head _M_head_impl;
+    };
+# 195 "/usr/include/c++/14.2.0/tuple" 3
+  template<size_t _Idx, typename _Head>
+    struct _Head_base<_Idx, _Head, false>
+    {
+      constexpr _Head_base()
+      : _M_head_impl() { }
+
+      constexpr _Head_base(const _Head& __h)
+      : _M_head_impl(__h) { }
+
+      constexpr _Head_base(const _Head_base&) = default;
+      constexpr _Head_base(_Head_base&&) = default;
+
+      template<typename _UHead>
+        constexpr _Head_base(_UHead&& __h)
+ : _M_head_impl(std::forward<_UHead>(__h)) { }
+
+      constexpr
+      _Head_base(allocator_arg_t, __uses_alloc0)
+      : _M_head_impl() { }
+
+      template<typename _Alloc>
+ constexpr
+ _Head_base(allocator_arg_t, __uses_alloc1<_Alloc> __a)
+ : _M_head_impl(allocator_arg, *__a._M_a) { }
+
+      template<typename _Alloc>
+ constexpr
+ _Head_base(allocator_arg_t, __uses_alloc2<_Alloc> __a)
+ : _M_head_impl(*__a._M_a) { }
+
+      template<typename _UHead>
+ constexpr
+ _Head_base(__uses_alloc0, _UHead&& __uhead)
+ : _M_head_impl(std::forward<_UHead>(__uhead)) { }
+
+      template<typename _Alloc, typename _UHead>
+ constexpr
+ _Head_base(__uses_alloc1<_Alloc> __a, _UHead&& __uhead)
+ : _M_head_impl(allocator_arg, *__a._M_a, std::forward<_UHead>(__uhead))
+ { }
+
+      template<typename _Alloc, typename _UHead>
+ constexpr
+ _Head_base(__uses_alloc2<_Alloc> __a, _UHead&& __uhead)
+ : _M_head_impl(std::forward<_UHead>(__uhead), *__a._M_a) { }
+
+      static constexpr _Head&
+      _M_head(_Head_base& __b) noexcept { return __b._M_head_impl; }
+
+      static constexpr const _Head&
+      _M_head(const _Head_base& __b) noexcept { return __b._M_head_impl; }
+
+      _Head _M_head_impl;
+    };
+# 274 "/usr/include/c++/14.2.0/tuple" 3
+  template<size_t _Idx, typename... _Elements>
+    struct _Tuple_impl;
+
+
+
+
+
+
+  template<size_t _Idx, typename _Head, typename... _Tail>
+    struct _Tuple_impl<_Idx, _Head, _Tail...>
+    : public _Tuple_impl<_Idx + 1, _Tail...>,
+      private _Head_base<_Idx, _Head>
+    {
+      template<size_t, typename...> friend struct _Tuple_impl;
+
+      typedef _Tuple_impl<_Idx + 1, _Tail...> _Inherited;
+      typedef _Head_base<_Idx, _Head> _Base;
+
+      static constexpr _Head&
+      _M_head(_Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
+
+      static constexpr const _Head&
+      _M_head(const _Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
+
+      static constexpr _Inherited&
+      _M_tail(_Tuple_impl& __t) noexcept { return __t; }
+
+      static constexpr const _Inherited&
+      _M_tail(const _Tuple_impl& __t) noexcept { return __t; }
+
+      constexpr _Tuple_impl()
+      : _Inherited(), _Base() { }
+
+      explicit constexpr
+      _Tuple_impl(const _Head& __head, const _Tail&... __tail)
+      : _Inherited(__tail...), _Base(__head)
+      { }
+
+      template<typename _UHead, typename... _UTail,
+        typename = __enable_if_t<sizeof...(_Tail) == sizeof...(_UTail)>>
+ explicit constexpr
+ _Tuple_impl(_UHead&& __head, _UTail&&... __tail)
+ : _Inherited(std::forward<_UTail>(__tail)...),
+   _Base(std::forward<_UHead>(__head))
+ { }
+
+      constexpr _Tuple_impl(const _Tuple_impl&) = default;
+
+
+
+      _Tuple_impl& operator=(const _Tuple_impl&) = delete;
+
+      _Tuple_impl(_Tuple_impl&&) = default;
+
+      template<typename... _UElements>
+ constexpr
+ _Tuple_impl(const _Tuple_impl<_Idx, _UElements...>& __in)
+ : _Inherited(_Tuple_impl<_Idx, _UElements...>::_M_tail(__in)),
+   _Base(_Tuple_impl<_Idx, _UElements...>::_M_head(__in))
+ { }
+
+      template<typename _UHead, typename... _UTails>
+ constexpr
+ _Tuple_impl(_Tuple_impl<_Idx, _UHead, _UTails...>&& __in)
+ : _Inherited(std::move
+       (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in))),
+   _Base(std::forward<_UHead>
+  (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in)))
+ { }
+# 370 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a)
+ : _Inherited(__tag, __a),
+   _Base(__tag, __use_alloc<_Head>(__a))
+ { }
+
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
+      const _Head& __head, const _Tail&... __tail)
+ : _Inherited(__tag, __a, __tail...),
+   _Base(__use_alloc<_Head, _Alloc, _Head>(__a), __head)
+ { }
+
+      template<typename _Alloc, typename _UHead, typename... _UTail,
+        typename = __enable_if_t<sizeof...(_Tail) == sizeof...(_UTail)>>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
+      _UHead&& __head, _UTail&&... __tail)
+ : _Inherited(__tag, __a, std::forward<_UTail>(__tail)...),
+   _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
+  std::forward<_UHead>(__head))
+ { }
+
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
+      const _Tuple_impl& __in)
+ : _Inherited(__tag, __a, _M_tail(__in)),
+   _Base(__use_alloc<_Head, _Alloc, _Head>(__a), _M_head(__in))
+ { }
+
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
+      _Tuple_impl&& __in)
+ : _Inherited(__tag, __a, std::move(_M_tail(__in))),
+   _Base(__use_alloc<_Head, _Alloc, _Head>(__a),
+  std::forward<_Head>(_M_head(__in)))
+ { }
+
+      template<typename _Alloc, typename _UHead, typename... _UTails>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
+      const _Tuple_impl<_Idx, _UHead, _UTails...>& __in)
+ : _Inherited(__tag, __a,
+       _Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in)),
+   _Base(__use_alloc<_Head, _Alloc, const _UHead&>(__a),
+  _Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in))
+ { }
+
+      template<typename _Alloc, typename _UHead, typename... _UTails>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a,
+      _Tuple_impl<_Idx, _UHead, _UTails...>&& __in)
+ : _Inherited(__tag, __a, std::move
+       (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in))),
+   _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
+  std::forward<_UHead>
+  (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in)))
+ { }
+# 465 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename... _UElements>
+ constexpr
+ void
+ _M_assign(const _Tuple_impl<_Idx, _UElements...>& __in)
+ {
+   _M_head(*this) = _Tuple_impl<_Idx, _UElements...>::_M_head(__in);
+   _M_tail(*this)._M_assign(
+       _Tuple_impl<_Idx, _UElements...>::_M_tail(__in));
+ }
+
+      template<typename _UHead, typename... _UTails>
+ constexpr
+ void
+ _M_assign(_Tuple_impl<_Idx, _UHead, _UTails...>&& __in)
+ {
+   _M_head(*this) = std::forward<_UHead>
+     (_Tuple_impl<_Idx, _UHead, _UTails...>::_M_head(__in));
+   _M_tail(*this)._M_assign(
+       std::move(_Tuple_impl<_Idx, _UHead, _UTails...>::_M_tail(__in)));
+ }
+# 525 "/usr/include/c++/14.2.0/tuple" 3
+    protected:
+      constexpr
+      void
+      _M_swap(_Tuple_impl& __in)
+      {
+ using std::swap;
+ swap(_M_head(*this), _M_head(__in));
+ _Inherited::_M_swap(_M_tail(__in));
+      }
+# 544 "/usr/include/c++/14.2.0/tuple" 3
+    };
+
+
+  template<size_t _Idx, typename _Head>
+    struct _Tuple_impl<_Idx, _Head>
+    : private _Head_base<_Idx, _Head>
+    {
+      template<size_t, typename...> friend struct _Tuple_impl;
+
+      typedef _Head_base<_Idx, _Head> _Base;
+
+      static constexpr _Head&
+      _M_head(_Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
+
+      static constexpr const _Head&
+      _M_head(const _Tuple_impl& __t) noexcept { return _Base::_M_head(__t); }
+
+      constexpr
+      _Tuple_impl()
+      : _Base() { }
+
+      explicit constexpr
+      _Tuple_impl(const _Head& __head)
+      : _Base(__head)
+      { }
+
+      template<typename _UHead>
+ explicit constexpr
+ _Tuple_impl(_UHead&& __head)
+ : _Base(std::forward<_UHead>(__head))
+ { }
+
+      constexpr _Tuple_impl(const _Tuple_impl&) = default;
+
+
+
+      _Tuple_impl& operator=(const _Tuple_impl&) = delete;
+
+
+
+
+      constexpr
+      _Tuple_impl(_Tuple_impl&& __in)
+      noexcept(is_nothrow_move_constructible<_Head>::value)
+      : _Base(static_cast<_Base&&>(__in))
+      { }
+
+
+      template<typename _UHead>
+ constexpr
+ _Tuple_impl(const _Tuple_impl<_Idx, _UHead>& __in)
+ : _Base(_Tuple_impl<_Idx, _UHead>::_M_head(__in))
+ { }
+
+      template<typename _UHead>
+ constexpr
+ _Tuple_impl(_Tuple_impl<_Idx, _UHead>&& __in)
+ : _Base(std::forward<_UHead>(_Tuple_impl<_Idx, _UHead>::_M_head(__in)))
+ { }
+# 626 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t __tag, const _Alloc& __a)
+ : _Base(__tag, __use_alloc<_Head>(__a))
+ { }
+
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t, const _Alloc& __a,
+      const _Head& __head)
+ : _Base(__use_alloc<_Head, _Alloc, const _Head&>(__a), __head)
+ { }
+
+      template<typename _Alloc, typename _UHead>
+ constexpr
+ _Tuple_impl(allocator_arg_t, const _Alloc& __a,
+      _UHead&& __head)
+ : _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
+  std::forward<_UHead>(__head))
+ { }
+
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t, const _Alloc& __a,
+      const _Tuple_impl& __in)
+ : _Base(__use_alloc<_Head, _Alloc, const _Head&>(__a), _M_head(__in))
+ { }
+
+      template<typename _Alloc>
+ constexpr
+ _Tuple_impl(allocator_arg_t, const _Alloc& __a,
+      _Tuple_impl&& __in)
+ : _Base(__use_alloc<_Head, _Alloc, _Head>(__a),
+  std::forward<_Head>(_M_head(__in)))
+ { }
+
+      template<typename _Alloc, typename _UHead>
+ constexpr
+ _Tuple_impl(allocator_arg_t, const _Alloc& __a,
+      const _Tuple_impl<_Idx, _UHead>& __in)
+ : _Base(__use_alloc<_Head, _Alloc, const _UHead&>(__a),
+  _Tuple_impl<_Idx, _UHead>::_M_head(__in))
+ { }
+
+      template<typename _Alloc, typename _UHead>
+ constexpr
+ _Tuple_impl(allocator_arg_t, const _Alloc& __a,
+      _Tuple_impl<_Idx, _UHead>&& __in)
+ : _Base(__use_alloc<_Head, _Alloc, _UHead>(__a),
+  std::forward<_UHead>(_Tuple_impl<_Idx, _UHead>::_M_head(__in)))
+ { }
+# 705 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename _UHead>
+ constexpr
+ void
+ _M_assign(const _Tuple_impl<_Idx, _UHead>& __in)
+ {
+   _M_head(*this) = _Tuple_impl<_Idx, _UHead>::_M_head(__in);
+ }
+
+      template<typename _UHead>
+ constexpr
+ void
+ _M_assign(_Tuple_impl<_Idx, _UHead>&& __in)
+ {
+   _M_head(*this)
+     = std::forward<_UHead>(_Tuple_impl<_Idx, _UHead>::_M_head(__in));
+ }
+# 751 "/usr/include/c++/14.2.0/tuple" 3
+    protected:
+      constexpr
+      void
+      _M_swap(_Tuple_impl& __in)
+      {
+ using std::swap;
+ swap(_M_head(*this), _M_head(__in));
+      }
+# 768 "/usr/include/c++/14.2.0/tuple" 3
+    };
+
+
+
+  template<bool, typename... _Types>
+    struct _TupleConstraints
+    {
+      template<typename... _UTypes>
+ using __constructible = __and_<is_constructible<_Types, _UTypes>...>;
+
+      template<typename... _UTypes>
+ using __convertible = __and_<is_convertible<_UTypes, _Types>...>;
+
+
+
+
+      template<typename... _UTypes>
+ static constexpr bool __is_implicitly_constructible()
+ {
+   return __and_<__constructible<_UTypes...>,
+   __convertible<_UTypes...>
+   >::value;
+ }
+
+
+
+
+      template<typename... _UTypes>
+ static constexpr bool __is_explicitly_constructible()
+ {
+   return __and_<__constructible<_UTypes...>,
+   __not_<__convertible<_UTypes...>>
+   >::value;
+ }
+
+      static constexpr bool __is_implicitly_default_constructible()
+      {
+ return __and_<std::__is_implicitly_default_constructible<_Types>...
+        >::value;
+      }
+
+      static constexpr bool __is_explicitly_default_constructible()
+      {
+ return __and_<is_default_constructible<_Types>...,
+        __not_<__and_<
+   std::__is_implicitly_default_constructible<_Types>...>
+        >>::value;
+      }
+    };
+
+
+
+  template<typename... _Types>
+    struct _TupleConstraints<false, _Types...>
+    {
+      template<typename... _UTypes>
+ static constexpr bool __is_implicitly_constructible()
+ { return false; }
+
+      template<typename... _UTypes>
+ static constexpr bool __is_explicitly_constructible()
+ { return false; }
+    };
+
+
+  template<typename... _Elements>
+    class tuple : public _Tuple_impl<0, _Elements...>
+    {
+      using _Inherited = _Tuple_impl<0, _Elements...>;
+
+
+      template<typename... _UTypes>
+ static consteval bool
+ __constructible()
+ {
+   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
+     return __and_v<is_constructible<_Elements, _UTypes>...>;
+   else
+     return false;
+ }
+
+      template<typename... _UTypes>
+ static consteval bool
+ __nothrow_constructible()
+ {
+   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
+     return __and_v<is_nothrow_constructible<_Elements, _UTypes>...>;
+   else
+     return false;
+ }
+
+      template<typename... _UTypes>
+ static consteval bool
+ __convertible()
+ {
+   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
+     return __and_v<is_convertible<_UTypes, _Elements>...>;
+   else
+     return false;
+ }
+
+
+
+      template<typename... _UTypes>
+ static consteval bool
+ __disambiguating_constraint()
+ {
+   if constexpr (sizeof...(_Elements) != sizeof...(_UTypes))
+     return false;
+   else if constexpr (sizeof...(_Elements) == 1)
+     {
+       using _U0 = typename _Nth_type<0, _UTypes...>::type;
+       return !is_same_v<remove_cvref_t<_U0>, tuple>;
+     }
+   else if constexpr (sizeof...(_Elements) < 4)
+     {
+       using _U0 = typename _Nth_type<0, _UTypes...>::type;
+       if constexpr (!is_same_v<remove_cvref_t<_U0>, allocator_arg_t>)
+  return true;
+       else
+  {
+    using _T0 = typename _Nth_type<0, _Elements...>::type;
+    return is_same_v<remove_cvref_t<_T0>, allocator_arg_t>;
+  }
+     }
+   return true;
+ }
+
+
+
+
+      template<typename _Tuple>
+ static consteval bool
+ __use_other_ctor()
+ {
+   if constexpr (sizeof...(_Elements) != 1)
+     return false;
+   else if constexpr (is_same_v<remove_cvref_t<_Tuple>, tuple>)
+     return true;
+   else
+     {
+       using _Tp = typename _Nth_type<0, _Elements...>::type;
+       if constexpr (is_convertible_v<_Tuple, _Tp>)
+  return true;
+       else if constexpr (is_constructible_v<_Tp, _Tuple>)
+  return true;
+     }
+   return false;
+ }
+
+      template<typename... _Up>
+ static consteval bool
+ __dangles()
+ {
+
+   return (__reference_constructs_from_temporary(_Elements, _Up&&)
+      || ...);
+
+
+
+ }
+# 961 "/usr/include/c++/14.2.0/tuple" 3
+    public:
+      constexpr
+      explicit(!(__is_implicitly_default_constructible_v<_Elements> && ...))
+      tuple()
+      noexcept((is_nothrow_default_constructible_v<_Elements> && ...))
+      requires (is_default_constructible_v<_Elements> && ...)
+      : _Inherited()
+      { }
+
+      constexpr explicit(!__convertible<const _Elements&...>())
+      tuple(const _Elements&... __elements)
+      noexcept(__nothrow_constructible<const _Elements&...>())
+      requires (__constructible<const _Elements&...>())
+      : _Inherited(__elements...)
+      { }
+
+      template<typename... _UTypes>
+ requires (__disambiguating_constraint<_UTypes...>())
+   && (__constructible<_UTypes...>())
+   && (!__dangles<_UTypes...>())
+ constexpr explicit(!__convertible<_UTypes...>())
+ tuple(_UTypes&&... __u)
+ noexcept(__nothrow_constructible<_UTypes...>())
+ : _Inherited(std::forward<_UTypes>(__u)...)
+ { }
+
+      template<typename... _UTypes>
+ requires (__disambiguating_constraint<_UTypes...>())
+   && (__constructible<_UTypes...>())
+   && (__dangles<_UTypes...>())
+ tuple(_UTypes&&...) = delete;
+
+      constexpr tuple(const tuple&) = default;
+
+      constexpr tuple(tuple&&) = default;
+
+      template<typename... _UTypes>
+ requires (__constructible<const _UTypes&...>())
+   && (!__use_other_ctor<const tuple<_UTypes...>&>())
+   && (!__dangles<const _UTypes&...>())
+ constexpr explicit(!__convertible<const _UTypes&...>())
+ tuple(const tuple<_UTypes...>& __u)
+ noexcept(__nothrow_constructible<const _UTypes&...>())
+ : _Inherited(static_cast<const _Tuple_impl<0, _UTypes...>&>(__u))
+ { }
+
+      template<typename... _UTypes>
+ requires (__constructible<const _UTypes&...>())
+   && (!__use_other_ctor<const tuple<_UTypes...>&>())
+   && (__dangles<const _UTypes&...>())
+ tuple(const tuple<_UTypes...>&) = delete;
+
+      template<typename... _UTypes>
+ requires (__constructible<_UTypes...>())
+   && (!__use_other_ctor<tuple<_UTypes...>>())
+   && (!__dangles<_UTypes...>())
+ constexpr explicit(!__convertible<_UTypes...>())
+ tuple(tuple<_UTypes...>&& __u)
+ noexcept(__nothrow_constructible<_UTypes...>())
+ : _Inherited(static_cast<_Tuple_impl<0, _UTypes...>&&>(__u))
+ { }
+
+      template<typename... _UTypes>
+ requires (__constructible<_UTypes...>())
+   && (!__use_other_ctor<tuple<_UTypes...>>())
+   && (__dangles<_UTypes...>())
+ tuple(tuple<_UTypes...>&&) = delete;
+# 1063 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<const _U1&, const _U2&>())
+   && (!__dangles<const _U1&, const _U2&>())
+ constexpr explicit(!__convertible<const _U1&, const _U2&>())
+ tuple(const pair<_U1, _U2>& __u)
+ noexcept(__nothrow_constructible<const _U1&, const _U2&>())
+ : _Inherited(__u.first, __u.second)
+ { }
+
+      template<typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<const _U1&, const _U2&>())
+   && (__dangles<const _U1&, const _U2&>())
+ tuple(const pair<_U1, _U2>&) = delete;
+
+      template<typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<_U1, _U2>())
+   && (!__dangles<_U1, _U2>())
+ constexpr explicit(!__convertible<_U1, _U2>())
+ tuple(pair<_U1, _U2>&& __u)
+ noexcept(__nothrow_constructible<_U1, _U2>())
+ : _Inherited(std::forward<_U1>(__u.first),
+       std::forward<_U2>(__u.second))
+ { }
+
+      template<typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<_U1, _U2>())
+   && (__dangles<_U1, _U2>())
+ tuple(pair<_U1, _U2>&&) = delete;
+# 1152 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename _Alloc>
+ constexpr
+ explicit(!(__is_implicitly_default_constructible_v<_Elements> && ...))
+ tuple(allocator_arg_t __tag, const _Alloc& __a)
+ requires (is_default_constructible_v<_Elements> && ...)
+ : _Inherited(__tag, __a)
+ { }
+
+      template<typename _Alloc>
+ constexpr explicit(!__convertible<const _Elements&...>())
+ tuple(allocator_arg_t __tag, const _Alloc& __a,
+       const _Elements&... __elements)
+ requires (__constructible<const _Elements&...>())
+ : _Inherited(__tag, __a, __elements...)
+ { }
+
+      template<typename _Alloc, typename... _UTypes>
+ requires (__disambiguating_constraint<_UTypes...>())
+   && (__constructible<_UTypes...>())
+   && (!__dangles<_UTypes...>())
+ constexpr explicit(!__convertible<_UTypes...>())
+ tuple(allocator_arg_t __tag, const _Alloc& __a, _UTypes&&... __u)
+ : _Inherited(__tag, __a, std::forward<_UTypes>(__u)...)
+ { }
+
+      template<typename _Alloc, typename... _UTypes>
+ requires (__disambiguating_constraint<_UTypes...>())
+   && (__constructible<_UTypes...>())
+   && (__dangles<_UTypes...>())
+ tuple(allocator_arg_t, const _Alloc&, _UTypes&&...) = delete;
+
+      template<typename _Alloc>
+ constexpr
+ tuple(allocator_arg_t __tag, const _Alloc& __a, const tuple& __u)
+ : _Inherited(__tag, __a, static_cast<const _Inherited&>(__u))
+ { }
+
+      template<typename _Alloc>
+ requires (__constructible<_Elements...>())
+ constexpr
+ tuple(allocator_arg_t __tag, const _Alloc& __a, tuple&& __u)
+ : _Inherited(__tag, __a, static_cast<_Inherited&&>(__u))
+ { }
+
+      template<typename _Alloc, typename... _UTypes>
+ requires (__constructible<const _UTypes&...>())
+   && (!__use_other_ctor<const tuple<_UTypes...>&>())
+   && (!__dangles<const _UTypes&...>())
+ constexpr explicit(!__convertible<const _UTypes&...>())
+ tuple(allocator_arg_t __tag, const _Alloc& __a,
+       const tuple<_UTypes...>& __u)
+ : _Inherited(__tag, __a,
+       static_cast<const _Tuple_impl<0, _UTypes...>&>(__u))
+ { }
+
+      template<typename _Alloc, typename... _UTypes>
+ requires (__constructible<const _UTypes&...>())
+   && (!__use_other_ctor<const tuple<_UTypes...>&>())
+   && (__dangles<const _UTypes&...>())
+ tuple(allocator_arg_t, const _Alloc&, const tuple<_UTypes...>&) = delete;
+
+      template<typename _Alloc, typename... _UTypes>
+ requires (__constructible<_UTypes...>())
+   && (!__use_other_ctor<tuple<_UTypes...>>())
+   && (!__dangles<_UTypes...>())
+ constexpr explicit(!__use_other_ctor<tuple<_UTypes...>>())
+ tuple(allocator_arg_t __tag, const _Alloc& __a, tuple<_UTypes...>&& __u)
+ : _Inherited(__tag, __a, static_cast<_Tuple_impl<0, _UTypes...>&&>(__u))
+ { }
+
+      template<typename _Alloc, typename... _UTypes>
+ requires (__constructible<_UTypes...>())
+   && (!__use_other_ctor<tuple<_UTypes...>>())
+   && (__dangles<_UTypes...>())
+ tuple(allocator_arg_t, const _Alloc&, tuple<_UTypes...>&&) = delete;
+# 1262 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename _Alloc, typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<const _U1&, const _U2&>())
+   && (!__dangles<const _U1&, const _U2&>())
+ constexpr explicit(!__convertible<const _U1&, const _U2&>())
+ tuple(allocator_arg_t __tag, const _Alloc& __a,
+       const pair<_U1, _U2>& __u)
+ noexcept(__nothrow_constructible<const _U1&, const _U2&>())
+ : _Inherited(__tag, __a, __u.first, __u.second)
+ { }
+
+      template<typename _Alloc, typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<const _U1&, const _U2&>())
+   && (__dangles<const _U1&, const _U2&>())
+ tuple(allocator_arg_t, const _Alloc&, const pair<_U1, _U2>&) = delete;
+
+      template<typename _Alloc, typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<_U1, _U2>())
+   && (!__dangles<_U1, _U2>())
+ constexpr explicit(!__convertible<_U1, _U2>())
+ tuple(allocator_arg_t __tag, const _Alloc& __a, pair<_U1, _U2>&& __u)
+ noexcept(__nothrow_constructible<_U1, _U2>())
+ : _Inherited(__tag, __a, std::move(__u.first), std::move(__u.second))
+ { }
+
+      template<typename _Alloc, typename _U1, typename _U2>
+ requires (sizeof...(_Elements) == 2)
+   && (__constructible<_U1, _U2>())
+   && (__dangles<_U1, _U2>())
+ tuple(allocator_arg_t, const _Alloc&, pair<_U1, _U2>&&) = delete;
+# 1654 "/usr/include/c++/14.2.0/tuple" 3
+    private:
+      template<typename... _UTypes>
+ static consteval bool
+ __assignable()
+ {
+   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
+     return __and_v<is_assignable<_Elements&, _UTypes>...>;
+   else
+     return false;
+ }
+
+      template<typename... _UTypes>
+ static consteval bool
+ __nothrow_assignable()
+ {
+   if constexpr (sizeof...(_UTypes) == sizeof...(_Elements))
+     return __and_v<is_nothrow_assignable<_Elements&, _UTypes>...>;
+   else
+     return false;
+ }
+# 1707 "/usr/include/c++/14.2.0/tuple" 3
+    public:
+
+      tuple& operator=(const tuple& __u) = delete;
+
+      constexpr tuple&
+      operator=(const tuple& __u)
+      noexcept(__nothrow_assignable<const _Elements&...>())
+      requires (__assignable<const _Elements&...>())
+      {
+ this->_M_assign(__u);
+ return *this;
+      }
+
+      constexpr tuple&
+      operator=(tuple&& __u)
+      noexcept(__nothrow_assignable<_Elements...>())
+      requires (__assignable<_Elements...>())
+      {
+ this->_M_assign(std::move(__u));
+ return *this;
+      }
+
+      template<typename... _UTypes>
+ requires (__assignable<const _UTypes&...>())
+ constexpr tuple&
+ operator=(const tuple<_UTypes...>& __u)
+ noexcept(__nothrow_assignable<const _UTypes&...>())
+ {
+   this->_M_assign(__u);
+   return *this;
+ }
+
+      template<typename... _UTypes>
+ requires (__assignable<_UTypes...>())
+ constexpr tuple&
+ operator=(tuple<_UTypes...>&& __u)
+ noexcept(__nothrow_assignable<_UTypes...>())
+ {
+   this->_M_assign(std::move(__u));
+   return *this;
+ }
+# 1785 "/usr/include/c++/14.2.0/tuple" 3
+      template<typename _U1, typename _U2>
+ requires (__assignable<const _U1&, const _U2&>())
+ constexpr tuple&
+ operator=(const pair<_U1, _U2>& __u)
+ noexcept(__nothrow_assignable<const _U1&, const _U2&>())
+ {
+   this->_M_head(*this) = __u.first;
+   this->_M_tail(*this)._M_head(*this) = __u.second;
+   return *this;
+ }
+
+      template<typename _U1, typename _U2>
+ requires (__assignable<_U1, _U2>())
+ constexpr tuple&
+ operator=(pair<_U1, _U2>&& __u)
+ noexcept(__nothrow_assignable<_U1, _U2>())
+ {
+   this->_M_head(*this) = std::forward<_U1>(__u.first);
+   this->_M_tail(*this)._M_head(*this) = std::forward<_U2>(__u.second);
+   return *this;
+ }
+# 1947 "/usr/include/c++/14.2.0/tuple" 3
+      constexpr
+      void
+      swap(tuple& __in)
+      noexcept(__and_<__is_nothrow_swappable<_Elements>...>::value)
+      { _Inherited::_M_swap(__in); }
+# 1966 "/usr/include/c++/14.2.0/tuple" 3
+    };
+
+
+  template<typename... _UTypes>
+    tuple(_UTypes...) -> tuple<_UTypes...>;
+  template<typename _T1, typename _T2>
+    tuple(pair<_T1, _T2>) -> tuple<_T1, _T2>;
+  template<typename _Alloc, typename... _UTypes>
+    tuple(allocator_arg_t, _Alloc, _UTypes...) -> tuple<_UTypes...>;
+  template<typename _Alloc, typename _T1, typename _T2>
+    tuple(allocator_arg_t, _Alloc, pair<_T1, _T2>) -> tuple<_T1, _T2>;
+  template<typename _Alloc, typename... _UTypes>
+    tuple(allocator_arg_t, _Alloc, tuple<_UTypes...>) -> tuple<_UTypes...>;
+
+
+
+  template<>
+    class tuple<>
+    {
+    public:
+      constexpr
+      void swap(tuple&) noexcept { }
+
+
+
+
+
+      tuple() = default;
+
+      template<typename _Alloc>
+ constexpr
+ tuple(allocator_arg_t, const _Alloc&) noexcept { }
+      template<typename _Alloc>
+ constexpr
+ tuple(allocator_arg_t, const _Alloc&, const tuple&) noexcept { }
+    };
+# 2402 "/usr/include/c++/14.2.0/tuple" 3
+  template<typename... _Elements>
+    struct tuple_size<tuple<_Elements...>>
+    : public integral_constant<size_t, sizeof...(_Elements)> { };
+
+
+  template<typename... _Types>
+    inline constexpr size_t tuple_size_v<tuple<_Types...>>
+      = sizeof...(_Types);
+
+  template<typename... _Types>
+    inline constexpr size_t tuple_size_v<const tuple<_Types...>>
+      = sizeof...(_Types);
+
+
+
+  template<size_t __i, typename... _Types>
+    struct tuple_element<__i, tuple<_Types...>>
+    {
+      static_assert(__i < sizeof...(_Types), "tuple index must be in range");
+
+      using type = typename _Nth_type<__i, _Types...>::type;
+    };
+
+  template<size_t __i, typename _Head, typename... _Tail>
+    constexpr _Head&
+    __get_helper(_Tuple_impl<__i, _Head, _Tail...>& __t) noexcept
+    { return _Tuple_impl<__i, _Head, _Tail...>::_M_head(__t); }
+
+  template<size_t __i, typename _Head, typename... _Tail>
+    constexpr const _Head&
+    __get_helper(const _Tuple_impl<__i, _Head, _Tail...>& __t) noexcept
+    { return _Tuple_impl<__i, _Head, _Tail...>::_M_head(__t); }
+
+
+  template<size_t __i, typename... _Types>
+    __enable_if_t<(__i >= sizeof...(_Types))>
+    __get_helper(const tuple<_Types...>&) = delete;
+
+
+  template<size_t __i, typename... _Elements>
+    constexpr __tuple_element_t<__i, tuple<_Elements...>>&
+    get(tuple<_Elements...>& __t) noexcept
+    { return std::__get_helper<__i>(__t); }
+
+
+  template<size_t __i, typename... _Elements>
+    constexpr const __tuple_element_t<__i, tuple<_Elements...>>&
+    get(const tuple<_Elements...>& __t) noexcept
+    { return std::__get_helper<__i>(__t); }
+
+
+  template<size_t __i, typename... _Elements>
+    constexpr __tuple_element_t<__i, tuple<_Elements...>>&&
+    get(tuple<_Elements...>&& __t) noexcept
+    {
+      typedef __tuple_element_t<__i, tuple<_Elements...>> __element_type;
+      return std::forward<__element_type>(std::__get_helper<__i>(__t));
+    }
+
+
+  template<size_t __i, typename... _Elements>
+    constexpr const __tuple_element_t<__i, tuple<_Elements...>>&&
+    get(const tuple<_Elements...>&& __t) noexcept
+    {
+      typedef __tuple_element_t<__i, tuple<_Elements...>> __element_type;
+      return std::forward<const __element_type>(std::__get_helper<__i>(__t));
+    }
+
+
+
+  template<size_t __i, typename... _Elements>
+    constexpr __enable_if_t<(__i >= sizeof...(_Elements))>
+    get(const tuple<_Elements...>&) = delete;
+
+
+
+
+  template <typename _Tp, typename... _Types>
+    constexpr _Tp&
+    get(tuple<_Types...>& __t) noexcept
+    {
+      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
+      static_assert(__idx < sizeof...(_Types),
+   "the type T in std::get<T> must occur exactly once in the tuple");
+      return std::__get_helper<__idx>(__t);
+    }
+
+
+  template <typename _Tp, typename... _Types>
+    constexpr _Tp&&
+    get(tuple<_Types...>&& __t) noexcept
+    {
+      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
+      static_assert(__idx < sizeof...(_Types),
+   "the type T in std::get<T> must occur exactly once in the tuple");
+      return std::forward<_Tp>(std::__get_helper<__idx>(__t));
+    }
+
+
+  template <typename _Tp, typename... _Types>
+    constexpr const _Tp&
+    get(const tuple<_Types...>& __t) noexcept
+    {
+      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
+      static_assert(__idx < sizeof...(_Types),
+   "the type T in std::get<T> must occur exactly once in the tuple");
+      return std::__get_helper<__idx>(__t);
+    }
+
+
+
+  template <typename _Tp, typename... _Types>
+    constexpr const _Tp&&
+    get(const tuple<_Types...>&& __t) noexcept
+    {
+      constexpr size_t __idx = __find_uniq_type_in_pack<_Tp, _Types...>();
+      static_assert(__idx < sizeof...(_Types),
+   "the type T in std::get<T> must occur exactly once in the tuple");
+      return std::forward<const _Tp>(std::__get_helper<__idx>(__t));
+    }
+
+
+
+  template<typename _Tp, typename _Up, size_t __i, size_t __size>
+    struct __tuple_compare
+    {
+      static constexpr bool
+      __eq(const _Tp& __t, const _Up& __u)
+      {
+ return bool(std::get<__i>(__t) == std::get<__i>(__u))
+   && __tuple_compare<_Tp, _Up, __i + 1, __size>::__eq(__t, __u);
+      }
+
+      static constexpr bool
+      __less(const _Tp& __t, const _Up& __u)
+      {
+ return bool(std::get<__i>(__t) < std::get<__i>(__u))
+   || (!bool(std::get<__i>(__u) < std::get<__i>(__t))
+       && __tuple_compare<_Tp, _Up, __i + 1, __size>::__less(__t, __u));
+      }
+    };
+
+  template<typename _Tp, typename _Up, size_t __size>
+    struct __tuple_compare<_Tp, _Up, __size, __size>
+    {
+      static constexpr bool
+      __eq(const _Tp&, const _Up&) { return true; }
+
+      static constexpr bool
+      __less(const _Tp&, const _Up&) { return false; }
+    };
+
+  template<typename... _TElements, typename... _UElements>
+    constexpr bool
+    operator==(const tuple<_TElements...>& __t,
+        const tuple<_UElements...>& __u)
+    {
+      static_assert(sizeof...(_TElements) == sizeof...(_UElements),
+   "tuple objects can only be compared if they have equal sizes.");
+      using __compare = __tuple_compare<tuple<_TElements...>,
+     tuple<_UElements...>,
+     0, sizeof...(_TElements)>;
+      return __compare::__eq(__t, __u);
+    }
+
+
+  template<typename _Cat, typename _Tp, typename _Up>
+    constexpr _Cat
+    __tuple_cmp(const _Tp&, const _Up&, index_sequence<>)
+    { return _Cat::equivalent; }
+
+  template<typename _Cat, typename _Tp, typename _Up,
+    size_t _Idx0, size_t... _Idxs>
+    constexpr _Cat
+    __tuple_cmp(const _Tp& __t, const _Up& __u,
+  index_sequence<_Idx0, _Idxs...>)
+    {
+      auto __c
+ = __detail::__synth3way(std::get<_Idx0>(__t), std::get<_Idx0>(__u));
+      if (__c != 0)
+ return __c;
+      return std::__tuple_cmp<_Cat>(__t, __u, index_sequence<_Idxs...>());
+    }
+
+  template<typename... _Tps, typename... _Ups>
+    constexpr
+    common_comparison_category_t<__detail::__synth3way_t<_Tps, _Ups>...>
+    operator<=>(const tuple<_Tps...>& __t, const tuple<_Ups...>& __u)
+    {
+      using _Cat
+ = common_comparison_category_t<__detail::__synth3way_t<_Tps, _Ups>...>;
+      return std::__tuple_cmp<_Cat>(__t, __u, index_sequence_for<_Tps...>());
+    }
+# 2636 "/usr/include/c++/14.2.0/tuple" 3
+  template<typename... _Elements>
+    constexpr tuple<typename __decay_and_strip<_Elements>::__type...>
+    make_tuple(_Elements&&... __args)
+    {
+      typedef tuple<typename __decay_and_strip<_Elements>::__type...>
+ __result_type;
+      return __result_type(std::forward<_Elements>(__args)...);
+    }
+
+
+
+
+  template<typename... _Elements>
+    constexpr tuple<_Elements&&...>
+    forward_as_tuple(_Elements&&... __args) noexcept
+    { return tuple<_Elements&&...>(std::forward<_Elements>(__args)...); }
+
+
+  template<size_t, typename, typename, size_t>
+    struct __make_tuple_impl;
+
+  template<size_t _Idx, typename _Tuple, typename... _Tp, size_t _Nm>
+    struct __make_tuple_impl<_Idx, tuple<_Tp...>, _Tuple, _Nm>
+    : __make_tuple_impl<_Idx + 1,
+   tuple<_Tp..., __tuple_element_t<_Idx, _Tuple>>,
+   _Tuple, _Nm>
+    { };
+
+  template<size_t _Nm, typename _Tuple, typename... _Tp>
+    struct __make_tuple_impl<_Nm, tuple<_Tp...>, _Tuple, _Nm>
+    {
+      typedef tuple<_Tp...> __type;
+    };
+
+  template<typename _Tuple>
+    struct __do_make_tuple
+    : __make_tuple_impl<0, tuple<>, _Tuple, tuple_size<_Tuple>::value>
+    { };
+
+
+  template<typename _Tuple>
+    struct __make_tuple
+    : public __do_make_tuple<__remove_cvref_t<_Tuple>>
+    { };
+
+
+  template<typename...>
+    struct __combine_tuples;
+
+  template<>
+    struct __combine_tuples<>
+    {
+      typedef tuple<> __type;
+    };
+
+  template<typename... _Ts>
+    struct __combine_tuples<tuple<_Ts...>>
+    {
+      typedef tuple<_Ts...> __type;
+    };
+
+  template<typename... _T1s, typename... _T2s, typename... _Rem>
+    struct __combine_tuples<tuple<_T1s...>, tuple<_T2s...>, _Rem...>
+    {
+      typedef typename __combine_tuples<tuple<_T1s..., _T2s...>,
+     _Rem...>::__type __type;
+    };
+
+
+  template<typename... _Tpls>
+    struct __tuple_cat_result
+    {
+      typedef typename __combine_tuples
+        <typename __make_tuple<_Tpls>::__type...>::__type __type;
+    };
+
+
+
+  template<typename...>
+    struct __make_1st_indices;
+
+  template<>
+    struct __make_1st_indices<>
+    {
+      typedef _Index_tuple<> __type;
+    };
+
+  template<typename _Tp, typename... _Tpls>
+    struct __make_1st_indices<_Tp, _Tpls...>
+    {
+      typedef typename _Build_index_tuple<tuple_size<
+ typename remove_reference<_Tp>::type>::value>::__type __type;
+    };
+
+
+
+
+  template<typename _Ret, typename _Indices, typename... _Tpls>
+    struct __tuple_concater;
+
+  template<typename _Ret, size_t... _Is, typename _Tp, typename... _Tpls>
+    struct __tuple_concater<_Ret, _Index_tuple<_Is...>, _Tp, _Tpls...>
+    {
+      template<typename... _Us>
+        static constexpr _Ret
+        _S_do(_Tp&& __tp, _Tpls&&... __tps, _Us&&... __us)
+        {
+   typedef typename __make_1st_indices<_Tpls...>::__type __idx;
+   typedef __tuple_concater<_Ret, __idx, _Tpls...> __next;
+   return __next::_S_do(std::forward<_Tpls>(__tps)...,
+          std::forward<_Us>(__us)...,
+          std::get<_Is>(std::forward<_Tp>(__tp))...);
+ }
+    };
+
+  template<typename _Ret>
+    struct __tuple_concater<_Ret, _Index_tuple<>>
+    {
+      template<typename... _Us>
+ static constexpr _Ret
+ _S_do(_Us&&... __us)
+        {
+   return _Ret(std::forward<_Us>(__us)...);
+ }
+    };
+
+  template<typename... _Tps>
+    struct __is_tuple_like_impl<tuple<_Tps...>> : true_type
+    { };
+
+
+
+
+
+
+  template<typename... _Tpls, typename = typename
+           enable_if<__and_<__is_tuple_like<_Tpls>...>::value>::type>
+
+    constexpr auto
+    tuple_cat(_Tpls&&... __tpls)
+    -> typename __tuple_cat_result<_Tpls...>::__type
+    {
+      typedef typename __tuple_cat_result<_Tpls...>::__type __ret;
+      typedef typename __make_1st_indices<_Tpls...>::__type __idx;
+      typedef __tuple_concater<__ret, __idx, _Tpls...> __concater;
+      return __concater::_S_do(std::forward<_Tpls>(__tpls)...);
+    }
+
+
+
+
+  template<typename... _Elements>
+    constexpr tuple<_Elements&...>
+    tie(_Elements&... __args) noexcept
+    { return tuple<_Elements&...>(__args...); }
+
+
+  template<typename... _Elements>
+    constexpr
+    inline
+
+
+    typename enable_if<__and_<__is_swappable<_Elements>...>::value
+      >::type
+
+
+
+    swap(tuple<_Elements...>& __x, tuple<_Elements...>& __y)
+    noexcept(noexcept(__x.swap(__y)))
+    { __x.swap(__y); }
+# 2818 "/usr/include/c++/14.2.0/tuple" 3
+  template<typename... _Elements>
+    constexpr
+    typename enable_if<!__and_<__is_swappable<_Elements>...>::value>::type
+    swap(tuple<_Elements...>&, tuple<_Elements...>&) = delete;
+
+
+
+
+
+
+  struct _Swallow_assign
+  {
+    template<class _Tp>
+      constexpr const _Swallow_assign&
+      operator=(const _Tp&) const
+      { return *this; }
+  };
+# 2853 "/usr/include/c++/14.2.0/tuple" 3
+  inline constexpr _Swallow_assign ignore{};
+
+
+  template<typename... _Types, typename _Alloc>
+    struct uses_allocator<tuple<_Types...>, _Alloc> : true_type { };
+# 2868 "/usr/include/c++/14.2.0/tuple" 3
+  template<class _T1, class _T2>
+    template<typename... _Args1, typename... _Args2>
+      constexpr
+      inline
+      pair<_T1, _T2>::
+      pair(piecewise_construct_t,
+    tuple<_Args1...> __first, tuple<_Args2...> __second)
+      : pair(__first, __second,
+      typename _Build_index_tuple<sizeof...(_Args1)>::__type(),
+      typename _Build_index_tuple<sizeof...(_Args2)>::__type())
+      { }
+
+  template<class _T1, class _T2>
+    template<typename... _Args1, size_t... _Indexes1,
+      typename... _Args2, size_t... _Indexes2>
+      constexpr inline
+      pair<_T1, _T2>::
+      pair(tuple<_Args1...>& __tuple1, tuple<_Args2...>& __tuple2,
+    _Index_tuple<_Indexes1...>, _Index_tuple<_Indexes2...>)
+      : first(std::forward<_Args1>(std::get<_Indexes1>(__tuple1))...),
+ second(std::forward<_Args2>(std::get<_Indexes2>(__tuple2))...)
+      { }
+
+
+
+
+
+
+  template<template<typename...> class _Trait, typename _Tp, typename _Tuple>
+    inline constexpr bool __unpack_std_tuple = false;
+
+  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
+    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, tuple<_Up...>>
+      = _Trait<_Tp, _Up...>::value;
+
+  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
+    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, tuple<_Up...>&>
+      = _Trait<_Tp, _Up&...>::value;
+
+  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
+    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, const tuple<_Up...>>
+      = _Trait<_Tp, const _Up...>::value;
+
+  template<template<typename...> class _Trait, typename _Tp, typename... _Up>
+    inline constexpr bool __unpack_std_tuple<_Trait, _Tp, const tuple<_Up...>&>
+      = _Trait<_Tp, const _Up&...>::value;
+
+
+
+  template <typename _Fn, typename _Tuple, size_t... _Idx>
+    constexpr decltype(auto)
+    __apply_impl(_Fn&& __f, _Tuple&& __t, index_sequence<_Idx...>)
+    {
+      return std::__invoke(std::forward<_Fn>(__f),
+      std::get<_Idx>(std::forward<_Tuple>(__t))...);
+    }
+
+
+
+
+  template <typename _Fn, typename _Tuple>
+
+    constexpr decltype(auto)
+    apply(_Fn&& __f, _Tuple&& __t)
+    noexcept(__unpack_std_tuple<is_nothrow_invocable, _Fn, _Tuple>)
+    {
+      using _Indices
+ = make_index_sequence<tuple_size_v<remove_reference_t<_Tuple>>>;
+      return std::__apply_impl(std::forward<_Fn>(__f),
+          std::forward<_Tuple>(__t),
+          _Indices{});
+    }
+
+
+
+  template <typename _Tp, typename _Tuple, size_t... _Idx>
+    constexpr _Tp
+    __make_from_tuple_impl(_Tuple&& __t, index_sequence<_Idx...>)
+    { return _Tp(std::get<_Idx>(std::forward<_Tuple>(__t))...); }
+
+
+
+
+  template <typename _Tp, typename _Tuple>
+
+    constexpr _Tp
+    make_from_tuple(_Tuple&& __t)
+    noexcept(__unpack_std_tuple<is_nothrow_constructible, _Tp, _Tuple>)
+    {
+      constexpr size_t __n = tuple_size_v<remove_reference_t<_Tuple>>;
+
+      if constexpr (__n == 1)
+ {
+   using _Elt = decltype(std::get<0>(std::declval<_Tuple>()));
+   static_assert(!__reference_constructs_from_temporary(_Tp, _Elt));
+ }
+
+      return __make_from_tuple_impl<_Tp>(std::forward<_Tuple>(__t),
+      make_index_sequence<__n>{});
+    }
+# 3030 "/usr/include/c++/14.2.0/tuple" 3
+
+}
+# 40 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 2 3
+
+
+
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+
+  template<typename _Tp>
+    concept _Std_pair = __is_pair<remove_cv_t<_Tp>>;
+
+
+
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc& __a,
+         _Args&&... __args) noexcept
+    requires (! _Std_pair<_Tp>)
+    {
+      if constexpr (uses_allocator_v<remove_cv_t<_Tp>, _Alloc>)
+ {
+   if constexpr (is_constructible_v<_Tp, allocator_arg_t,
+        const _Alloc&, _Args...>)
+     {
+       return tuple<allocator_arg_t, const _Alloc&, _Args&&...>(
+    allocator_arg, __a, std::forward<_Args>(__args)...);
+     }
+   else
+     {
+       static_assert(is_constructible_v<_Tp, _Args..., const _Alloc&>,
+    "construction with an allocator must be possible"
+    " if uses_allocator is true");
+
+       return tuple<_Args&&..., const _Alloc&>(
+    std::forward<_Args>(__args)..., __a);
+     }
+ }
+      else
+ {
+   static_assert(is_constructible_v<_Tp, _Args...>);
+
+   return tuple<_Args&&...>(std::forward<_Args>(__args)...);
+ }
+    }
+
+  template<_Std_pair _Tp, typename _Alloc, typename _Tuple1, typename _Tuple2>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc& __a, piecewise_construct_t,
+         _Tuple1&& __x, _Tuple2&& __y) noexcept;
+
+  template<_Std_pair _Tp, typename _Alloc>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc&) noexcept;
+
+  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc&, _Up&&, _Vp&&) noexcept;
+
+  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc&,
+         const pair<_Up, _Vp>&) noexcept;
+
+  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc&, pair<_Up, _Vp>&&) noexcept;
+# 118 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
+  template<_Std_pair _Tp, typename _Alloc, typename _Tuple1, typename _Tuple2>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc& __a, piecewise_construct_t,
+         _Tuple1&& __x, _Tuple2&& __y) noexcept
+    {
+      using _Tp1 = typename _Tp::first_type;
+      using _Tp2 = typename _Tp::second_type;
+
+      return std::make_tuple(piecewise_construct,
+   std::apply([&__a](auto&&... __args1) {
+       return std::uses_allocator_construction_args<_Tp1>(
+    __a, std::forward<decltype(__args1)>(__args1)...);
+   }, std::forward<_Tuple1>(__x)),
+   std::apply([&__a](auto&&... __args2) {
+       return std::uses_allocator_construction_args<_Tp2>(
+    __a, std::forward<decltype(__args2)>(__args2)...);
+   }, std::forward<_Tuple2>(__y)));
+    }
+
+  template<_Std_pair _Tp, typename _Alloc>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc& __a) noexcept
+    {
+      using _Tp1 = typename _Tp::first_type;
+      using _Tp2 = typename _Tp::second_type;
+
+      return std::make_tuple(piecewise_construct,
+   std::uses_allocator_construction_args<_Tp1>(__a),
+   std::uses_allocator_construction_args<_Tp2>(__a));
+    }
+
+  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc& __a, _Up&& __u, _Vp&& __v)
+      noexcept
+    {
+      using _Tp1 = typename _Tp::first_type;
+      using _Tp2 = typename _Tp::second_type;
+
+      return std::make_tuple(piecewise_construct,
+   std::uses_allocator_construction_args<_Tp1>(__a,
+     std::forward<_Up>(__u)),
+   std::uses_allocator_construction_args<_Tp2>(__a,
+     std::forward<_Vp>(__v)));
+    }
+
+  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc& __a,
+         const pair<_Up, _Vp>& __pr) noexcept
+    {
+      using _Tp1 = typename _Tp::first_type;
+      using _Tp2 = typename _Tp::second_type;
+
+      return std::make_tuple(piecewise_construct,
+   std::uses_allocator_construction_args<_Tp1>(__a, __pr.first),
+   std::uses_allocator_construction_args<_Tp2>(__a, __pr.second));
+    }
+
+  template<_Std_pair _Tp, typename _Alloc, typename _Up, typename _Vp>
+    constexpr auto
+    uses_allocator_construction_args(const _Alloc& __a,
+         pair<_Up, _Vp>&& __pr) noexcept
+    {
+      using _Tp1 = typename _Tp::first_type;
+      using _Tp2 = typename _Tp::second_type;
+
+
+
+
+      return std::make_tuple(piecewise_construct,
+   std::uses_allocator_construction_args<_Tp1>(__a,
+     std::get<0>(std::move(__pr))),
+   std::uses_allocator_construction_args<_Tp2>(__a,
+     std::get<1>(std::move(__pr))));
+    }
+# 225 "/usr/include/c++/14.2.0/bits/uses_allocator_args.h" 3
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    constexpr _Tp
+    make_obj_using_allocator(const _Alloc& __a, _Args&&... __args)
+    {
+      return std::make_from_tuple<_Tp>(
+   std::uses_allocator_construction_args<_Tp>(__a,
+     std::forward<_Args>(__args)...));
+    }
+
+  template<typename _Tp, typename _Alloc, typename... _Args>
+    constexpr _Tp*
+    uninitialized_construct_using_allocator(_Tp* __p, const _Alloc& __a,
+         _Args&&... __args)
+    {
+      return std::apply([&](auto&&... __xs) {
+ return std::construct_at(__p, std::forward<decltype(__xs)>(__xs)...);
+      }, std::uses_allocator_construction_args<_Tp>(__a,
+ std::forward<_Args>(__args)...));
+    }
+
+
+}
+# 42 "/usr/include/c++/14.2.0/bits/memory_resource.h" 2 3
+# 50 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+namespace pmr
+{
+
+
+
+
+
+
+  class memory_resource
+  {
+    static constexpr size_t _S_max_align = alignof(max_align_t);
+
+  public:
+    memory_resource() = default;
+    memory_resource(const memory_resource&) = default;
+    virtual ~memory_resource();
+
+    memory_resource& operator=(const memory_resource&) = default;
+
+    [[nodiscard]]
+    void*
+    allocate(size_t __bytes, size_t __alignment = _S_max_align)
+    __attribute__((__returns_nonnull__,__alloc_size__(2),__alloc_align__(3)))
+    { return ::operator new(__bytes, do_allocate(__bytes, __alignment)); }
+
+    void
+    deallocate(void* __p, size_t __bytes, size_t __alignment = _S_max_align)
+    __attribute__((__nonnull__))
+    { return do_deallocate(__p, __bytes, __alignment); }
+
+    [[nodiscard]]
+    bool
+    is_equal(const memory_resource& __other) const noexcept
+    { return do_is_equal(__other); }
+
+  private:
+    virtual void*
+    do_allocate(size_t __bytes, size_t __alignment) = 0;
+
+    virtual void
+    do_deallocate(void* __p, size_t __bytes, size_t __alignment) = 0;
+
+    virtual bool
+    do_is_equal(const memory_resource& __other) const noexcept = 0;
+  };
+
+  [[nodiscard]]
+  inline bool
+  operator==(const memory_resource& __a, const memory_resource& __b) noexcept
+  { return &__a == &__b || __a.is_equal(__b); }
+# 119 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+  template<typename _Tp>
+    class polymorphic_allocator
+    {
+
+
+      template<typename _Up>
+ struct __not_pair { using type = void; };
+
+      template<typename _Up1, typename _Up2>
+ struct __not_pair<pair<_Up1, _Up2>> { };
+
+    public:
+      using value_type = _Tp;
+
+      polymorphic_allocator() noexcept
+      {
+ extern memory_resource* get_default_resource() noexcept
+   __attribute__((__returns_nonnull__));
+ _M_resource = get_default_resource();
+      }
+
+      polymorphic_allocator(memory_resource* __r) noexcept
+      __attribute__((__nonnull__))
+      : _M_resource(__r)
+      { ; }
+
+      polymorphic_allocator(const polymorphic_allocator& __other) = default;
+
+      template<typename _Up>
+ polymorphic_allocator(const polymorphic_allocator<_Up>& __x) noexcept
+ : _M_resource(__x.resource())
+ { }
+
+      polymorphic_allocator&
+      operator=(const polymorphic_allocator&) = delete;
+
+      [[nodiscard]]
+      _Tp*
+      allocate(size_t __n)
+      __attribute__((__returns_nonnull__))
+      {
+ if ((__gnu_cxx::__int_traits<size_t>::__max / sizeof(_Tp)) < __n)
+   std::__throw_bad_array_new_length();
+ return static_cast<_Tp*>(_M_resource->allocate(__n * sizeof(_Tp),
+             alignof(_Tp)));
+      }
+
+      void
+      deallocate(_Tp* __p, size_t __n) noexcept
+      __attribute__((__nonnull__))
+      { _M_resource->deallocate(__p, __n * sizeof(_Tp), alignof(_Tp)); }
+
+
+      [[nodiscard]] void*
+      allocate_bytes(size_t __nbytes,
+       size_t __alignment = alignof(max_align_t))
+      { return _M_resource->allocate(__nbytes, __alignment); }
+
+      void
+      deallocate_bytes(void* __p, size_t __nbytes,
+         size_t __alignment = alignof(max_align_t))
+      { _M_resource->deallocate(__p, __nbytes, __alignment); }
+
+      template<typename _Up>
+ [[nodiscard]] _Up*
+ allocate_object(size_t __n = 1)
+ {
+   if ((__gnu_cxx::__int_traits<size_t>::__max / sizeof(_Up)) < __n)
+     std::__throw_bad_array_new_length();
+   return static_cast<_Up*>(allocate_bytes(__n * sizeof(_Up),
+        alignof(_Up)));
+ }
+
+      template<typename _Up>
+ void
+ deallocate_object(_Up* __p, size_t __n = 1)
+ { deallocate_bytes(__p, __n * sizeof(_Up), alignof(_Up)); }
+
+      template<typename _Up, typename... _CtorArgs>
+ [[nodiscard]] _Up*
+ new_object(_CtorArgs&&... __ctor_args)
+ {
+   _Up* __p = allocate_object<_Up>();
+   try
+     {
+       construct(__p, std::forward<_CtorArgs>(__ctor_args)...);
+     }
+   catch(...)
+     {
+       deallocate_object(__p);
+       throw;
+     }
+   return __p;
+ }
+
+      template<typename _Up>
+ void
+ delete_object(_Up* __p)
+ {
+   __p->~_Up();
+   deallocate_object(__p);
+ }
+# 297 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+      template<typename _Tp1, typename... _Args>
+ __attribute__((__nonnull__))
+ void
+ construct(_Tp1* __p, _Args&&... __args)
+ {
+   std::uninitialized_construct_using_allocator(__p, *this,
+       std::forward<_Args>(__args)...);
+ }
+
+
+      template<typename _Up>
+ __attribute__ ((__deprecated__ ("use '" "allocator_traits::destroy" "' instead")))
+ __attribute__((__nonnull__))
+ void
+ destroy(_Up* __p)
+ { __p->~_Up(); }
+
+      polymorphic_allocator
+      select_on_container_copy_construction() const noexcept
+      { return polymorphic_allocator(); }
+
+      memory_resource*
+      resource() const noexcept
+      __attribute__((__returns_nonnull__))
+      { return _M_resource; }
+
+
+
+      [[nodiscard]]
+      friend bool
+      operator==(const polymorphic_allocator& __a,
+   const polymorphic_allocator& __b) noexcept
+      { return *__a.resource() == *__b.resource(); }
+# 339 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+    private:
+# 366 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+      memory_resource* _M_resource;
+    };
+
+  template<typename _Tp1, typename _Tp2>
+    [[nodiscard]]
+    inline bool
+    operator==(const polymorphic_allocator<_Tp1>& __a,
+        const polymorphic_allocator<_Tp2>& __b) noexcept
+    { return *__a.resource() == *__b.resource(); }
+# 385 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+}
+
+  template<typename _Alloc> struct allocator_traits;
+
+
+  template<typename _Tp>
+    struct allocator_traits<pmr::polymorphic_allocator<_Tp>>
+    {
+
+      using allocator_type = pmr::polymorphic_allocator<_Tp>;
+
+
+      using value_type = _Tp;
+
+
+      using pointer = _Tp*;
+
+
+      using const_pointer = const _Tp*;
+
+
+      using void_pointer = void*;
+
+
+      using const_void_pointer = const void*;
+
+
+      using difference_type = std::ptrdiff_t;
+
+
+      using size_type = std::size_t;
+
+
+
+
+
+      using propagate_on_container_copy_assignment = false_type;
+      using propagate_on_container_move_assignment = false_type;
+      using propagate_on_container_swap = false_type;
+
+      static allocator_type
+      select_on_container_copy_construction(const allocator_type&) noexcept
+      { return allocator_type(); }
+
+
+
+      using is_always_equal = false_type;
+
+      template<typename _Up>
+ using rebind_alloc = pmr::polymorphic_allocator<_Up>;
+
+      template<typename _Up>
+ using rebind_traits = allocator_traits<pmr::polymorphic_allocator<_Up>>;
+# 446 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+      [[nodiscard]] static pointer
+      allocate(allocator_type& __a, size_type __n)
+      { return __a.allocate(__n); }
+# 461 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+      [[nodiscard]] static pointer
+      allocate(allocator_type& __a, size_type __n, const_void_pointer)
+      { return __a.allocate(__n); }
+# 473 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+      static void
+      deallocate(allocator_type& __a, pointer __p, size_type __n)
+      { __a.deallocate(__p, __n); }
+# 488 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+      template<typename _Up, typename... _Args>
+ static void
+ construct(allocator_type& __a, _Up* __p, _Args&&... __args)
+ { __a.construct(__p, std::forward<_Args>(__args)...); }
+# 500 "/usr/include/c++/14.2.0/bits/memory_resource.h" 3
+      template<typename _Up>
+ static constexpr void
+ destroy(allocator_type&, _Up* __p)
+ noexcept(is_nothrow_destructible<_Up>::value)
+ { __p->~_Up(); }
+
+
+
+
+
+      static constexpr size_type
+      max_size(const allocator_type&) noexcept
+      { return size_t(-1) / sizeof(value_type); }
+    };
+
+
+}
+# 87 "/usr/include/c++/14.2.0/vector" 2 3
 namespace std __attribute__ ((__visibility__ ("default")))
 {
 
