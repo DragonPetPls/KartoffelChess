@@ -182,4 +182,7 @@ CMakeFiles/src.dir/Test.cpp.o.ddi: \
  /usr/include/c++/14.2.0/cstdint \
  /usr/lib/gcc/x86_64-unknown-linux-gnu/14.2.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-least.h
+ /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
+ /usr/include/c++/14.2.0/bits/chrono.h /usr/include/c++/14.2.0/ratio \
+ /usr/include/c++/14.2.0/limits /usr/include/c++/14.2.0/ctime \
+ /usr/include/c++/14.2.0/bits/parse_numbers.h

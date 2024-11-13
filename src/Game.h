@@ -38,8 +38,10 @@ private:
     //The game history array keeps track of last moves in order to be able to undo them, the game historyCounter points to the last move.
     //If the gameHistoryCounter = -1 no move can be undone
     LastMove gameHistory[MAX_GAME_LENGTH];
+    uint64_t pastHashes[MAX_GAME_LENGTH];
     int gameHistoryCounter;
     char status;
+    int movesWithoutProgess;
 
 public:
     //Attributes
@@ -74,11 +76,34 @@ public:
     void loadFen(const std::string& fen);
     static std::string moveToString(Move move);
     char getStatus();
+    bool areMovesStillPlayable();
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;
     piece getPiece(bitboard square);
 };
+
+namespace std {
+    template <>
+    struct hash<Game> {
+        std::size_t operator()(const Game& game) const noexcept {
+            std::size_t hashValue = 0;
+
+            // Combine the hash of each member, weighted by `std::hash_combine` pattern
+            hashValue ^= std::hash<int>{}(game.evaluation) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<color>{}(game.currentPlayer) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.enPassant) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.castleRights) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+
+            // Hash each element in arrays
+            for (const auto& board : game.pieceBoards) {
+                hashValue ^= std::hash<bitboard>{}(board) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            }
+
+            return hashValue;
+        }
+    };
+}
 
 
 #endif //SRC_GAME_H

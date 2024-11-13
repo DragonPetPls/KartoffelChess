@@ -49577,6 +49577,8 @@ enum Results {
     UNKNOWN
 };
 
+const int REPETITIONS_TILL_DRAW = 3;
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
@@ -49653,8 +49655,10 @@ private:
 
 
     LastMove gameHistory[MAX_GAME_LENGTH];
+    uint64_t pastHashes[MAX_GAME_LENGTH];
     int gameHistoryCounter;
     char status;
+    int movesWithoutProgess;
 
 public:
 
@@ -49689,11 +49693,34 @@ public:
     void loadFen(const std::string& fen);
     static std::string moveToString(Move move);
     char getStatus();
+    bool areMovesStillPlayable();
 
 
     [[nodiscard]] int getGameHistoryCounter() const;
     piece getPiece(bitboard square);
 };
+
+namespace std {
+    template <>
+    struct hash<Game> {
+        std::size_t operator()(const Game& game) const noexcept {
+            std::size_t hashValue = 0;
+
+
+            hashValue ^= std::hash<int>{}(game.evaluation) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<color>{}(game.currentPlayer) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.enPassant) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.castleRights) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+
+
+            for (const auto& board : game.pieceBoards) {
+                hashValue ^= std::hash<bitboard>{}(board) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            }
+
+            return hashValue;
+        }
+    };
+}
 # 8 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h" 2
 
 
@@ -49701,7 +49728,10 @@ public:
 
 class Test {
 private:
+    static int checkmates;
+
     static int perft(Game &g, int depth, bool printInfo = false);
+    static int perftStatus(Game &g, int depth, bool printInfo = false);
 public:
     static void testPrintGame();
     static void testDoMove();
@@ -49709,9 +49739,3663 @@ public:
     static void testFen();
     static void perft();
     static void consolPerft();
+    static void statusPerft();
 };
 # 9 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp" 2
 
+# 1 "/usr/include/c++/14.2.0/bits/chrono.h" 1 3
+# 33 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+       
+# 34 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+
+
+
+# 1 "/usr/include/c++/14.2.0/ratio" 1 3
+# 33 "/usr/include/c++/14.2.0/ratio" 3
+       
+# 34 "/usr/include/c++/14.2.0/ratio" 3
+# 43 "/usr/include/c++/14.2.0/ratio" 3
+# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
+# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
+       
+# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
+# 44 "/usr/include/c++/14.2.0/ratio" 2 3
+
+
+# 45 "/usr/include/c++/14.2.0/ratio" 3
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+# 59 "/usr/include/c++/14.2.0/ratio" 3
+  template<intmax_t _Pn>
+    struct __static_sign
+    : integral_constant<intmax_t, (_Pn < 0) ? -1 : 1>
+    { };
+
+  template<intmax_t _Pn>
+    struct __static_abs
+    : integral_constant<intmax_t, _Pn * __static_sign<_Pn>::value>
+    { };
+
+  template<intmax_t _Pn, intmax_t _Qn>
+    struct __static_gcd
+    : __static_gcd<_Qn, (_Pn % _Qn)>
+    { };
+
+  template<intmax_t _Pn>
+    struct __static_gcd<_Pn, 0>
+    : integral_constant<intmax_t, __static_abs<_Pn>::value>
+    { };
+
+  template<intmax_t _Qn>
+    struct __static_gcd<0, _Qn>
+    : integral_constant<intmax_t, __static_abs<_Qn>::value>
+    { };
+
+
+
+
+
+
+
+  template<intmax_t _Pn, intmax_t _Qn>
+    struct __safe_multiply
+    {
+    private:
+      static const uintmax_t __c = uintmax_t(1) << (sizeof(intmax_t) * 4);
+
+      static const uintmax_t __a0 = __static_abs<_Pn>::value % __c;
+      static const uintmax_t __a1 = __static_abs<_Pn>::value / __c;
+      static const uintmax_t __b0 = __static_abs<_Qn>::value % __c;
+      static const uintmax_t __b1 = __static_abs<_Qn>::value / __c;
+
+      static_assert(__a1 == 0 || __b1 == 0,
+      "overflow in multiplication");
+      static_assert(__a0 * __b1 + __b0 * __a1 < (__c >> 1),
+      "overflow in multiplication");
+      static_assert(__b0 * __a0 <= 0x7fffffffffffffffL,
+      "overflow in multiplication");
+      static_assert((__a0 * __b1 + __b0 * __a1) * __c
+      <= 0x7fffffffffffffffL - __b0 * __a0,
+      "overflow in multiplication");
+
+    public:
+      static const intmax_t value = _Pn * _Qn;
+    };
+
+
+
+  template<uintmax_t __hi1, uintmax_t __lo1, uintmax_t __hi2, uintmax_t __lo2>
+    struct __big_less
+    : integral_constant<bool, (__hi1 < __hi2
+          || (__hi1 == __hi2 && __lo1 < __lo2))>
+    { };
+
+  template<uintmax_t __hi1, uintmax_t __lo1, uintmax_t __hi2, uintmax_t __lo2>
+    struct __big_add
+    {
+      static constexpr uintmax_t __lo = __lo1 + __lo2;
+      static constexpr uintmax_t __hi = (__hi1 + __hi2 +
+      (__lo1 + __lo2 < __lo1));
+    };
+
+
+  template<uintmax_t __hi1, uintmax_t __lo1, uintmax_t __hi2, uintmax_t __lo2>
+    struct __big_sub
+    {
+      static_assert(!__big_less<__hi1, __lo1, __hi2, __lo2>::value,
+      "Internal library error");
+      static constexpr uintmax_t __lo = __lo1 - __lo2;
+      static constexpr uintmax_t __hi = (__hi1 - __hi2 -
+      (__lo1 < __lo2));
+    };
+
+
+  template<uintmax_t __x, uintmax_t __y>
+    struct __big_mul
+    {
+    private:
+      static constexpr uintmax_t __c = uintmax_t(1) << (sizeof(intmax_t) * 4);
+      static constexpr uintmax_t __x0 = __x % __c;
+      static constexpr uintmax_t __x1 = __x / __c;
+      static constexpr uintmax_t __y0 = __y % __c;
+      static constexpr uintmax_t __y1 = __y / __c;
+      static constexpr uintmax_t __x0y0 = __x0 * __y0;
+      static constexpr uintmax_t __x0y1 = __x0 * __y1;
+      static constexpr uintmax_t __x1y0 = __x1 * __y0;
+      static constexpr uintmax_t __x1y1 = __x1 * __y1;
+      static constexpr uintmax_t __mix = __x0y1 + __x1y0;
+      static constexpr uintmax_t __mix_lo = __mix * __c;
+      static constexpr uintmax_t __mix_hi
+      = __mix / __c + ((__mix < __x0y1) ? __c : 0);
+      typedef __big_add<__mix_hi, __mix_lo, __x1y1, __x0y0> _Res;
+    public:
+      static constexpr uintmax_t __hi = _Res::__hi;
+      static constexpr uintmax_t __lo = _Res::__lo;
+    };
+
+
+
+  template<uintmax_t __n1, uintmax_t __n0, uintmax_t __d>
+    struct __big_div_impl
+    {
+    private:
+      static_assert(__d >= (uintmax_t(1) << (sizeof(intmax_t) * 8 - 1)),
+      "Internal library error");
+      static_assert(__n1 < __d, "Internal library error");
+      static constexpr uintmax_t __c = uintmax_t(1) << (sizeof(intmax_t) * 4);
+      static constexpr uintmax_t __d1 = __d / __c;
+      static constexpr uintmax_t __d0 = __d % __c;
+
+      static constexpr uintmax_t __q1x = __n1 / __d1;
+      static constexpr uintmax_t __r1x = __n1 % __d1;
+      static constexpr uintmax_t __m = __q1x * __d0;
+      static constexpr uintmax_t __r1y = __r1x * __c + __n0 / __c;
+      static constexpr uintmax_t __r1z = __r1y + __d;
+      static constexpr uintmax_t __r1
+      = ((__r1y < __m) ? ((__r1z >= __d) && (__r1z < __m))
+  ? (__r1z + __d) : __r1z : __r1y) - __m;
+      static constexpr uintmax_t __q1
+      = __q1x - ((__r1y < __m)
+   ? ((__r1z >= __d) && (__r1z < __m)) ? 2 : 1 : 0);
+      static constexpr uintmax_t __q0x = __r1 / __d1;
+      static constexpr uintmax_t __r0x = __r1 % __d1;
+      static constexpr uintmax_t __n = __q0x * __d0;
+      static constexpr uintmax_t __r0y = __r0x * __c + __n0 % __c;
+      static constexpr uintmax_t __r0z = __r0y + __d;
+      static constexpr uintmax_t __r0
+      = ((__r0y < __n) ? ((__r0z >= __d) && (__r0z < __n))
+  ? (__r0z + __d) : __r0z : __r0y) - __n;
+      static constexpr uintmax_t __q0
+      = __q0x - ((__r0y < __n) ? ((__r0z >= __d)
+      && (__r0z < __n)) ? 2 : 1 : 0);
+
+    public:
+      static constexpr uintmax_t __quot = __q1 * __c + __q0;
+      static constexpr uintmax_t __rem = __r0;
+
+    private:
+      typedef __big_mul<__quot, __d> _Prod;
+      typedef __big_add<_Prod::__hi, _Prod::__lo, 0, __rem> _Sum;
+      static_assert(_Sum::__hi == __n1 && _Sum::__lo == __n0,
+      "Internal library error");
+  };
+
+  template<uintmax_t __n1, uintmax_t __n0, uintmax_t __d>
+    struct __big_div
+    {
+    private:
+      static_assert(__d != 0, "Internal library error");
+      static_assert(sizeof (uintmax_t) == sizeof (unsigned long long),
+      "This library calls __builtin_clzll on uintmax_t, which "
+      "is unsafe on your platform. Please complain to "
+      "http://gcc.gnu.org/bugzilla/");
+      static constexpr int __shift = __builtin_clzll(__d);
+      static constexpr int __coshift_ = sizeof(uintmax_t) * 8 - __shift;
+      static constexpr int __coshift = (__shift != 0) ? __coshift_ : 0;
+      static constexpr uintmax_t __c1 = uintmax_t(1) << __shift;
+      static constexpr uintmax_t __c2 = uintmax_t(1) << __coshift;
+      static constexpr uintmax_t __new_d = __d * __c1;
+      static constexpr uintmax_t __new_n0 = __n0 * __c1;
+      static constexpr uintmax_t __n1_shifted = (__n1 % __d) * __c1;
+      static constexpr uintmax_t __n0_top = (__shift != 0) ? (__n0 / __c2) : 0;
+      static constexpr uintmax_t __new_n1 = __n1_shifted + __n0_top;
+      typedef __big_div_impl<__new_n1, __new_n0, __new_d> _Res;
+
+    public:
+      static constexpr uintmax_t __quot_hi = __n1 / __d;
+      static constexpr uintmax_t __quot_lo = _Res::__quot;
+      static constexpr uintmax_t __rem = _Res::__rem / __c1;
+
+    private:
+      typedef __big_mul<__quot_lo, __d> _P0;
+      typedef __big_mul<__quot_hi, __d> _P1;
+      typedef __big_add<_P0::__hi, _P0::__lo, _P1::__lo, __rem> _Sum;
+
+      static_assert(_P1::__hi == 0, "Internal library error");
+      static_assert(_Sum::__hi >= _P0::__hi, "Internal library error");
+
+      static_assert(_Sum::__hi == __n1 && _Sum::__lo == __n0,
+      "Internal library error");
+      static_assert(__rem < __d, "Internal library error");
+    };
+# 268 "/usr/include/c++/14.2.0/ratio" 3
+  template<intmax_t _Num, intmax_t _Den = 1>
+    struct ratio
+    {
+      static_assert(_Den != 0, "denominator cannot be zero");
+      static_assert(_Num >= -0x7fffffffffffffffL && _Den >= -0x7fffffffffffffffL,
+      "out of range");
+
+
+      static constexpr intmax_t num =
+        _Num * __static_sign<_Den>::value / __static_gcd<_Num, _Den>::value;
+
+      static constexpr intmax_t den =
+        __static_abs<_Den>::value / __static_gcd<_Num, _Den>::value;
+
+      typedef ratio<num, den> type;
+    };
+# 295 "/usr/include/c++/14.2.0/ratio" 3
+  template<typename _Tp>
+    struct __is_ratio
+    : std::false_type
+    { };
+
+  template<intmax_t _Num, intmax_t _Den>
+    struct __is_ratio<ratio<_Num, _Den>>
+    : std::true_type
+    { };
+
+
+  template<typename _Tp>
+    constexpr bool __is_ratio_v = false;
+  template<intmax_t _Num, intmax_t _Den>
+    constexpr bool __is_ratio_v<ratio<_Num, _Den>> = true;
+
+
+  template<typename _R1, typename _R2>
+    constexpr bool
+    __are_both_ratios() noexcept
+    {
+
+      if constexpr (__is_ratio_v<_R1>)
+ if constexpr (__is_ratio_v<_R2>)
+   return true;
+      return false;
+
+
+
+    }
+
+  template<typename _R1, typename _R2>
+    struct __ratio_multiply
+    {
+      static_assert(std::__are_both_ratios<_R1, _R2>(),
+      "both template arguments must be a std::ratio");
+
+    private:
+      static const intmax_t __gcd1 =
+        __static_gcd<_R1::num, _R2::den>::value;
+      static const intmax_t __gcd2 =
+        __static_gcd<_R2::num, _R1::den>::value;
+
+    public:
+      typedef ratio<
+        __safe_multiply<(_R1::num / __gcd1),
+                        (_R2::num / __gcd2)>::value,
+        __safe_multiply<(_R1::den / __gcd2),
+                        (_R2::den / __gcd1)>::value> type;
+
+      static constexpr intmax_t num = type::num;
+      static constexpr intmax_t den = type::den;
+    };
+# 360 "/usr/include/c++/14.2.0/ratio" 3
+  template<typename _R1, typename _R2>
+    using ratio_multiply = typename __ratio_multiply<_R1, _R2>::type;
+
+
+
+  template<typename _R1, typename _R2>
+    struct __ratio_divide
+    {
+      static_assert(_R2::num != 0, "division by 0");
+
+      typedef typename __ratio_multiply<
+        _R1,
+        ratio<_R2::den, _R2::num>>::type type;
+
+      static constexpr intmax_t num = type::num;
+      static constexpr intmax_t den = type::den;
+    };
+# 389 "/usr/include/c++/14.2.0/ratio" 3
+  template<typename _R1, typename _R2>
+    using ratio_divide = typename __ratio_divide<_R1, _R2>::type;
+
+
+  template<typename _R1, typename _R2>
+    struct ratio_equal
+    : integral_constant<bool, _R1::num == _R2::num && _R1::den == _R2::den>
+    {
+      static_assert(std::__are_both_ratios<_R1, _R2>(),
+      "both template arguments must be a std::ratio");
+    };
+
+
+  template<typename _R1, typename _R2>
+    struct ratio_not_equal
+    : integral_constant<bool, !ratio_equal<_R1, _R2>::value>
+    { };
+
+
+
+
+  template<typename _R1, typename _R2,
+           typename _Left = __big_mul<_R1::num,_R2::den>,
+           typename _Right = __big_mul<_R2::num,_R1::den> >
+    struct __ratio_less_impl_1
+    : integral_constant<bool, __big_less<_Left::__hi, _Left::__lo,
+           _Right::__hi, _Right::__lo>::value>
+    { };
+
+  template<typename _R1, typename _R2,
+    bool = (_R1::num == 0 || _R2::num == 0
+     || (__static_sign<_R1::num>::value
+         != __static_sign<_R2::num>::value)),
+    bool = (__static_sign<_R1::num>::value == -1
+     && __static_sign<_R2::num>::value == -1)>
+    struct __ratio_less_impl
+    : __ratio_less_impl_1<_R1, _R2>::type
+    { };
+
+  template<typename _R1, typename _R2>
+    struct __ratio_less_impl<_R1, _R2, true, false>
+    : integral_constant<bool, _R1::num < _R2::num>
+    { };
+
+  template<typename _R1, typename _R2>
+    struct __ratio_less_impl<_R1, _R2, false, true>
+    : __ratio_less_impl_1<ratio<-_R2::num, _R2::den>,
+           ratio<-_R1::num, _R1::den> >::type
+    { };
+
+
+
+
+  template<typename _R1, typename _R2>
+    struct ratio_less
+    : __ratio_less_impl<_R1, _R2>::type
+    {
+      static_assert(std::__are_both_ratios<_R1, _R2>(),
+      "both template arguments must be a std::ratio");
+    };
+
+
+  template<typename _R1, typename _R2>
+    struct ratio_less_equal
+    : integral_constant<bool, !ratio_less<_R2, _R1>::value>
+    { };
+
+
+  template<typename _R1, typename _R2>
+    struct ratio_greater
+    : integral_constant<bool, ratio_less<_R2, _R1>::value>
+    { };
+
+
+  template<typename _R1, typename _R2>
+    struct ratio_greater_equal
+    : integral_constant<bool, !ratio_less<_R1, _R2>::value>
+    { };
+
+
+  template <typename _R1, typename _R2>
+    inline constexpr bool ratio_equal_v = ratio_equal<_R1, _R2>::value;
+  template <typename _R1, typename _R2>
+    inline constexpr bool ratio_not_equal_v = ratio_not_equal<_R1, _R2>::value;
+  template <typename _R1, typename _R2>
+    inline constexpr bool ratio_less_v = ratio_less<_R1, _R2>::value;
+  template <typename _R1, typename _R2>
+    inline constexpr bool ratio_less_equal_v
+      = ratio_less_equal<_R1, _R2>::value;
+  template <typename _R1, typename _R2>
+    inline constexpr bool ratio_greater_v = ratio_greater<_R1, _R2>::value;
+  template <typename _R1, typename _R2>
+    inline constexpr bool ratio_greater_equal_v
+      = ratio_greater_equal<_R1, _R2>::value;
+
+
+
+
+  template<typename _R1, typename _R2,
+      bool = (_R1::num >= 0),
+      bool = (_R2::num >= 0),
+      bool = ratio_less<ratio<__static_abs<_R1::num>::value, _R1::den>,
+        ratio<__static_abs<_R2::num>::value, _R2::den> >::value>
+    struct __ratio_add_impl
+    {
+    private:
+      typedef typename __ratio_add_impl<
+        ratio<-_R1::num, _R1::den>,
+        ratio<-_R2::num, _R2::den> >::type __t;
+    public:
+      typedef ratio<-__t::num, __t::den> type;
+    };
+
+
+  template<typename _R1, typename _R2, bool __b>
+    struct __ratio_add_impl<_R1, _R2, true, true, __b>
+    {
+    private:
+      static constexpr uintmax_t __g = __static_gcd<_R1::den, _R2::den>::value;
+      static constexpr uintmax_t __d2 = _R2::den / __g;
+      typedef __big_mul<_R1::den, __d2> __d;
+      typedef __big_mul<_R1::num, _R2::den / __g> __x;
+      typedef __big_mul<_R2::num, _R1::den / __g> __y;
+      typedef __big_add<__x::__hi, __x::__lo, __y::__hi, __y::__lo> __n;
+      static_assert(__n::__hi >= __x::__hi, "Internal library error");
+      typedef __big_div<__n::__hi, __n::__lo, __g> __ng;
+      static constexpr uintmax_t __g2 = __static_gcd<__ng::__rem, __g>::value;
+      typedef __big_div<__n::__hi, __n::__lo, __g2> __n_final;
+      static_assert(__n_final::__rem == 0, "Internal library error");
+      static_assert(__n_final::__quot_hi == 0 &&
+        __n_final::__quot_lo <= 0x7fffffffffffffffL, "overflow in addition");
+      typedef __big_mul<_R1::den / __g2, __d2> __d_final;
+      static_assert(__d_final::__hi == 0 &&
+        __d_final::__lo <= 0x7fffffffffffffffL, "overflow in addition");
+    public:
+      typedef ratio<__n_final::__quot_lo, __d_final::__lo> type;
+    };
+
+  template<typename _R1, typename _R2>
+    struct __ratio_add_impl<_R1, _R2, false, true, true>
+    : __ratio_add_impl<_R2, _R1>
+    { };
+
+
+  template<typename _R1, typename _R2>
+    struct __ratio_add_impl<_R1, _R2, true, false, false>
+    {
+    private:
+      static constexpr uintmax_t __g = __static_gcd<_R1::den, _R2::den>::value;
+      static constexpr uintmax_t __d2 = _R2::den / __g;
+      typedef __big_mul<_R1::den, __d2> __d;
+      typedef __big_mul<_R1::num, _R2::den / __g> __x;
+      typedef __big_mul<-_R2::num, _R1::den / __g> __y;
+      typedef __big_sub<__x::__hi, __x::__lo, __y::__hi, __y::__lo> __n;
+      typedef __big_div<__n::__hi, __n::__lo, __g> __ng;
+      static constexpr uintmax_t __g2 = __static_gcd<__ng::__rem, __g>::value;
+      typedef __big_div<__n::__hi, __n::__lo, __g2> __n_final;
+      static_assert(__n_final::__rem == 0, "Internal library error");
+      static_assert(__n_final::__quot_hi == 0 &&
+        __n_final::__quot_lo <= 0x7fffffffffffffffL, "overflow in addition");
+      typedef __big_mul<_R1::den / __g2, __d2> __d_final;
+      static_assert(__d_final::__hi == 0 &&
+        __d_final::__lo <= 0x7fffffffffffffffL, "overflow in addition");
+    public:
+      typedef ratio<__n_final::__quot_lo, __d_final::__lo> type;
+    };
+
+  template<typename _R1, typename _R2>
+    struct __ratio_add
+    {
+      static_assert(std::__are_both_ratios<_R1, _R2>(),
+      "both template arguments must be a std::ratio");
+
+      typedef typename __ratio_add_impl<_R1, _R2>::type type;
+      static constexpr intmax_t num = type::num;
+      static constexpr intmax_t den = type::den;
+    };
+# 578 "/usr/include/c++/14.2.0/ratio" 3
+  template<typename _R1, typename _R2>
+    using ratio_add = typename __ratio_add<_R1, _R2>::type;
+
+
+
+  template<typename _R1, typename _R2>
+    struct __ratio_subtract
+    {
+      typedef typename __ratio_add<
+        _R1,
+        ratio<-_R2::num, _R2::den>>::type type;
+
+      static constexpr intmax_t num = type::num;
+      static constexpr intmax_t den = type::den;
+    };
+# 605 "/usr/include/c++/14.2.0/ratio" 3
+  template<typename _R1, typename _R2>
+    using ratio_subtract = typename __ratio_subtract<_R1, _R2>::type;
+# 618 "/usr/include/c++/14.2.0/ratio" 3
+  using atto = ratio< 1, 1000000000000000000>;
+  using femto = ratio< 1, 1000000000000000>;
+  using pico = ratio< 1, 1000000000000>;
+  using nano = ratio< 1, 1000000000>;
+  using micro = ratio< 1, 1000000>;
+  using milli = ratio< 1, 1000>;
+  using centi = ratio< 1, 100>;
+  using deci = ratio< 1, 10>;
+  using deca = ratio< 10, 1>;
+  using hecto = ratio< 100, 1>;
+  using kilo = ratio< 1000, 1>;
+  using mega = ratio< 1000000, 1>;
+  using giga = ratio< 1000000000, 1>;
+  using tera = ratio< 1000000000000, 1>;
+  using peta = ratio< 1000000000000000, 1>;
+  using exa = ratio< 1000000000000000000, 1>;
+# 646 "/usr/include/c++/14.2.0/ratio" 3
+
+}
+# 38 "/usr/include/c++/14.2.0/bits/chrono.h" 2 3
+
+# 1 "/usr/include/c++/14.2.0/limits" 1 3
+# 40 "/usr/include/c++/14.2.0/limits" 3
+       
+# 41 "/usr/include/c++/14.2.0/limits" 3
+# 158 "/usr/include/c++/14.2.0/limits" 3
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+
+
+
+
+
+
+  enum float_round_style
+  {
+    round_indeterminate = -1,
+    round_toward_zero = 0,
+    round_to_nearest = 1,
+    round_toward_infinity = 2,
+    round_toward_neg_infinity = 3
+  };
+
+
+
+
+
+
+
+  enum float_denorm_style
+  {
+
+    denorm_indeterminate = -1,
+
+    denorm_absent = 0,
+
+    denorm_present = 1
+  };
+# 202 "/usr/include/c++/14.2.0/limits" 3
+  struct __numeric_limits_base
+  {
+
+
+    static constexpr bool is_specialized = false;
+
+
+
+
+    static constexpr int digits = 0;
+
+
+    static constexpr int digits10 = 0;
+
+
+
+
+    static constexpr int max_digits10 = 0;
+
+
+
+    static constexpr bool is_signed = false;
+
+
+    static constexpr bool is_integer = false;
+
+
+
+
+    static constexpr bool is_exact = false;
+
+
+
+    static constexpr int radix = 0;
+
+
+
+    static constexpr int min_exponent = 0;
+
+
+
+    static constexpr int min_exponent10 = 0;
+
+
+
+
+    static constexpr int max_exponent = 0;
+
+
+
+    static constexpr int max_exponent10 = 0;
+
+
+    static constexpr bool has_infinity = false;
+
+
+
+    static constexpr bool has_quiet_NaN = false;
+
+
+
+    static constexpr bool has_signaling_NaN = false;
+
+
+    static constexpr float_denorm_style has_denorm = denorm_absent;
+
+
+
+    static constexpr bool has_denorm_loss = false;
+
+
+
+    static constexpr bool is_iec559 = false;
+
+
+
+
+    static constexpr bool is_bounded = false;
+# 288 "/usr/include/c++/14.2.0/limits" 3
+    static constexpr bool is_modulo = false;
+
+
+    static constexpr bool traps = false;
+
+
+    static constexpr bool tinyness_before = false;
+
+
+
+
+    static constexpr float_round_style round_style =
+          round_toward_zero;
+  };
+# 311 "/usr/include/c++/14.2.0/limits" 3
+  template<typename _Tp>
+    struct numeric_limits : public __numeric_limits_base
+    {
+
+
+      static constexpr _Tp
+      min() noexcept { return _Tp(); }
+
+
+      static constexpr _Tp
+      max() noexcept { return _Tp(); }
+
+
+
+
+      static constexpr _Tp
+      lowest() noexcept { return _Tp(); }
+
+
+
+
+      static constexpr _Tp
+      epsilon() noexcept { return _Tp(); }
+
+
+      static constexpr _Tp
+      round_error() noexcept { return _Tp(); }
+
+
+      static constexpr _Tp
+      infinity() noexcept { return _Tp(); }
+
+
+
+      static constexpr _Tp
+      quiet_NaN() noexcept { return _Tp(); }
+
+
+
+      static constexpr _Tp
+      signaling_NaN() noexcept { return _Tp(); }
+
+
+
+
+      static constexpr _Tp
+      denorm_min() noexcept { return _Tp(); }
+    };
+
+
+
+
+  template<typename _Tp>
+    struct numeric_limits<const _Tp>
+    : public numeric_limits<_Tp> { };
+
+  template<typename _Tp>
+    struct numeric_limits<volatile _Tp>
+    : public numeric_limits<_Tp> { };
+
+  template<typename _Tp>
+    struct numeric_limits<const volatile _Tp>
+    : public numeric_limits<_Tp> { };
+# 383 "/usr/include/c++/14.2.0/limits" 3
+  template<>
+    struct numeric_limits<bool>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr bool
+      min() noexcept { return false; }
+
+      static constexpr bool
+      max() noexcept { return true; }
+
+
+      static constexpr bool
+      lowest() noexcept { return min(); }
+
+      static constexpr int digits = 1;
+      static constexpr int digits10 = 0;
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = false;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr bool
+      epsilon() noexcept { return false; }
+
+      static constexpr bool
+      round_error() noexcept { return false; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr bool
+      infinity() noexcept { return false; }
+
+      static constexpr bool
+      quiet_NaN() noexcept { return false; }
+
+      static constexpr bool
+      signaling_NaN() noexcept { return false; }
+
+      static constexpr bool
+      denorm_min() noexcept { return false; }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+
+
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<char>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr char
+      min() noexcept { return (((char)(-1) < 0) ? -(((char)(-1) < 0) ? (((((char)1 << ((sizeof(char) * 8 - ((char)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char)0) - 1 : (char)0); }
+
+      static constexpr char
+      max() noexcept { return (((char)(-1) < 0) ? (((((char)1 << ((sizeof(char) * 8 - ((char)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char)0); }
+
+
+      static constexpr char
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits = (sizeof(char) * 8 - ((char)(-1) < 0));
+      static constexpr int digits10 = ((sizeof(char) * 8 - ((char)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = ((char)(-1) < 0);
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr char
+      epsilon() noexcept { return 0; }
+
+      static constexpr char
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr
+      char infinity() noexcept { return char(); }
+
+      static constexpr char
+      quiet_NaN() noexcept { return char(); }
+
+      static constexpr char
+      signaling_NaN() noexcept { return char(); }
+
+      static constexpr char
+      denorm_min() noexcept { return static_cast<char>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = !is_signed;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<signed char>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr signed char
+      min() noexcept { return -0x7f - 1; }
+
+      static constexpr signed char
+      max() noexcept { return 0x7f; }
+
+
+      static constexpr signed char
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits = (sizeof(signed char) * 8 - ((signed char)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(signed char) * 8 - ((signed char)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr signed char
+      epsilon() noexcept { return 0; }
+
+      static constexpr signed char
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr signed char
+      infinity() noexcept { return static_cast<signed char>(0); }
+
+      static constexpr signed char
+      quiet_NaN() noexcept { return static_cast<signed char>(0); }
+
+      static constexpr signed char
+      signaling_NaN() noexcept
+      { return static_cast<signed char>(0); }
+
+      static constexpr signed char
+      denorm_min() noexcept
+      { return static_cast<signed char>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<unsigned char>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr unsigned char
+      min() noexcept { return 0; }
+
+      static constexpr unsigned char
+      max() noexcept { return 0x7f * 2U + 1; }
+
+
+      static constexpr unsigned char
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits
+       = (sizeof(unsigned char) * 8 - ((unsigned char)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(unsigned char) * 8 - ((unsigned char)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = false;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr unsigned char
+      epsilon() noexcept { return 0; }
+
+      static constexpr unsigned char
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr unsigned char
+      infinity() noexcept
+      { return static_cast<unsigned char>(0); }
+
+      static constexpr unsigned char
+      quiet_NaN() noexcept
+      { return static_cast<unsigned char>(0); }
+
+      static constexpr unsigned char
+      signaling_NaN() noexcept
+      { return static_cast<unsigned char>(0); }
+
+      static constexpr unsigned char
+      denorm_min() noexcept
+      { return static_cast<unsigned char>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = true;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<wchar_t>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr wchar_t
+      min() noexcept { return (((wchar_t)(-1) < 0) ? -(((wchar_t)(-1) < 0) ? (((((wchar_t)1 << ((sizeof(wchar_t) * 8 - ((wchar_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(wchar_t)0) - 1 : (wchar_t)0); }
+
+      static constexpr wchar_t
+      max() noexcept { return (((wchar_t)(-1) < 0) ? (((((wchar_t)1 << ((sizeof(wchar_t) * 8 - ((wchar_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(wchar_t)0); }
+
+
+      static constexpr wchar_t
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits = (sizeof(wchar_t) * 8 - ((wchar_t)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(wchar_t) * 8 - ((wchar_t)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = ((wchar_t)(-1) < 0);
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr wchar_t
+      epsilon() noexcept { return 0; }
+
+      static constexpr wchar_t
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr wchar_t
+      infinity() noexcept { return wchar_t(); }
+
+      static constexpr wchar_t
+      quiet_NaN() noexcept { return wchar_t(); }
+
+      static constexpr wchar_t
+      signaling_NaN() noexcept { return wchar_t(); }
+
+      static constexpr wchar_t
+      denorm_min() noexcept { return wchar_t(); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = !is_signed;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+
+  template<>
+    struct numeric_limits<char8_t>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr char8_t
+      min() noexcept { return (((char8_t)(-1) < 0) ? -(((char8_t)(-1) < 0) ? (((((char8_t)1 << ((sizeof(char8_t) * 8 - ((char8_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char8_t)0) - 1 : (char8_t)0); }
+
+      static constexpr char8_t
+      max() noexcept { return (((char8_t)(-1) < 0) ? (((((char8_t)1 << ((sizeof(char8_t) * 8 - ((char8_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char8_t)0); }
+
+      static constexpr char8_t
+      lowest() noexcept { return min(); }
+
+      static constexpr int digits = (sizeof(char8_t) * 8 - ((char8_t)(-1) < 0));
+      static constexpr int digits10 = ((sizeof(char8_t) * 8 - ((char8_t)(-1) < 0)) * 643L / 2136);
+      static constexpr int max_digits10 = 0;
+      static constexpr bool is_signed = ((char8_t)(-1) < 0);
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr char8_t
+      epsilon() noexcept { return 0; }
+
+      static constexpr char8_t
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+ = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr char8_t
+      infinity() noexcept { return char8_t(); }
+
+      static constexpr char8_t
+      quiet_NaN() noexcept { return char8_t(); }
+
+      static constexpr char8_t
+      signaling_NaN() noexcept { return char8_t(); }
+
+      static constexpr char8_t
+      denorm_min() noexcept { return char8_t(); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = !is_signed;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+ = round_toward_zero;
+    };
+
+
+
+
+  template<>
+    struct numeric_limits<char16_t>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr char16_t
+      min() noexcept { return (((char16_t)(-1) < 0) ? -(((char16_t)(-1) < 0) ? (((((char16_t)1 << ((sizeof(char16_t) * 8 - ((char16_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char16_t)0) - 1 : (char16_t)0); }
+
+      static constexpr char16_t
+      max() noexcept { return (((char16_t)(-1) < 0) ? (((((char16_t)1 << ((sizeof(char16_t) * 8 - ((char16_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char16_t)0); }
+
+      static constexpr char16_t
+      lowest() noexcept { return min(); }
+
+      static constexpr int digits = (sizeof(char16_t) * 8 - ((char16_t)(-1) < 0));
+      static constexpr int digits10 = ((sizeof(char16_t) * 8 - ((char16_t)(-1) < 0)) * 643L / 2136);
+      static constexpr int max_digits10 = 0;
+      static constexpr bool is_signed = ((char16_t)(-1) < 0);
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr char16_t
+      epsilon() noexcept { return 0; }
+
+      static constexpr char16_t
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr char16_t
+      infinity() noexcept { return char16_t(); }
+
+      static constexpr char16_t
+      quiet_NaN() noexcept { return char16_t(); }
+
+      static constexpr char16_t
+      signaling_NaN() noexcept { return char16_t(); }
+
+      static constexpr char16_t
+      denorm_min() noexcept { return char16_t(); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = !is_signed;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<char32_t>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr char32_t
+      min() noexcept { return (((char32_t)(-1) < 0) ? -(((char32_t)(-1) < 0) ? (((((char32_t)1 << ((sizeof(char32_t) * 8 - ((char32_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char32_t)0) - 1 : (char32_t)0); }
+
+      static constexpr char32_t
+      max() noexcept { return (((char32_t)(-1) < 0) ? (((((char32_t)1 << ((sizeof(char32_t) * 8 - ((char32_t)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(char32_t)0); }
+
+      static constexpr char32_t
+      lowest() noexcept { return min(); }
+
+      static constexpr int digits = (sizeof(char32_t) * 8 - ((char32_t)(-1) < 0));
+      static constexpr int digits10 = ((sizeof(char32_t) * 8 - ((char32_t)(-1) < 0)) * 643L / 2136);
+      static constexpr int max_digits10 = 0;
+      static constexpr bool is_signed = ((char32_t)(-1) < 0);
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr char32_t
+      epsilon() noexcept { return 0; }
+
+      static constexpr char32_t
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr char32_t
+      infinity() noexcept { return char32_t(); }
+
+      static constexpr char32_t
+      quiet_NaN() noexcept { return char32_t(); }
+
+      static constexpr char32_t
+      signaling_NaN() noexcept { return char32_t(); }
+
+      static constexpr char32_t
+      denorm_min() noexcept { return char32_t(); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = !is_signed;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style = round_toward_zero;
+    };
+
+
+
+  template<>
+    struct numeric_limits<short>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr short
+      min() noexcept { return -0x7fff - 1; }
+
+      static constexpr short
+      max() noexcept { return 0x7fff; }
+
+
+      static constexpr short
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits = (sizeof(short) * 8 - ((short)(-1) < 0));
+      static constexpr int digits10 = ((sizeof(short) * 8 - ((short)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr short
+      epsilon() noexcept { return 0; }
+
+      static constexpr short
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr short
+      infinity() noexcept { return short(); }
+
+      static constexpr short
+      quiet_NaN() noexcept { return short(); }
+
+      static constexpr short
+      signaling_NaN() noexcept { return short(); }
+
+      static constexpr short
+      denorm_min() noexcept { return short(); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<unsigned short>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr unsigned short
+      min() noexcept { return 0; }
+
+      static constexpr unsigned short
+      max() noexcept { return 0x7fff * 2U + 1; }
+
+
+      static constexpr unsigned short
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits
+       = (sizeof(unsigned short) * 8 - ((unsigned short)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(unsigned short) * 8 - ((unsigned short)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = false;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr unsigned short
+      epsilon() noexcept { return 0; }
+
+      static constexpr unsigned short
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr unsigned short
+      infinity() noexcept
+      { return static_cast<unsigned short>(0); }
+
+      static constexpr unsigned short
+      quiet_NaN() noexcept
+      { return static_cast<unsigned short>(0); }
+
+      static constexpr unsigned short
+      signaling_NaN() noexcept
+      { return static_cast<unsigned short>(0); }
+
+      static constexpr unsigned short
+      denorm_min() noexcept
+      { return static_cast<unsigned short>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = true;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<int>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr int
+      min() noexcept { return -0x7fffffff - 1; }
+
+      static constexpr int
+      max() noexcept { return 0x7fffffff; }
+
+
+      static constexpr int
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits = (sizeof(int) * 8 - ((int)(-1) < 0));
+      static constexpr int digits10 = ((sizeof(int) * 8 - ((int)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr int
+      epsilon() noexcept { return 0; }
+
+      static constexpr int
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr int
+      infinity() noexcept { return static_cast<int>(0); }
+
+      static constexpr int
+      quiet_NaN() noexcept { return static_cast<int>(0); }
+
+      static constexpr int
+      signaling_NaN() noexcept { return static_cast<int>(0); }
+
+      static constexpr int
+      denorm_min() noexcept { return static_cast<int>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<unsigned int>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr unsigned int
+      min() noexcept { return 0; }
+
+      static constexpr unsigned int
+      max() noexcept { return 0x7fffffff * 2U + 1; }
+
+
+      static constexpr unsigned int
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits
+       = (sizeof(unsigned int) * 8 - ((unsigned int)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(unsigned int) * 8 - ((unsigned int)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = false;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr unsigned int
+      epsilon() noexcept { return 0; }
+
+      static constexpr unsigned int
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr unsigned int
+      infinity() noexcept { return static_cast<unsigned int>(0); }
+
+      static constexpr unsigned int
+      quiet_NaN() noexcept
+      { return static_cast<unsigned int>(0); }
+
+      static constexpr unsigned int
+      signaling_NaN() noexcept
+      { return static_cast<unsigned int>(0); }
+
+      static constexpr unsigned int
+      denorm_min() noexcept
+      { return static_cast<unsigned int>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = true;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<long>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr long
+      min() noexcept { return -0x7fffffffffffffffL - 1; }
+
+      static constexpr long
+      max() noexcept { return 0x7fffffffffffffffL; }
+
+
+      static constexpr long
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits = (sizeof(long) * 8 - ((long)(-1) < 0));
+      static constexpr int digits10 = ((sizeof(long) * 8 - ((long)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr long
+      epsilon() noexcept { return 0; }
+
+      static constexpr long
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr long
+      infinity() noexcept { return static_cast<long>(0); }
+
+      static constexpr long
+      quiet_NaN() noexcept { return static_cast<long>(0); }
+
+      static constexpr long
+      signaling_NaN() noexcept { return static_cast<long>(0); }
+
+      static constexpr long
+      denorm_min() noexcept { return static_cast<long>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<unsigned long>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr unsigned long
+      min() noexcept { return 0; }
+
+      static constexpr unsigned long
+      max() noexcept { return 0x7fffffffffffffffL * 2UL + 1; }
+
+
+      static constexpr unsigned long
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits
+       = (sizeof(unsigned long) * 8 - ((unsigned long)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(unsigned long) * 8 - ((unsigned long)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = false;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr unsigned long
+      epsilon() noexcept { return 0; }
+
+      static constexpr unsigned long
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr unsigned long
+      infinity() noexcept
+      { return static_cast<unsigned long>(0); }
+
+      static constexpr unsigned long
+      quiet_NaN() noexcept
+      { return static_cast<unsigned long>(0); }
+
+      static constexpr unsigned long
+      signaling_NaN() noexcept
+      { return static_cast<unsigned long>(0); }
+
+      static constexpr unsigned long
+      denorm_min() noexcept
+      { return static_cast<unsigned long>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = true;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<long long>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr long long
+      min() noexcept { return -0x7fffffffffffffffLL - 1; }
+
+      static constexpr long long
+      max() noexcept { return 0x7fffffffffffffffLL; }
+
+
+      static constexpr long long
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits
+       = (sizeof(long long) * 8 - ((long long)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(long long) * 8 - ((long long)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr long long
+      epsilon() noexcept { return 0; }
+
+      static constexpr long long
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr long long
+      infinity() noexcept { return static_cast<long long>(0); }
+
+      static constexpr long long
+      quiet_NaN() noexcept { return static_cast<long long>(0); }
+
+      static constexpr long long
+      signaling_NaN() noexcept
+      { return static_cast<long long>(0); }
+
+      static constexpr long long
+      denorm_min() noexcept { return static_cast<long long>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+
+
+  template<>
+    struct numeric_limits<unsigned long long>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr unsigned long long
+      min() noexcept { return 0; }
+
+      static constexpr unsigned long long
+      max() noexcept { return 0x7fffffffffffffffLL * 2ULL + 1; }
+
+
+      static constexpr unsigned long long
+      lowest() noexcept { return min(); }
+
+
+      static constexpr int digits
+       = (sizeof(unsigned long long) * 8 - ((unsigned long long)(-1) < 0));
+      static constexpr int digits10
+       = ((sizeof(unsigned long long) * 8 - ((unsigned long long)(-1) < 0)) * 643L / 2136);
+
+      static constexpr int max_digits10 = 0;
+
+      static constexpr bool is_signed = false;
+      static constexpr bool is_integer = true;
+      static constexpr bool is_exact = true;
+      static constexpr int radix = 2;
+
+      static constexpr unsigned long long
+      epsilon() noexcept { return 0; }
+
+      static constexpr unsigned long long
+      round_error() noexcept { return 0; }
+
+      static constexpr int min_exponent = 0;
+      static constexpr int min_exponent10 = 0;
+      static constexpr int max_exponent = 0;
+      static constexpr int max_exponent10 = 0;
+
+      static constexpr bool has_infinity = false;
+      static constexpr bool has_quiet_NaN = false;
+      static constexpr bool has_signaling_NaN = false;
+      static constexpr float_denorm_style has_denorm
+       = denorm_absent;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr unsigned long long
+      infinity() noexcept
+      { return static_cast<unsigned long long>(0); }
+
+      static constexpr unsigned long long
+      quiet_NaN() noexcept
+      { return static_cast<unsigned long long>(0); }
+
+      static constexpr unsigned long long
+      signaling_NaN() noexcept
+      { return static_cast<unsigned long long>(0); }
+
+      static constexpr unsigned long long
+      denorm_min() noexcept
+      { return static_cast<unsigned long long>(0); }
+
+      static constexpr bool is_iec559 = false;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = true;
+
+      static constexpr bool traps = true;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+       = round_toward_zero;
+    };
+# 1637 "/usr/include/c++/14.2.0/limits" 3
+  __extension__ template<> struct numeric_limits<__int128> { static constexpr bool is_specialized = true; static constexpr __int128 min() noexcept { return (((__int128)(-1) < 0) ? -(((__int128)(-1) < 0) ? (((((__int128)1 << ((128 - ((__int128)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(__int128)0) - 1 : (__int128)0); } static constexpr __int128 max() noexcept { return (((__int128)(-1) < 0) ? (((((__int128)1 << ((128 - ((__int128)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(__int128)0); } static constexpr int digits = 128 - 1; static constexpr int digits10 = (128 - 1) * 643L / 2136; static constexpr bool is_signed = true; static constexpr bool is_integer = true; static constexpr bool is_exact = true; static constexpr int radix = 2; static constexpr __int128 epsilon() noexcept { return 0; } static constexpr __int128 round_error() noexcept { return 0; } static constexpr __int128 lowest() noexcept { return min(); } static constexpr int max_digits10 = 0; static constexpr int min_exponent = 0; static constexpr int min_exponent10 = 0; static constexpr int max_exponent = 0; static constexpr int max_exponent10 = 0; static constexpr bool has_infinity = false; static constexpr bool has_quiet_NaN = false; static constexpr bool has_signaling_NaN = false; static constexpr float_denorm_style has_denorm = denorm_absent; static constexpr bool has_denorm_loss = false; static constexpr __int128 infinity() noexcept { return static_cast<__int128>(0); } static constexpr __int128 quiet_NaN() noexcept { return static_cast<__int128>(0); } static constexpr __int128 signaling_NaN() noexcept { return static_cast<__int128>(0); } static constexpr __int128 denorm_min() noexcept { return static_cast<__int128>(0); } static constexpr bool is_iec559 = false; static constexpr bool is_bounded = true; static constexpr bool is_modulo = false; static constexpr bool traps = true; static constexpr bool tinyness_before = false; static constexpr float_round_style round_style = round_toward_zero; }; __extension__ template<> struct numeric_limits<unsigned __int128> { static constexpr bool is_specialized = true; static constexpr unsigned __int128 min() noexcept { return 0; } static constexpr unsigned __int128 max() noexcept { return (((unsigned __int128)(-1) < 0) ? (((((unsigned __int128)1 << ((128 - ((unsigned __int128)(-1) < 0)) - 1)) - 1) << 1) + 1) : ~(unsigned __int128)0); } static constexpr unsigned __int128 lowest() noexcept { return min(); } static constexpr int max_digits10 = 0; static constexpr int digits = 128; static constexpr int digits10 = 128 * 643L / 2136; static constexpr bool is_signed = false; static constexpr bool is_integer = true; static constexpr bool is_exact = true; static constexpr int radix = 2; static constexpr unsigned __int128 epsilon() noexcept { return 0; } static constexpr unsigned __int128 round_error() noexcept { return 0; } static constexpr int min_exponent = 0; static constexpr int min_exponent10 = 0; static constexpr int max_exponent = 0; static constexpr int max_exponent10 = 0; static constexpr bool has_infinity = false; static constexpr bool has_quiet_NaN = false; static constexpr bool has_signaling_NaN = false; static constexpr float_denorm_style has_denorm = denorm_absent; static constexpr bool has_denorm_loss = false; static constexpr unsigned __int128 infinity() noexcept { return static_cast<unsigned __int128>(0); } static constexpr unsigned __int128 quiet_NaN() noexcept { return static_cast<unsigned __int128>(0); } static constexpr unsigned __int128 signaling_NaN() noexcept { return static_cast<unsigned __int128>(0); } static constexpr unsigned __int128 denorm_min() noexcept { return static_cast<unsigned __int128>(0); } static constexpr bool is_iec559 = false; static constexpr bool is_bounded = true; static constexpr bool is_modulo = true; static constexpr bool traps = true; static constexpr bool tinyness_before = false; static constexpr float_round_style round_style = round_toward_zero; };
+# 1669 "/usr/include/c++/14.2.0/limits" 3
+  template<>
+    struct numeric_limits<float>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr float
+      min() noexcept { return 1.17549435082228750796873653722224568e-38F; }
+
+      static constexpr float
+      max() noexcept { return 3.40282346638528859811704183484516925e+38F; }
+
+
+      static constexpr float
+      lowest() noexcept { return -3.40282346638528859811704183484516925e+38F; }
+
+
+      static constexpr int digits = 24;
+      static constexpr int digits10 = 6;
+
+      static constexpr int max_digits10
+  = (2 + (24) * 643L / 2136);
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = false;
+      static constexpr bool is_exact = false;
+      static constexpr int radix = 2;
+
+      static constexpr float
+      epsilon() noexcept { return 1.19209289550781250000000000000000000e-7F; }
+
+      static constexpr float
+      round_error() noexcept { return 0.5F; }
+
+      static constexpr int min_exponent = (-125);
+      static constexpr int min_exponent10 = (-37);
+      static constexpr int max_exponent = 128;
+      static constexpr int max_exponent10 = 38;
+
+      static constexpr bool has_infinity = 1;
+      static constexpr bool has_quiet_NaN = 1;
+      static constexpr bool has_signaling_NaN = has_quiet_NaN;
+      static constexpr float_denorm_style has_denorm
+ = bool(1) ? denorm_present : denorm_absent;
+      static constexpr bool has_denorm_loss
+       = false;
+
+      static constexpr float
+      infinity() noexcept { return __builtin_huge_valf(); }
+
+      static constexpr float
+      quiet_NaN() noexcept { return __builtin_nanf(""); }
+
+      static constexpr float
+      signaling_NaN() noexcept { return __builtin_nansf(""); }
+
+      static constexpr float
+      denorm_min() noexcept { return 1.40129846432481707092372958328991613e-45F; }
+
+      static constexpr bool is_iec559
+ = has_infinity && has_quiet_NaN && has_denorm == denorm_present;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = false;
+      static constexpr bool tinyness_before
+       = false;
+      static constexpr float_round_style round_style
+       = round_to_nearest;
+    };
+
+
+
+
+
+
+  template<>
+    struct numeric_limits<double>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr double
+      min() noexcept { return double(2.22507385850720138309023271733240406e-308L); }
+
+      static constexpr double
+      max() noexcept { return double(1.79769313486231570814527423731704357e+308L); }
+
+
+      static constexpr double
+      lowest() noexcept { return -double(1.79769313486231570814527423731704357e+308L); }
+
+
+      static constexpr int digits = 53;
+      static constexpr int digits10 = 15;
+
+      static constexpr int max_digits10
+  = (2 + (53) * 643L / 2136);
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = false;
+      static constexpr bool is_exact = false;
+      static constexpr int radix = 2;
+
+      static constexpr double
+      epsilon() noexcept { return double(2.22044604925031308084726333618164062e-16L); }
+
+      static constexpr double
+      round_error() noexcept { return 0.5; }
+
+      static constexpr int min_exponent = (-1021);
+      static constexpr int min_exponent10 = (-307);
+      static constexpr int max_exponent = 1024;
+      static constexpr int max_exponent10 = 308;
+
+      static constexpr bool has_infinity = 1;
+      static constexpr bool has_quiet_NaN = 1;
+      static constexpr bool has_signaling_NaN = has_quiet_NaN;
+      static constexpr float_denorm_style has_denorm
+ = bool(1) ? denorm_present : denorm_absent;
+      static constexpr bool has_denorm_loss
+        = false;
+
+      static constexpr double
+      infinity() noexcept { return __builtin_huge_val(); }
+
+      static constexpr double
+      quiet_NaN() noexcept { return __builtin_nan(""); }
+
+      static constexpr double
+      signaling_NaN() noexcept { return __builtin_nans(""); }
+
+      static constexpr double
+      denorm_min() noexcept { return double(4.94065645841246544176568792868221372e-324L); }
+
+      static constexpr bool is_iec559
+ = has_infinity && has_quiet_NaN && has_denorm == denorm_present;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = false;
+      static constexpr bool tinyness_before
+       = false;
+      static constexpr float_round_style round_style
+       = round_to_nearest;
+    };
+
+
+
+
+
+
+  template<>
+    struct numeric_limits<long double>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr long double
+      min() noexcept { return 3.36210314311209350626267781732175260e-4932L; }
+
+      static constexpr long double
+      max() noexcept { return 1.18973149535723176502126385303097021e+4932L; }
+
+
+      static constexpr long double
+      lowest() noexcept { return -1.18973149535723176502126385303097021e+4932L; }
+
+
+      static constexpr int digits = 64;
+      static constexpr int digits10 = 18;
+
+      static constexpr int max_digits10
+  = (2 + (64) * 643L / 2136);
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = false;
+      static constexpr bool is_exact = false;
+      static constexpr int radix = 2;
+
+      static constexpr long double
+      epsilon() noexcept { return 1.08420217248550443400745280086994171e-19L; }
+
+      static constexpr long double
+      round_error() noexcept { return 0.5L; }
+
+      static constexpr int min_exponent = (-16381);
+      static constexpr int min_exponent10 = (-4931);
+      static constexpr int max_exponent = 16384;
+      static constexpr int max_exponent10 = 4932;
+
+      static constexpr bool has_infinity = 1;
+      static constexpr bool has_quiet_NaN = 1;
+      static constexpr bool has_signaling_NaN = has_quiet_NaN;
+      static constexpr float_denorm_style has_denorm
+ = bool(1) ? denorm_present : denorm_absent;
+      static constexpr bool has_denorm_loss
+ = false;
+
+      static constexpr long double
+      infinity() noexcept { return __builtin_huge_vall(); }
+
+      static constexpr long double
+      quiet_NaN() noexcept { return __builtin_nanl(""); }
+
+      static constexpr long double
+      signaling_NaN() noexcept { return __builtin_nansl(""); }
+
+      static constexpr long double
+      denorm_min() noexcept { return 3.64519953188247460252840593361941982e-4951L; }
+
+      static constexpr bool is_iec559
+ = has_infinity && has_quiet_NaN && has_denorm == denorm_present;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = false;
+      static constexpr bool tinyness_before =
+      false;
+      static constexpr float_round_style round_style =
+            round_to_nearest;
+    };
+# 1989 "/usr/include/c++/14.2.0/limits" 3
+__extension__ template<> struct numeric_limits<_Float32> { static constexpr bool is_specialized = true; static constexpr _Float32 min() noexcept { return 1.17549435082228750796873653722224568e-38F32; } static constexpr _Float32 max() noexcept { return 3.40282346638528859811704183484516925e+38F32; } static constexpr _Float32 lowest() noexcept { return -3.40282346638528859811704183484516925e+38F32; } static constexpr int digits = 24; static constexpr int digits10 = 6; static constexpr int max_digits10 = (2 + (24) * 643L / 2136); static constexpr bool is_signed = true; static constexpr bool is_integer = false; static constexpr bool is_exact = false; static constexpr int radix = 2; static constexpr _Float32 epsilon() noexcept { return 1.19209289550781250000000000000000000e-7F32; } static constexpr _Float32 round_error() noexcept { return 0.5F32; } static constexpr int min_exponent = (-125); static constexpr int min_exponent10 = (-37); static constexpr int max_exponent = 128; static constexpr int max_exponent10 = 38; static constexpr bool has_infinity = 1; static constexpr bool has_quiet_NaN = 1; static constexpr bool has_signaling_NaN = has_quiet_NaN; static constexpr float_denorm_style has_denorm = bool(1) ? denorm_present : denorm_absent; static constexpr bool has_denorm_loss = false; static constexpr _Float32 infinity() noexcept { return __builtin_huge_valf32(); } static constexpr _Float32 quiet_NaN() noexcept { return __builtin_nanf32(""); } static constexpr _Float32 signaling_NaN() noexcept { return __builtin_nansf32(""); } static constexpr _Float32 denorm_min() noexcept { return 1.40129846432481707092372958328991613e-45F32; } static constexpr bool is_iec559 = has_infinity && has_quiet_NaN && has_denorm == denorm_present; static constexpr bool is_bounded = true; static constexpr bool is_modulo = false; static constexpr bool traps = false; static constexpr bool tinyness_before = false; static constexpr float_round_style round_style = round_to_nearest; };
+
+
+__extension__ template<> struct numeric_limits<_Float64> { static constexpr bool is_specialized = true; static constexpr _Float64 min() noexcept { return 2.22507385850720138309023271733240406e-308F64; } static constexpr _Float64 max() noexcept { return 1.79769313486231570814527423731704357e+308F64; } static constexpr _Float64 lowest() noexcept { return -1.79769313486231570814527423731704357e+308F64; } static constexpr int digits = 53; static constexpr int digits10 = 15; static constexpr int max_digits10 = (2 + (53) * 643L / 2136); static constexpr bool is_signed = true; static constexpr bool is_integer = false; static constexpr bool is_exact = false; static constexpr int radix = 2; static constexpr _Float64 epsilon() noexcept { return 2.22044604925031308084726333618164062e-16F64; } static constexpr _Float64 round_error() noexcept { return 0.5F64; } static constexpr int min_exponent = (-1021); static constexpr int min_exponent10 = (-307); static constexpr int max_exponent = 1024; static constexpr int max_exponent10 = 308; static constexpr bool has_infinity = 1; static constexpr bool has_quiet_NaN = 1; static constexpr bool has_signaling_NaN = has_quiet_NaN; static constexpr float_denorm_style has_denorm = bool(1) ? denorm_present : denorm_absent; static constexpr bool has_denorm_loss = false; static constexpr _Float64 infinity() noexcept { return __builtin_huge_valf64(); } static constexpr _Float64 quiet_NaN() noexcept { return __builtin_nanf64(""); } static constexpr _Float64 signaling_NaN() noexcept { return __builtin_nansf64(""); } static constexpr _Float64 denorm_min() noexcept { return 4.94065645841246544176568792868221372e-324F64; } static constexpr bool is_iec559 = has_infinity && has_quiet_NaN && has_denorm == denorm_present; static constexpr bool is_bounded = true; static constexpr bool is_modulo = false; static constexpr bool traps = false; static constexpr bool tinyness_before = false; static constexpr float_round_style round_style = round_to_nearest; };
+
+
+__extension__ template<> struct numeric_limits<_Float128> { static constexpr bool is_specialized = true; static constexpr _Float128 min() noexcept { return 3.36210314311209350626267781732175260e-4932F128; } static constexpr _Float128 max() noexcept { return 1.18973149535723176508575932662800702e+4932F128; } static constexpr _Float128 lowest() noexcept { return -1.18973149535723176508575932662800702e+4932F128; } static constexpr int digits = 113; static constexpr int digits10 = 33; static constexpr int max_digits10 = (2 + (113) * 643L / 2136); static constexpr bool is_signed = true; static constexpr bool is_integer = false; static constexpr bool is_exact = false; static constexpr int radix = 2; static constexpr _Float128 epsilon() noexcept { return 1.92592994438723585305597794258492732e-34F128; } static constexpr _Float128 round_error() noexcept { return 0.5F128; } static constexpr int min_exponent = (-16381); static constexpr int min_exponent10 = (-4931); static constexpr int max_exponent = 16384; static constexpr int max_exponent10 = 4932; static constexpr bool has_infinity = 1; static constexpr bool has_quiet_NaN = 1; static constexpr bool has_signaling_NaN = has_quiet_NaN; static constexpr float_denorm_style has_denorm = bool(1) ? denorm_present : denorm_absent; static constexpr bool has_denorm_loss = false; static constexpr _Float128 infinity() noexcept { return __builtin_huge_valf128(); } static constexpr _Float128 quiet_NaN() noexcept { return __builtin_nanf128(""); } static constexpr _Float128 signaling_NaN() noexcept { return __builtin_nansf128(""); } static constexpr _Float128 denorm_min() noexcept { return 6.47517511943802511092443895822764655e-4966F128; } static constexpr bool is_iec559 = has_infinity && has_quiet_NaN && has_denorm == denorm_present; static constexpr bool is_bounded = true; static constexpr bool is_modulo = false; static constexpr bool traps = false; static constexpr bool tinyness_before = false; static constexpr float_round_style round_style = round_to_nearest; };
+# 2087 "/usr/include/c++/14.2.0/limits" 3
+  __extension__
+  template<>
+    struct numeric_limits<__float128>
+    {
+      static constexpr bool is_specialized = true;
+
+      static constexpr __float128
+      min() noexcept
+      {
+
+
+
+
+ return __extension__ 0x1.0p-16382Q;
+
+      }
+
+      static constexpr __float128
+      max() noexcept
+      {
+
+
+
+
+
+
+
+ return __extension__ 0x1.ffffffffffffffffffffffffffffp+16383Q;
+
+      }
+
+      static constexpr __float128
+      lowest() noexcept
+      { return -max(); }
+
+      static constexpr int digits = 113;
+      static constexpr int digits10 = 33;
+
+      static constexpr int max_digits10 = 35;
+
+      static constexpr bool is_signed = true;
+      static constexpr bool is_integer = false;
+      static constexpr bool is_exact = false;
+      static constexpr int radix = 2;
+
+      static constexpr __float128
+      epsilon() noexcept
+      { return double(1.9259299443872359e-34); }
+
+      static constexpr __float128
+      round_error() noexcept { return 0.5; }
+
+      static constexpr int min_exponent = -16381;
+      static constexpr int min_exponent10 = -4931;
+      static constexpr int max_exponent = 16384;
+      static constexpr int max_exponent10 = 4932;
+
+      static constexpr bool has_infinity = 1;
+      static constexpr bool has_quiet_NaN = 1;
+
+
+      static constexpr bool has_signaling_NaN = true;
+
+
+
+      static constexpr float_denorm_style has_denorm
+ = denorm_present;
+      static constexpr bool has_denorm_loss = false;
+
+      static constexpr __float128
+      infinity() noexcept
+      { return __builtin_huge_val(); }
+
+      static constexpr __float128
+      quiet_NaN() noexcept
+      { return __builtin_nan(""); }
+
+      static constexpr __float128
+      signaling_NaN() noexcept
+      {
+
+ return __builtin_nansq("");
+
+
+
+
+
+      }
+
+      static constexpr __float128
+      denorm_min() noexcept
+      {
+
+
+
+
+ return __extension__ 0x1.0p-16494Q;
+
+      }
+
+      static constexpr bool is_iec559 = has_signaling_NaN;
+      static constexpr bool is_bounded = true;
+      static constexpr bool is_modulo = false;
+
+      static constexpr bool traps = false;
+      static constexpr bool tinyness_before = false;
+      static constexpr float_round_style round_style
+ = round_to_nearest;
+# 2218 "/usr/include/c++/14.2.0/limits" 3
+    };
+
+
+
+
+}
+# 40 "/usr/include/c++/14.2.0/bits/chrono.h" 2 3
+# 1 "/usr/include/c++/14.2.0/ctime" 1 3
+# 39 "/usr/include/c++/14.2.0/ctime" 3
+       
+# 40 "/usr/include/c++/14.2.0/ctime" 3
+# 58 "/usr/include/c++/14.2.0/ctime" 3
+namespace std
+{
+  using ::clock_t;
+  using ::time_t;
+  using ::tm;
+
+  using ::clock;
+  using ::difftime;
+  using ::mktime;
+  using ::time;
+  using ::asctime;
+  using ::ctime;
+  using ::gmtime;
+  using ::localtime;
+  using ::strftime;
+}
+
+
+
+namespace std
+{
+  using ::timespec;
+  using ::timespec_get;
+}
+# 41 "/usr/include/c++/14.2.0/bits/chrono.h" 2 3
+# 1 "/usr/include/c++/14.2.0/bits/parse_numbers.h" 1 3
+# 33 "/usr/include/c++/14.2.0/bits/parse_numbers.h" 3
+       
+# 34 "/usr/include/c++/14.2.0/bits/parse_numbers.h" 3
+# 42 "/usr/include/c++/14.2.0/bits/parse_numbers.h" 3
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+
+namespace __parse_int
+{
+  template<unsigned _Base, char _Dig>
+    struct _Digit;
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '0'> : integral_constant<unsigned, 0>
+    {
+      using __valid = true_type;
+    };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '1'> : integral_constant<unsigned, 1>
+    {
+      using __valid = true_type;
+    };
+
+  template<unsigned _Base, unsigned _Val>
+    struct _Digit_impl : integral_constant<unsigned, _Val>
+    {
+      static_assert(_Base > _Val, "invalid digit");
+      using __valid = true_type;
+    };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '2'> : _Digit_impl<_Base, 2>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '3'> : _Digit_impl<_Base, 3>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '4'> : _Digit_impl<_Base, 4>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '5'> : _Digit_impl<_Base, 5>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '6'> : _Digit_impl<_Base, 6>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '7'> : _Digit_impl<_Base, 7>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '8'> : _Digit_impl<_Base, 8>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '9'> : _Digit_impl<_Base, 9>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'a'> : _Digit_impl<_Base, 0xa>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'A'> : _Digit_impl<_Base, 0xa>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'b'> : _Digit_impl<_Base, 0xb>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'B'> : _Digit_impl<_Base, 0xb>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'c'> : _Digit_impl<_Base, 0xc>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'C'> : _Digit_impl<_Base, 0xc>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'd'> : _Digit_impl<_Base, 0xd>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'D'> : _Digit_impl<_Base, 0xd>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'e'> : _Digit_impl<_Base, 0xe>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'E'> : _Digit_impl<_Base, 0xe>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'f'> : _Digit_impl<_Base, 0xf>
+    { };
+
+  template<unsigned _Base>
+    struct _Digit<_Base, 'F'> : _Digit_impl<_Base, 0xf>
+    { };
+
+
+  template<unsigned _Base>
+    struct _Digit<_Base, '\''> : integral_constant<unsigned, 0>
+    {
+      using __valid = false_type;
+    };
+
+
+
+  template<unsigned long long _Val>
+    using __ull_constant = integral_constant<unsigned long long, _Val>;
+
+  template<unsigned _Base, char _Dig, char... _Digs>
+    struct _Power_help
+    {
+      using __next = typename _Power_help<_Base, _Digs...>::type;
+      using __valid_digit = typename _Digit<_Base, _Dig>::__valid;
+      using type
+ = __ull_constant<__next::value * (__valid_digit{} ? _Base : 1ULL)>;
+    };
+
+  template<unsigned _Base, char _Dig>
+    struct _Power_help<_Base, _Dig>
+    {
+      using __valid_digit = typename _Digit<_Base, _Dig>::__valid;
+      using type = __ull_constant<__valid_digit::value>;
+    };
+
+  template<unsigned _Base, char... _Digs>
+    struct _Power : _Power_help<_Base, _Digs...>::type
+    { };
+
+  template<unsigned _Base>
+    struct _Power<_Base> : __ull_constant<0>
+    { };
+
+
+
+  template<unsigned _Base, unsigned long long _Pow, char _Dig, char... _Digs>
+    struct _Number_help
+    {
+      using __digit = _Digit<_Base, _Dig>;
+      using __valid_digit = typename __digit::__valid;
+      using __next = _Number_help<_Base,
+      __valid_digit::value ? _Pow / _Base : _Pow,
+      _Digs...>;
+      using type = __ull_constant<_Pow * __digit::value + __next::type::value>;
+      static_assert((type::value / _Pow) == __digit::value,
+      "integer literal does not fit in unsigned long long");
+    };
+
+
+  template<unsigned _Base, unsigned long long _Pow, char _Dig, char..._Digs>
+    struct _Number_help<_Base, _Pow, '\'', _Dig, _Digs...>
+    : _Number_help<_Base, _Pow, _Dig, _Digs...>
+    { };
+
+
+  template<unsigned _Base, char _Dig>
+    struct _Number_help<_Base, 1ULL, _Dig>
+    {
+      using type = __ull_constant<_Digit<_Base, _Dig>::value>;
+    };
+
+  template<unsigned _Base, char... _Digs>
+    struct _Number
+    : _Number_help<_Base, _Power<_Base, _Digs...>::value, _Digs...>::type
+    { };
+
+  template<unsigned _Base>
+    struct _Number<_Base>
+    : __ull_constant<0>
+    { };
+
+
+
+  template<char... _Digs>
+    struct _Parse_int;
+
+  template<char... _Digs>
+    struct _Parse_int<'0', 'b', _Digs...>
+    : _Number<2U, _Digs...>::type
+    { };
+
+  template<char... _Digs>
+    struct _Parse_int<'0', 'B', _Digs...>
+    : _Number<2U, _Digs...>::type
+    { };
+
+  template<char... _Digs>
+    struct _Parse_int<'0', 'x', _Digs...>
+    : _Number<16U, _Digs...>::type
+    { };
+
+  template<char... _Digs>
+    struct _Parse_int<'0', 'X', _Digs...>
+    : _Number<16U, _Digs...>::type
+    { };
+
+  template<char... _Digs>
+    struct _Parse_int<'0', _Digs...>
+    : _Number<8U, _Digs...>::type
+    { };
+
+  template<char... _Digs>
+    struct _Parse_int
+    : _Number<10U, _Digs...>::type
+    { };
+
+}
+
+
+namespace __select_int
+{
+  template<unsigned long long _Val, typename... _Ints>
+    struct _Select_int_base;
+
+  template<unsigned long long _Val, typename _IntType, typename... _Ints>
+    struct _Select_int_base<_Val, _IntType, _Ints...>
+    : __conditional_t<(_Val <= __gnu_cxx::__int_traits<_IntType>::__max),
+        integral_constant<_IntType, (_IntType)_Val>,
+        _Select_int_base<_Val, _Ints...>>
+    { };
+
+  template<unsigned long long _Val>
+    struct _Select_int_base<_Val>
+    { };
+
+  template<char... _Digs>
+    using _Select_int = typename _Select_int_base<
+ __parse_int::_Parse_int<_Digs...>::value,
+ unsigned char,
+ unsigned short,
+ unsigned int,
+ unsigned long,
+ unsigned long long
+      >::type;
+
+}
+
+
+}
+# 42 "/usr/include/c++/14.2.0/bits/chrono.h" 2 3
+
+
+
+
+
+# 1 "/usr/include/c++/14.2.0/bits/version.h" 1 3
+# 47 "/usr/include/c++/14.2.0/bits/version.h" 3
+       
+# 48 "/usr/include/c++/14.2.0/bits/version.h" 3
+# 48 "/usr/include/c++/14.2.0/bits/chrono.h" 2 3
+
+namespace std __attribute__ ((__visibility__ ("default")))
+{
+
+
+
+  namespace filesystem { struct __file_clock; };
+
+
+  namespace chrono
+  {
+
+
+
+
+    template<typename _Rep, typename _Period = ratio<1>>
+      class duration;
+
+
+    template<typename _Clock, typename _Dur = typename _Clock::duration>
+      class time_point;
+
+  }
+# 79 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+  template<typename _CT, typename _Period1, typename _Period2, typename = void>
+    struct __duration_common_type
+    { };
+
+  template<typename _CT, typename _Period1, typename _Period2>
+    struct __duration_common_type<_CT, _Period1, _Period2,
+      __void_t<typename _CT::type>>
+    {
+    private:
+      using __gcd_num = __static_gcd<_Period1::num, _Period2::num>;
+      using __gcd_den = __static_gcd<_Period1::den, _Period2::den>;
+      using __cr = typename _CT::type;
+      using __r = ratio<__gcd_num::value,
+   (_Period1::den / __gcd_den::value) * _Period2::den>;
+
+    public:
+      using type = chrono::duration<__cr, typename __r::type>;
+    };
+
+
+
+
+
+
+
+  template<typename _Rep1, typename _Period1, typename _Rep2, typename _Period2>
+    struct common_type<chrono::duration<_Rep1, _Period1>,
+         chrono::duration<_Rep2, _Period2>>
+    : __duration_common_type<common_type<_Rep1, _Rep2>,
+        typename _Period1::type,
+        typename _Period2::type>
+    { };
+
+
+  template<typename _Rep, typename _Period>
+    struct common_type<chrono::duration<_Rep, _Period>,
+         chrono::duration<_Rep, _Period>>
+    {
+      using type = chrono::duration<typename common_type<_Rep>::type,
+        typename _Period::type>;
+    };
+
+
+  template<typename _Rep, typename _Period>
+    struct common_type<chrono::duration<_Rep, _Period>>
+    {
+      using type = chrono::duration<typename common_type<_Rep>::type,
+        typename _Period::type>;
+    };
+
+
+
+
+
+
+  template<typename _CT, typename _Clock, typename = void>
+    struct __timepoint_common_type
+    { };
+
+  template<typename _CT, typename _Clock>
+    struct __timepoint_common_type<_CT, _Clock, __void_t<typename _CT::type>>
+    {
+      using type = chrono::time_point<_Clock, typename _CT::type>;
+    };
+
+
+
+
+
+
+
+  template<typename _Clock, typename _Duration1, typename _Duration2>
+    struct common_type<chrono::time_point<_Clock, _Duration1>,
+         chrono::time_point<_Clock, _Duration2>>
+    : __timepoint_common_type<common_type<_Duration1, _Duration2>, _Clock>
+    { };
+
+
+  template<typename _Clock, typename _Duration>
+    struct common_type<chrono::time_point<_Clock, _Duration>,
+         chrono::time_point<_Clock, _Duration>>
+    { using type = chrono::time_point<_Clock, _Duration>; };
+
+
+  template<typename _Clock, typename _Duration>
+    struct common_type<chrono::time_point<_Clock, _Duration>>
+    { using type = chrono::time_point<_Clock, _Duration>; };
+
+
+
+
+  namespace chrono
+  {
+
+
+
+
+
+
+    template<typename _ToDur, typename _CF, typename _CR,
+      bool _NumIsOne = false, bool _DenIsOne = false>
+      struct __duration_cast_impl
+      {
+ template<typename _Rep, typename _Period>
+   static constexpr _ToDur
+   __cast(const duration<_Rep, _Period>& __d)
+   {
+     typedef typename _ToDur::rep __to_rep;
+     return _ToDur(static_cast<__to_rep>(static_cast<_CR>(__d.count())
+       * static_cast<_CR>(_CF::num)
+       / static_cast<_CR>(_CF::den)));
+   }
+      };
+
+    template<typename _ToDur, typename _CF, typename _CR>
+      struct __duration_cast_impl<_ToDur, _CF, _CR, true, true>
+      {
+ template<typename _Rep, typename _Period>
+   static constexpr _ToDur
+   __cast(const duration<_Rep, _Period>& __d)
+   {
+     typedef typename _ToDur::rep __to_rep;
+     return _ToDur(static_cast<__to_rep>(__d.count()));
+   }
+      };
+
+    template<typename _ToDur, typename _CF, typename _CR>
+      struct __duration_cast_impl<_ToDur, _CF, _CR, true, false>
+      {
+ template<typename _Rep, typename _Period>
+   static constexpr _ToDur
+   __cast(const duration<_Rep, _Period>& __d)
+   {
+     typedef typename _ToDur::rep __to_rep;
+     return _ToDur(static_cast<__to_rep>(
+       static_cast<_CR>(__d.count()) / static_cast<_CR>(_CF::den)));
+   }
+      };
+
+    template<typename _ToDur, typename _CF, typename _CR>
+      struct __duration_cast_impl<_ToDur, _CF, _CR, false, true>
+      {
+ template<typename _Rep, typename _Period>
+   static constexpr _ToDur
+   __cast(const duration<_Rep, _Period>& __d)
+   {
+     typedef typename _ToDur::rep __to_rep;
+     return _ToDur(static_cast<__to_rep>(
+       static_cast<_CR>(__d.count()) * static_cast<_CR>(_CF::num)));
+   }
+      };
+
+    template<typename _Tp>
+      struct __is_duration
+      : std::false_type
+      { };
+
+    template<typename _Rep, typename _Period>
+      struct __is_duration<duration<_Rep, _Period>>
+      : std::true_type
+      { };
+
+    template<typename _Tp>
+      using __enable_if_is_duration
+ = typename enable_if<__is_duration<_Tp>::value, _Tp>::type;
+
+    template<typename _Tp>
+      using __disable_if_is_duration
+ = typename enable_if<!__is_duration<_Tp>::value, _Tp>::type;
+
+
+    template<typename _Tp>
+      inline constexpr bool __is_duration_v = false;
+    template<typename _Rep, typename _Period>
+      inline constexpr bool __is_duration_v<duration<_Rep, _Period>> = true;
+    template<typename _Tp>
+      inline constexpr bool __is_time_point_v = false;
+    template<typename _Clock, typename _Dur>
+      inline constexpr bool __is_time_point_v<time_point<_Clock, _Dur>> = true;
+# 272 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _ToDur, typename _Rep, typename _Period>
+      [[__nodiscard__]]
+      constexpr __enable_if_is_duration<_ToDur>
+      duration_cast(const duration<_Rep, _Period>& __d)
+      {
+
+ if constexpr (is_same_v<_ToDur, duration<_Rep, _Period>>)
+   return __d;
+ else
+   {
+
+   using __to_period = typename _ToDur::period;
+   using __to_rep = typename _ToDur::rep;
+   using __cf = ratio_divide<_Period, __to_period>;
+   using __cr = typename common_type<__to_rep, _Rep, intmax_t>::type;
+   using __dc = __duration_cast_impl<_ToDur, __cf, __cr,
+         __cf::num == 1, __cf::den == 1>;
+   return __dc::__cast(__d);
+
+   }
+
+      }
+# 306 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Rep>
+      struct treat_as_floating_point
+      : is_floating_point<_Rep>
+      { };
+
+
+    template <typename _Rep>
+      inline constexpr bool treat_as_floating_point_v =
+ treat_as_floating_point<_Rep>::value;
+
+    template<>
+      inline constexpr bool treat_as_floating_point_v<int> = false;
+    template<>
+      inline constexpr bool treat_as_floating_point_v<long> = false;
+    template<>
+      inline constexpr bool treat_as_floating_point_v<long long> = false;
+    template<>
+      inline constexpr bool treat_as_floating_point_v<float> = true;
+    template<>
+      inline constexpr bool treat_as_floating_point_v<double> = true;
+    template<>
+      inline constexpr bool treat_as_floating_point_v<long double> = true;
+
+
+
+
+    template<typename _Tp>
+      inline constexpr bool is_clock_v = false;
+
+    template<typename _Tp>
+      requires requires {
+ typename _Tp::rep;
+ typename _Tp::period;
+ typename _Tp::duration;
+ typename _Tp::time_point::clock;
+ typename _Tp::time_point::duration;
+ { &_Tp::is_steady } -> same_as<const bool*>;
+ { _Tp::now() } -> same_as<typename _Tp::time_point>;
+ requires same_as<typename _Tp::duration,
+    duration<typename _Tp::rep, typename _Tp::period>>;
+ requires same_as<typename _Tp::time_point::duration,
+    typename _Tp::duration>;
+      }
+    inline constexpr bool is_clock_v<_Tp> = true;
+# 369 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Tp>
+      struct is_clock
+      : bool_constant<is_clock_v<_Tp>>
+      { };
+# 386 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _ToDur, typename _Rep, typename _Period>
+      [[nodiscard]] constexpr __enable_if_is_duration<_ToDur>
+      floor(const duration<_Rep, _Period>& __d)
+      {
+ auto __to = chrono::duration_cast<_ToDur>(__d);
+ if (__to > __d)
+   return __to - _ToDur{1};
+ return __to;
+      }
+# 406 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _ToDur, typename _Rep, typename _Period>
+      [[nodiscard]] constexpr __enable_if_is_duration<_ToDur>
+      ceil(const duration<_Rep, _Period>& __d)
+      {
+ auto __to = chrono::duration_cast<_ToDur>(__d);
+ if (__to < __d)
+   return __to + _ToDur{1};
+ return __to;
+      }
+# 427 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template <typename _ToDur, typename _Rep, typename _Period>
+      [[nodiscard]] constexpr
+      enable_if_t<
+ __and_<__is_duration<_ToDur>,
+        __not_<treat_as_floating_point<typename _ToDur::rep>>>::value,
+ _ToDur>
+      round(const duration<_Rep, _Period>& __d)
+      {
+ _ToDur __t0 = chrono::floor<_ToDur>(__d);
+ _ToDur __t1 = __t0 + _ToDur{1};
+ auto __diff0 = __d - __t0;
+ auto __diff1 = __t1 - __d;
+ if (__diff0 == __diff1)
+   {
+     if (__t0.count() & 1)
+       return __t1;
+     return __t0;
+   }
+ else if (__diff0 < __diff1)
+   return __t0;
+ return __t1;
+      }
+
+
+
+
+
+
+
+    template<typename _Rep, typename _Period>
+      [[nodiscard]] constexpr
+      enable_if_t<numeric_limits<_Rep>::is_signed, duration<_Rep, _Period>>
+      abs(duration<_Rep, _Period> __d)
+      {
+ if (__d >= __d.zero())
+   return __d;
+ return -__d;
+      }
+
+
+    namespace __detail { using chrono::ceil; }
+# 494 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Rep>
+      struct duration_values
+      {
+ static constexpr _Rep
+ zero() noexcept
+ { return _Rep(0); }
+
+ static constexpr _Rep
+ max() noexcept
+ { return numeric_limits<_Rep>::max(); }
+
+ static constexpr _Rep
+ min() noexcept
+ { return numeric_limits<_Rep>::lowest(); }
+      };
+
+    template<typename _Rep, typename _Period>
+      class duration
+      {
+ static_assert(!__is_duration<_Rep>::value,
+        "rep cannot be a std::chrono::duration");
+ static_assert(__is_ratio<_Period>::value,
+        "period must be a specialization of std::ratio");
+ static_assert(_Period::num > 0, "period must be positive");
+
+ template<typename _Rep2>
+   using __is_float = treat_as_floating_point<_Rep2>;
+
+ static constexpr intmax_t
+ _S_gcd(intmax_t __m, intmax_t __n) noexcept
+ {
+
+
+
+   do
+     {
+       intmax_t __rem = __m % __n;
+       __m = __n;
+       __n = __rem;
+     }
+   while (__n != 0);
+   return __m;
+
+
+
+
+
+ }
+
+
+
+
+
+ template<typename _R1, typename _R2,
+   intmax_t __gcd1 = _S_gcd(_R1::num, _R2::num),
+   intmax_t __gcd2 = _S_gcd(_R1::den, _R2::den)>
+   using __divide = ratio<(_R1::num / __gcd1) * (_R2::den / __gcd2),
+     (_R1::den / __gcd2) * (_R2::num / __gcd1)>;
+
+
+ template<typename _Period2>
+   using __is_harmonic
+     = __bool_constant<__divide<_Period2, _Period>::den == 1>;
+
+      public:
+
+ using rep = _Rep;
+ using period = typename _Period::type;
+
+
+ constexpr duration() = default;
+
+ duration(const duration&) = default;
+
+
+
+ template<typename _Rep2, typename = _Require<
+   is_convertible<const _Rep2&, rep>,
+   __or_<__is_float<rep>, __not_<__is_float<_Rep2>>>>>
+   constexpr explicit duration(const _Rep2& __rep)
+   : __r(static_cast<rep>(__rep)) { }
+
+ template<typename _Rep2, typename _Period2, typename = _Require<
+   is_convertible<const _Rep2&, rep>,
+   __or_<__is_float<rep>,
+         __and_<__is_harmonic<_Period2>,
+         __not_<__is_float<_Rep2>>>>>>
+   constexpr duration(const duration<_Rep2, _Period2>& __d)
+   : __r(duration_cast<duration>(__d).count()) { }
+
+ ~duration() = default;
+ duration& operator=(const duration&) = default;
+
+
+ constexpr rep
+ count() const
+ { return __r; }
+
+
+
+ constexpr duration<typename common_type<rep>::type, period>
+ operator+() const
+ { return duration<typename common_type<rep>::type, period>(__r); }
+
+ constexpr duration<typename common_type<rep>::type, period>
+ operator-() const
+ { return duration<typename common_type<rep>::type, period>(-__r); }
+
+ constexpr duration&
+ operator++()
+ {
+   ++__r;
+   return *this;
+ }
+
+ constexpr duration
+ operator++(int)
+ { return duration(__r++); }
+
+ constexpr duration&
+ operator--()
+ {
+   --__r;
+   return *this;
+ }
+
+ constexpr duration
+ operator--(int)
+ { return duration(__r--); }
+
+ constexpr duration&
+ operator+=(const duration& __d)
+ {
+   __r += __d.count();
+   return *this;
+ }
+
+ constexpr duration&
+ operator-=(const duration& __d)
+ {
+   __r -= __d.count();
+   return *this;
+ }
+
+ constexpr duration&
+ operator*=(const rep& __rhs)
+ {
+   __r *= __rhs;
+   return *this;
+ }
+
+ constexpr duration&
+ operator/=(const rep& __rhs)
+ {
+   __r /= __rhs;
+   return *this;
+ }
+
+
+ template<typename _Rep2 = rep>
+   constexpr
+   __enable_if_t<!treat_as_floating_point<_Rep2>::value, duration&>
+   operator%=(const rep& __rhs)
+   {
+     __r %= __rhs;
+     return *this;
+   }
+
+ template<typename _Rep2 = rep>
+   constexpr
+   __enable_if_t<!treat_as_floating_point<_Rep2>::value, duration&>
+   operator%=(const duration& __d)
+   {
+     __r %= __d.count();
+     return *this;
+   }
+
+
+ static constexpr duration
+ zero() noexcept
+ { return duration(duration_values<rep>::zero()); }
+
+ static constexpr duration
+ min() noexcept
+ { return duration(duration_values<rep>::min()); }
+
+ static constexpr duration
+ max() noexcept
+ { return duration(duration_values<rep>::max()); }
+
+      private:
+ rep __r;
+      };
+
+
+
+
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr typename common_type<duration<_Rep1, _Period1>,
+         duration<_Rep2, _Period2>>::type
+      operator+(const duration<_Rep1, _Period1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep1, _Period1> __dur1;
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<__dur1,__dur2>::type __cd;
+ return __cd(__cd(__lhs).count() + __cd(__rhs).count());
+      }
+
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr typename common_type<duration<_Rep1, _Period1>,
+         duration<_Rep2, _Period2>>::type
+      operator-(const duration<_Rep1, _Period1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep1, _Period1> __dur1;
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<__dur1,__dur2>::type __cd;
+ return __cd(__cd(__lhs).count() - __cd(__rhs).count());
+      }
+# 727 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Rep1, typename _Rep2,
+      typename _CRep = typename common_type<_Rep1, _Rep2>::type>
+      using __common_rep_t = typename
+ enable_if<is_convertible<const _Rep2&, _CRep>::value, _CRep>::type;
+# 739 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Rep1, typename _Period, typename _Rep2>
+      constexpr duration<__common_rep_t<_Rep1, _Rep2>, _Period>
+      operator*(const duration<_Rep1, _Period>& __d, const _Rep2& __s)
+      {
+ typedef duration<typename common_type<_Rep1, _Rep2>::type, _Period>
+   __cd;
+ return __cd(__cd(__d).count() * __s);
+      }
+
+    template<typename _Rep1, typename _Rep2, typename _Period>
+      constexpr duration<__common_rep_t<_Rep2, _Rep1>, _Period>
+      operator*(const _Rep1& __s, const duration<_Rep2, _Period>& __d)
+      { return __d * __s; }
+
+    template<typename _Rep1, typename _Period, typename _Rep2>
+      constexpr
+      duration<__common_rep_t<_Rep1, __disable_if_is_duration<_Rep2>>, _Period>
+      operator/(const duration<_Rep1, _Period>& __d, const _Rep2& __s)
+      {
+ typedef duration<typename common_type<_Rep1, _Rep2>::type, _Period>
+   __cd;
+ return __cd(__cd(__d).count() / __s);
+      }
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr typename common_type<_Rep1, _Rep2>::type
+      operator/(const duration<_Rep1, _Period1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep1, _Period1> __dur1;
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<__dur1,__dur2>::type __cd;
+ return __cd(__lhs).count() / __cd(__rhs).count();
+      }
+
+
+    template<typename _Rep1, typename _Period, typename _Rep2>
+      constexpr
+      duration<__common_rep_t<_Rep1, __disable_if_is_duration<_Rep2>>, _Period>
+      operator%(const duration<_Rep1, _Period>& __d, const _Rep2& __s)
+      {
+ typedef duration<typename common_type<_Rep1, _Rep2>::type, _Period>
+   __cd;
+ return __cd(__cd(__d).count() % __s);
+      }
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr typename common_type<duration<_Rep1, _Period1>,
+         duration<_Rep2, _Period2>>::type
+      operator%(const duration<_Rep1, _Period1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep1, _Period1> __dur1;
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<__dur1,__dur2>::type __cd;
+ return __cd(__cd(__lhs).count() % __cd(__rhs).count());
+      }
+# 807 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr bool
+      operator==(const duration<_Rep1, _Period1>& __lhs,
+   const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep1, _Period1> __dur1;
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<__dur1,__dur2>::type __ct;
+ return __ct(__lhs).count() == __ct(__rhs).count();
+      }
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr bool
+      operator<(const duration<_Rep1, _Period1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep1, _Period1> __dur1;
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<__dur1,__dur2>::type __ct;
+ return __ct(__lhs).count() < __ct(__rhs).count();
+      }
+
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      requires three_way_comparable<common_type_t<_Rep1, _Rep2>>
+      constexpr auto
+      operator<=>(const duration<_Rep1, _Period1>& __lhs,
+    const duration<_Rep2, _Period2>& __rhs)
+      {
+ using __ct = common_type_t<duration<_Rep1, _Period1>,
+       duration<_Rep2, _Period2>>;
+ return __ct(__lhs).count() <=> __ct(__rhs).count();
+      }
+# 852 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr bool
+      operator<=(const duration<_Rep1, _Period1>& __lhs,
+   const duration<_Rep2, _Period2>& __rhs)
+      { return !(__rhs < __lhs); }
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr bool
+      operator>(const duration<_Rep1, _Period1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      { return __rhs < __lhs; }
+
+    template<typename _Rep1, typename _Period1,
+      typename _Rep2, typename _Period2>
+      constexpr bool
+      operator>=(const duration<_Rep1, _Period1>& __lhs,
+   const duration<_Rep2, _Period2>& __rhs)
+      { return !(__lhs < __rhs); }
+# 888 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    using nanoseconds = duration<int64_t, nano>;
+
+
+    using microseconds = duration<int64_t, micro>;
+
+
+    using milliseconds = duration<int64_t, milli>;
+
+
+    using seconds = duration<int64_t>;
+
+
+    using minutes = duration<int64_t, ratio< 60>>;
+
+
+    using hours = duration<int64_t, ratio<3600>>;
+
+
+
+    using days = duration<int64_t, ratio<86400>>;
+
+
+    using weeks = duration<int64_t, ratio<604800>>;
+
+
+    using years = duration<int64_t, ratio<31556952>>;
+
+
+    using months = duration<int64_t, ratio<2629746>>;
+
+
+
+
+    template<typename _Clock, typename _Dur>
+      class time_point
+      {
+ static_assert(__is_duration<_Dur>::value,
+     "duration must be a specialization of std::chrono::duration");
+
+      public:
+ typedef _Clock clock;
+ typedef _Dur duration;
+ typedef typename duration::rep rep;
+ typedef typename duration::period period;
+
+ constexpr time_point() : __d(duration::zero())
+ { }
+
+ constexpr explicit time_point(const duration& __dur)
+ : __d(__dur)
+ { }
+
+
+ template<typename _Dur2,
+   typename = _Require<is_convertible<_Dur2, _Dur>>>
+   constexpr time_point(const time_point<clock, _Dur2>& __t)
+   : __d(__t.time_since_epoch())
+   { }
+
+
+ constexpr duration
+ time_since_epoch() const
+ { return __d; }
+
+
+ constexpr time_point&
+ operator++()
+ {
+   ++__d;
+   return *this;
+ }
+
+ constexpr time_point
+ operator++(int)
+ { return time_point{__d++}; }
+
+ constexpr time_point&
+ operator--()
+ {
+   --__d;
+   return *this;
+ }
+
+ constexpr time_point
+ operator--(int)
+ { return time_point{__d--}; }
+
+
+
+ constexpr time_point&
+ operator+=(const duration& __dur)
+ {
+   __d += __dur;
+   return *this;
+ }
+
+ constexpr time_point&
+ operator-=(const duration& __dur)
+ {
+   __d -= __dur;
+   return *this;
+ }
+
+
+ static constexpr time_point
+ min() noexcept
+ { return time_point(duration::min()); }
+
+ static constexpr time_point
+ max() noexcept
+ { return time_point(duration::max()); }
+
+      private:
+ duration __d;
+      };
+# 1016 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _ToDur, typename _Clock, typename _Dur>
+      [[__nodiscard__]] constexpr
+      __enable_if_t<__is_duration<_ToDur>::value, time_point<_Clock, _ToDur>>
+      time_point_cast(const time_point<_Clock, _Dur>& __t)
+      {
+ typedef time_point<_Clock, _ToDur> __time_point;
+ return __time_point(duration_cast<_ToDur>(__t.time_since_epoch()));
+      }
+# 1038 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _ToDur, typename _Clock, typename _Dur>
+      [[nodiscard]] constexpr
+      enable_if_t<__is_duration_v<_ToDur>, time_point<_Clock, _ToDur>>
+      floor(const time_point<_Clock, _Dur>& __tp)
+      {
+ return time_point<_Clock, _ToDur>{
+     chrono::floor<_ToDur>(__tp.time_since_epoch())};
+      }
+# 1059 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _ToDur, typename _Clock, typename _Dur>
+      [[nodiscard]] constexpr
+      enable_if_t<__is_duration_v<_ToDur>, time_point<_Clock, _ToDur>>
+      ceil(const time_point<_Clock, _Dur>& __tp)
+      {
+ return time_point<_Clock, _ToDur>{
+     chrono::ceil<_ToDur>(__tp.time_since_epoch())};
+      }
+# 1081 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _ToDur, typename _Clock, typename _Dur>
+      [[nodiscard]] constexpr
+      enable_if_t<__is_duration_v<_ToDur>
+      && !treat_as_floating_point_v<typename _ToDur::rep>,
+    time_point<_Clock, _ToDur>>
+      round(const time_point<_Clock, _Dur>& __tp)
+      {
+ return time_point<_Clock, _ToDur>{
+     chrono::round<_ToDur>(__tp.time_since_epoch())};
+      }
+
+
+
+
+
+
+    template<typename _Clock, typename _Dur1,
+      typename _Rep2, typename _Period2>
+      constexpr time_point<_Clock,
+ typename common_type<_Dur1, duration<_Rep2, _Period2>>::type>
+      operator+(const time_point<_Clock, _Dur1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<_Dur1,__dur2>::type __ct;
+ typedef time_point<_Clock, __ct> __time_point;
+ return __time_point(__lhs.time_since_epoch() + __rhs);
+      }
+
+
+    template<typename _Rep1, typename _Period1,
+      typename _Clock, typename _Dur2>
+      constexpr time_point<_Clock,
+ typename common_type<duration<_Rep1, _Period1>, _Dur2>::type>
+      operator+(const duration<_Rep1, _Period1>& __lhs,
+  const time_point<_Clock, _Dur2>& __rhs)
+      {
+ typedef duration<_Rep1, _Period1> __dur1;
+ typedef typename common_type<__dur1,_Dur2>::type __ct;
+ typedef time_point<_Clock, __ct> __time_point;
+ return __time_point(__rhs.time_since_epoch() + __lhs);
+      }
+
+
+    template<typename _Clock, typename _Dur1,
+      typename _Rep2, typename _Period2>
+      constexpr time_point<_Clock,
+ typename common_type<_Dur1, duration<_Rep2, _Period2>>::type>
+      operator-(const time_point<_Clock, _Dur1>& __lhs,
+  const duration<_Rep2, _Period2>& __rhs)
+      {
+ typedef duration<_Rep2, _Period2> __dur2;
+ typedef typename common_type<_Dur1,__dur2>::type __ct;
+ typedef time_point<_Clock, __ct> __time_point;
+ return __time_point(__lhs.time_since_epoch() -__rhs);
+      }
+
+
+    template<typename _Clock, typename _Dur1, typename _Dur2>
+      constexpr typename common_type<_Dur1, _Dur2>::type
+      operator-(const time_point<_Clock, _Dur1>& __lhs,
+  const time_point<_Clock, _Dur2>& __rhs)
+      { return __lhs.time_since_epoch() - __rhs.time_since_epoch(); }
+
+
+
+
+
+
+
+    template<typename _Clock, typename _Dur1, typename _Dur2>
+      constexpr bool
+      operator==(const time_point<_Clock, _Dur1>& __lhs,
+   const time_point<_Clock, _Dur2>& __rhs)
+      { return __lhs.time_since_epoch() == __rhs.time_since_epoch(); }
+
+
+    template<typename _Clock, typename _Dur1,
+      three_way_comparable_with<_Dur1> _Dur2>
+      constexpr auto
+      operator<=>(const time_point<_Clock, _Dur1>& __lhs,
+    const time_point<_Clock, _Dur2>& __rhs)
+      { return __lhs.time_since_epoch() <=> __rhs.time_since_epoch(); }
+# 1172 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    template<typename _Clock, typename _Dur1, typename _Dur2>
+      constexpr bool
+      operator<(const time_point<_Clock, _Dur1>& __lhs,
+  const time_point<_Clock, _Dur2>& __rhs)
+      { return __lhs.time_since_epoch() < __rhs.time_since_epoch(); }
+
+    template<typename _Clock, typename _Dur1, typename _Dur2>
+      constexpr bool
+      operator<=(const time_point<_Clock, _Dur1>& __lhs,
+   const time_point<_Clock, _Dur2>& __rhs)
+      { return !(__rhs < __lhs); }
+
+    template<typename _Clock, typename _Dur1, typename _Dur2>
+      constexpr bool
+      operator>(const time_point<_Clock, _Dur1>& __lhs,
+  const time_point<_Clock, _Dur2>& __rhs)
+      { return __rhs < __lhs; }
+
+    template<typename _Clock, typename _Dur1, typename _Dur2>
+      constexpr bool
+      operator>=(const time_point<_Clock, _Dur1>& __lhs,
+   const time_point<_Clock, _Dur2>& __rhs)
+      { return !(__lhs < __rhs); }
+# 1217 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+inline namespace _V2 {
+
+
+
+
+
+
+
+    struct system_clock
+    {
+      typedef chrono::nanoseconds duration;
+      typedef duration::rep rep;
+      typedef duration::period period;
+      typedef chrono::time_point<system_clock, duration> time_point;
+
+      static_assert(system_clock::duration::min()
+      < system_clock::duration::zero(),
+      "a clock's minimum duration cannot be less than its epoch");
+
+      static constexpr bool is_steady = false;
+
+      static time_point
+      now() noexcept;
+
+
+      static std::time_t
+      to_time_t(const time_point& __t) noexcept
+      {
+ return std::time_t(duration_cast<chrono::seconds>
+      (__t.time_since_epoch()).count());
+      }
+
+      static time_point
+      from_time_t(std::time_t __t) noexcept
+      {
+ typedef chrono::time_point<system_clock, seconds> __from;
+ return time_point_cast<system_clock::duration>
+        (__from(chrono::seconds(__t)));
+      }
+    };
+# 1265 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    struct steady_clock
+    {
+      typedef chrono::nanoseconds duration;
+      typedef duration::rep rep;
+      typedef duration::period period;
+      typedef chrono::time_point<steady_clock, duration> time_point;
+
+      static constexpr bool is_steady = true;
+
+      static time_point
+      now() noexcept;
+    };
+# 1287 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+    using high_resolution_clock = system_clock;
+
+}
+
+
+
+
+    template<typename _Duration>
+      using sys_time = time_point<system_clock, _Duration>;
+    using sys_seconds = sys_time<seconds>;
+    using sys_days = sys_time<days>;
+
+    using file_clock = ::std::filesystem::__file_clock;
+
+    template<typename _Duration>
+      using file_time = time_point<file_clock, _Duration>;
+
+    template<> struct is_clock<system_clock> : true_type { };
+    template<> struct is_clock<steady_clock> : true_type { };
+    template<> struct is_clock<file_clock> : true_type { };
+
+    template<> inline constexpr bool is_clock_v<system_clock> = true;
+    template<> inline constexpr bool is_clock_v<steady_clock> = true;
+    template<> inline constexpr bool is_clock_v<file_clock> = true;
+
+
+  }
+
+
+  inline namespace literals
+  {
+# 1342 "/usr/include/c++/14.2.0/bits/chrono.h" 3
+  inline namespace chrono_literals
+  {
+
+
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wliteral-suffix"
+
+    template<typename _Dur, char... _Digits>
+      constexpr _Dur __check_overflow()
+      {
+ using _Val = __parse_int::_Parse_int<_Digits...>;
+ constexpr typename _Dur::rep __repval = _Val::value;
+ static_assert(__repval >= 0 && __repval == _Val::value,
+        "literal value cannot be represented by duration type");
+ return _Dur(__repval);
+      }
+
+
+
+    constexpr chrono::duration<long double, ratio<3600,1>>
+    operator""h(long double __hours)
+    { return chrono::duration<long double, ratio<3600,1>>{__hours}; }
+
+
+    template <char... _Digits>
+      constexpr chrono::hours
+      operator""h()
+      { return __check_overflow<chrono::hours, _Digits...>(); }
+
+
+    constexpr chrono::duration<long double, ratio<60,1>>
+    operator""min(long double __mins)
+    { return chrono::duration<long double, ratio<60,1>>{__mins}; }
+
+
+    template <char... _Digits>
+      constexpr chrono::minutes
+      operator""min()
+      { return __check_overflow<chrono::minutes, _Digits...>(); }
+
+
+    constexpr chrono::duration<long double>
+    operator""s(long double __secs)
+    { return chrono::duration<long double>{__secs}; }
+
+
+    template <char... _Digits>
+      constexpr chrono::seconds
+      operator""s()
+      { return __check_overflow<chrono::seconds, _Digits...>(); }
+
+
+    constexpr chrono::duration<long double, milli>
+    operator""ms(long double __msecs)
+    { return chrono::duration<long double, milli>{__msecs}; }
+
+
+    template <char... _Digits>
+      constexpr chrono::milliseconds
+      operator""ms()
+      { return __check_overflow<chrono::milliseconds, _Digits...>(); }
+
+
+    constexpr chrono::duration<long double, micro>
+    operator""us(long double __usecs)
+    { return chrono::duration<long double, micro>{__usecs}; }
+
+
+    template <char... _Digits>
+      constexpr chrono::microseconds
+      operator""us()
+      { return __check_overflow<chrono::microseconds, _Digits...>(); }
+
+
+    constexpr chrono::duration<long double, nano>
+    operator""ns(long double __nsecs)
+    { return chrono::duration<long double, nano>{__nsecs}; }
+
+
+    template <char... _Digits>
+      constexpr chrono::nanoseconds
+      operator""ns()
+      { return __check_overflow<chrono::nanoseconds, _Digits...>(); }
+
+#pragma GCC diagnostic pop
+
+  }
+  }
+
+  namespace chrono
+  {
+    using namespace literals::chrono_literals;
+  }
+
+
+
+  namespace filesystem
+  {
+    struct __file_clock
+    {
+      using duration = chrono::nanoseconds;
+      using rep = duration::rep;
+      using period = duration::period;
+      using time_point = chrono::time_point<__file_clock>;
+      static constexpr bool is_steady = false;
+
+      static time_point
+      now() noexcept
+      { return _S_from_sys(chrono::system_clock::now()); }
+
+
+      template<typename _Dur>
+ static
+ chrono::file_time<common_type_t<_Dur, chrono::seconds>>
+ from_sys(const chrono::sys_time<_Dur>& __t) noexcept
+ { return _S_from_sys(__t); }
+
+
+      template<typename _Dur>
+ static
+ chrono::sys_time<common_type_t<_Dur, chrono::seconds>>
+ to_sys(const chrono::file_time<_Dur>& __t) noexcept
+ { return _S_to_sys(__t); }
+
+
+    private:
+      using __sys_clock = chrono::system_clock;
+
+
+
+
+      static constexpr chrono::seconds _S_epoch_diff{6437664000};
+
+    protected:
+
+      template<typename _Dur>
+ static
+ chrono::time_point<__file_clock, common_type_t<_Dur, chrono::seconds>>
+ _S_from_sys(const chrono::time_point<__sys_clock, _Dur>& __t) noexcept
+ {
+   using _CDur = common_type_t<_Dur, chrono::seconds>;
+   using __file_time = chrono::time_point<__file_clock, _CDur>;
+   return __file_time{__t.time_since_epoch()} - _S_epoch_diff;
+ }
+
+
+      template<typename _Dur>
+ static
+ chrono::time_point<__sys_clock, common_type_t<_Dur, chrono::seconds>>
+ _S_to_sys(const chrono::time_point<__file_clock, _Dur>& __t) noexcept
+ {
+   using _CDur = common_type_t<_Dur, chrono::seconds>;
+   using __sys_time = chrono::time_point<__sys_clock, _CDur>;
+   return __sys_time{__t.time_since_epoch()} + _S_epoch_diff;
+ }
+    };
+  }
+
+
+
+}
+# 11 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp" 2
+
+
+
+
+# 14 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp"
+int Test::checkmates;
 
 void Test::testPrintGame() {
     Game g;
@@ -49787,15 +53471,24 @@ void Test::perft() {
 
     int depth[10] = {5, 4, 5, 4, 4, 4, 6, 6, 4, 6};
     int results[10] = {4865609, 4085603, 674624, 422333, 2103487, 3894594, 217342, 2217, 1274206, 824064};
+    int nodesSearched = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     for(int i = 0; i < 10; i++) {
         g.loadFen(fen[i]);
         int n = perft(g, depth[i]);
+        nodesSearched += n;
         if(n == results[i]) {
             std::cout << "Test " << i << " successful" << std::endl;
         } else {
             std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << std::endl;
         }
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
+    std::cout << nodesSearched << " nodes were searched." << std::endl;
+    std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
+
 }
 
 int Test::perft(Game &g, int depth, bool printInfo) {
@@ -49851,4 +53544,64 @@ void Test::consolPerft() {
             }
         }
     }
+}
+
+void Test::statusPerft() {
+    Game g;
+    std::string fen[4] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+    "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
+    "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "};
+
+    int depth[4] = {5, 4, 4, 4};
+    int results[4] = {4865609, 4085603, 43238, 422333};
+    int checkmatesResults[4] = {347, 43, 17, 5};
+    int nodesSearched = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+    for(int i = 0; i < 4; i++) {
+        g.loadFen(fen[i]);
+        checkmates = 0;
+        int n = perftStatus(g, depth[i]);
+        nodesSearched += n;
+        if(n == results[i] && checkmates == checkmatesResults[i]) {
+            std::cout << "Test " << i << " successful" << std::endl;
+        } else {
+            std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << " Checkmates: " << checkmates << " Correct: " << checkmatesResults[i] << std::endl;
+        }
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
+    std::cout << nodesSearched << " nodes were searched." << std::endl;
+    std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
+
+}
+
+int Test::perftStatus(Game &g, int depth, bool printInfo) {
+
+    if(depth == 0) {
+        char status = g.getStatus();
+        if (status == WHITE_WON || status == BLACK_WON) {
+            checkmates++;
+        }
+        return 1;
+    }
+
+    auto next = g.getAllPseudoLegalMoves();
+    int n = 0;
+    for(Move m: next) {
+        g.doMove(m);
+        if(!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+        int p = perftStatus(g, depth - 1);
+        n += p;
+
+        if(printInfo) {
+            std::cout << Game::moveToString(m) << ": " << p << std::endl;
+        }
+        g.undoMove();
+    }
+    return n;
 }

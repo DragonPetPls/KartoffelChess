@@ -13,6 +13,7 @@ int main() {
     //Test::testFen();
     //Test::perft();
     //Test::consolPerft();
+    Test::statusPerft();
 #endif
     return 0;
 }

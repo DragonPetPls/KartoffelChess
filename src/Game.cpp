@@ -11,6 +11,7 @@
  * This function will set up the typical chess starting position
  */
 void Game::loadStartingPosition() {
+    status = ON_GOING;
     pieceBoards[WHITE_PAWN] = WHITE_PAWN_STARTING_POSITION;
     pieceBoards[WHITE_KNIGHT] = WHITE_KNIGHT_STARTING_POSITION;
     pieceBoards[WHITE_BISHOP] = WHITE_BISHOP_STARTING_POSITION;
@@ -138,11 +139,13 @@ piece Game::getPiece(bitboard square) {
 void Game::doMove(Move move) {
 
     //Storing everything to undo this move later
+    status = UNKNOWN;
     gameHistoryCounter++;
     gameHistory[gameHistoryCounter].enPassant = this->enPassant;
     gameHistory[gameHistoryCounter].castleRights = this->castleRights;
     gameHistory[gameHistoryCounter].eval = this->evaluation;
     gameHistory[gameHistoryCounter].move = move;
+    pastHashes[gameHistoryCounter] = std::hash<Game>{}(*this);
 
     //En passant
     bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
@@ -179,6 +182,9 @@ void Game::doMove(Move move) {
 
     //Changing who to move
     currentPlayer = BLACK * (currentPlayer == WHITE);
+
+    //Adjusting moves without progress
+    movesWithoutProgess = (movesWithoutProgess + 1) * (move.startingPiece == PAWN || gameHistory[gameHistoryCounter].capturedPiece != NO_PIECE);
 }
 
 /*
@@ -214,6 +220,7 @@ void Game::doMoveAsString(std::string moveStr) {
  * This function undoes the last move restoring the previous position
  */
 void Game::undoMove() {
+    status = UNKNOWN;
     //Restoring saved data
     this->evaluation = gameHistory[gameHistoryCounter].eval;
     this->castleRights = gameHistory[gameHistoryCounter].castleRights;
@@ -242,6 +249,7 @@ void Game::undoMove() {
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
 
     gameHistoryCounter--;
+    movesWithoutProgess = (movesWithoutProgess - 1) * (movesWithoutProgess > 0);
 }
 
 /*
@@ -750,6 +758,7 @@ int Game::getIndex(const bitboard &board) {
  */
 void Game::loadFen(const std::string &fen) {
     gameHistoryCounter= 0;
+    status = UNKNOWN;
 
     for (int i = 0; i < 14; i++) {
         pieceBoards[i] = 0;
@@ -861,6 +870,102 @@ std::string Game::moveToString(Move move) {
     return str;
 }
 
+/*
+ * Returns the state of the game as WHITE_WON, BLACK_WON, DRAW or ON_GOING
+ */
 char Game::getStatus() {
+    if(status != UNKNOWN) {
+        return status;
+    }
 
+    //Checking threefold repetion
+    uint64_t hash = std::hash<Game>{}(*this);
+    int sameCounter = 0;
+    for(int i = 0; i <= gameHistoryCounter; i++) {
+        sameCounter += pastHashes[i] == hash;
+    }
+    if(sameCounter >= REPETITIONS_TILL_DRAW) {
+        status = DRAW;
+        return status;
+    }
+
+    //checking if there are legal moves left to be played
+    bool movesLeft = areMovesStillPlayable();
+    if (movesLeft == true) {
+        status = ON_GOING;
+        return ON_GOING;
+    }
+
+    //Checking if draw or checkmate
+    int index = getIndex(COLOR_TO_PIECE[currentPlayer] | KING);
+    bool isCheck = isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING], index, COLOR_TO_PIECE[1 - currentPlayer]);
+
+    if (isCheck == true && currentPlayer == WHITE) status = BLACK_WON;
+    else if (isCheck == true && currentPlayer == BLACK) status = WHITE_WON;
+    else status = DRAW;
+    return status;
+}
+
+/*
+ * Returns true if there is atleast one move that can still be played
+ */
+bool Game::areMovesStillPlayable() {
+    //Generating hitmaps
+    bitboard ownHitmap = 0;
+    bitboard enemyHitmap = 0;
+    for(int i = 0; i < 6; i++){
+        ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[currentPlayer]];
+        enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]];
+    }
+    bitboard hitmap = ownHitmap | enemyHitmap;
+
+    bitboard squareMask = 1;
+    for(int i = 0; i < 64; i++){
+        //Skipping if there is no own piece
+        if(!(ownHitmap & squareMask)){
+            squareMask = squareMask << 1;
+            continue;
+        }
+
+        //Getting the piece without its color
+        piece p = getPiece(squareMask);
+        p &= ~BLACK_PIECE;
+
+        std::vector<Move> pm;
+        pm.reserve(50);
+        switch (p) {
+            case PAWN:
+                pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case KNIGHT:
+                pm = getKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case BISHOP:
+                pm = getBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case ROOK:
+                pm = getRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case QUEEN:
+                pm = getQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case KING:
+                pm = getKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            default:
+                break;
+        }
+
+        for (Move move : pm) {
+            doMove(move);
+            if(isPositionLegal()) {
+                undoMove();
+                return true;
+            }
+            undoMove();
+        }
+
+        squareMask = squareMask << 1;
+    }
+    return false;
 }

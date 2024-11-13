@@ -53,6 +53,8 @@ enum Results {
     UNKNOWN
 };
 
+const int REPETITIONS_TILL_DRAW = 3;
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;

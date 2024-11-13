@@ -6,7 +6,12 @@
 #include <sstream>
 #include <iostream>
 #include "Test.h"
+
+#include <bits/chrono.h>
+
 #include "Game.h"
+
+int Test::checkmates;
 
 void Test::testPrintGame() {
     Game g;
@@ -82,15 +87,24 @@ void Test::perft() {
 
     int depth[10] = {5, 4, 5, 4, 4, 4, 6, 6, 4, 6};
     int results[10] = {4865609, 4085603, 674624, 422333, 2103487, 3894594, 217342, 2217, 1274206, 824064};
+    int nodesSearched = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     for(int i = 0; i < 10; i++) {
         g.loadFen(fen[i]);
         int n = perft(g, depth[i]);
+        nodesSearched += n;
         if(n == results[i]) {
             std::cout << "Test " << i << " successful" << std::endl;
         } else {
             std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << std::endl;
         }
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
+    std::cout << nodesSearched << " nodes were searched." << std::endl;
+    std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
+
 }
 
 int Test::perft(Game &g, int depth, bool printInfo) {
@@ -146,4 +160,64 @@ void Test::consolPerft() {
             }
         }
     }
+}
+
+void Test::statusPerft() {
+    Game g;
+    std::string fen[4] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+    "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
+    "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "};
+
+    int depth[4] = {5, 4, 4, 4};
+    int results[4] = {4865609, 4085603, 43238, 422333};
+    int checkmatesResults[4] = {347, 43, 17, 5};
+    int nodesSearched = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+    for(int i = 0; i < 4; i++) {
+        g.loadFen(fen[i]);
+        checkmates = 0;
+        int n = perftStatus(g, depth[i]);
+        nodesSearched += n;
+        if(n == results[i] && checkmates == checkmatesResults[i]) {
+            std::cout << "Test " << i << " successful" << std::endl;
+        } else {
+            std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << " Checkmates: " << checkmates << " Correct: " << checkmatesResults[i] <<  std::endl;
+        }
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
+    std::cout << nodesSearched << " nodes were searched." << std::endl;
+    std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
+
+}
+
+int Test::perftStatus(Game &g, int depth, bool printInfo) {
+    //g.printGame();
+    if(depth == 0) {
+        char status = g.getStatus();
+        if (status == WHITE_WON || status == BLACK_WON) {
+            checkmates++;
+        }
+        return 1;
+    }
+
+    auto next = g.getAllPseudoLegalMoves();
+    int n = 0;
+    for(Move m: next) {
+        g.doMove(m);
+        if(!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+        int p = perftStatus(g, depth - 1);
+        n += p;
+
+        if(printInfo) {
+            std::cout << Game::moveToString(m) << ": " << p << std::endl;
+        }
+        g.undoMove();
+    }
+    return n;
 }

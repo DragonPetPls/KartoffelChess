@@ -48380,6 +48380,8 @@ enum Results {
     UNKNOWN
 };
 
+const int REPETITIONS_TILL_DRAW = 3;
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
@@ -48456,8 +48458,10 @@ private:
 
 
     LastMove gameHistory[MAX_GAME_LENGTH];
+    uint64_t pastHashes[MAX_GAME_LENGTH];
     int gameHistoryCounter;
     char status;
+    int movesWithoutProgess;
 
 public:
 
@@ -48492,11 +48496,34 @@ public:
     void loadFen(const std::string& fen);
     static std::string moveToString(Move move);
     char getStatus();
+    bool areMovesStillPlayable();
 
 
     [[nodiscard]] int getGameHistoryCounter() const;
     piece getPiece(bitboard square);
 };
+
+namespace std {
+    template <>
+    struct hash<Game> {
+        std::size_t operator()(const Game& game) const noexcept {
+            std::size_t hashValue = 0;
+
+
+            hashValue ^= std::hash<int>{}(game.evaluation) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<color>{}(game.currentPlayer) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.enPassant) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.castleRights) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+
+
+            for (const auto& board : game.pieceBoards) {
+                hashValue ^= std::hash<bitboard>{}(board) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            }
+
+            return hashValue;
+        }
+    };
+}
 # 7 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.cpp" 2
 
 # 1 "/usr/include/strings.h" 1 3 4
@@ -48594,6 +48621,7 @@ extern int strncasecmp_l (const char *__s1, const char *__s2,
 
 # 13 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.cpp"
 void Game::loadStartingPosition() {
+    status = ON_GOING;
     pieceBoards[WHITE_PAWN] = WHITE_PAWN_STARTING_POSITION;
     pieceBoards[WHITE_KNIGHT] = WHITE_KNIGHT_STARTING_POSITION;
     pieceBoards[WHITE_BISHOP] = WHITE_BISHOP_STARTING_POSITION;
@@ -48721,11 +48749,13 @@ piece Game::getPiece(bitboard square) {
 void Game::doMove(Move move) {
 
 
+    status = UNKNOWN;
     gameHistoryCounter++;
     gameHistory[gameHistoryCounter].enPassant = this->enPassant;
     gameHistory[gameHistoryCounter].castleRights = this->castleRights;
     gameHistory[gameHistoryCounter].eval = this->evaluation;
     gameHistory[gameHistoryCounter].move = move;
+    pastHashes[gameHistoryCounter] = std::hash<Game>{}(*this);
 
 
     bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
@@ -48762,6 +48792,9 @@ void Game::doMove(Move move) {
 
 
     currentPlayer = BLACK * (currentPlayer == WHITE);
+
+
+    movesWithoutProgess = (movesWithoutProgess + 1) * (move.startingPiece == PAWN || gameHistory[gameHistoryCounter].capturedPiece != NO_PIECE);
 }
 
 
@@ -48797,6 +48830,7 @@ void Game::doMoveAsString(std::string moveStr) {
 
 
 void Game::undoMove() {
+    status = UNKNOWN;
 
     this->evaluation = gameHistory[gameHistoryCounter].eval;
     this->castleRights = gameHistory[gameHistoryCounter].castleRights;
@@ -48825,6 +48859,7 @@ void Game::undoMove() {
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
 
     gameHistoryCounter--;
+    movesWithoutProgess = (movesWithoutProgess - 1) * (movesWithoutProgess > 0);
 }
 
 
@@ -49333,6 +49368,7 @@ int Game::getIndex(const bitboard &board) {
 
 void Game::loadFen(const std::string &fen) {
     gameHistoryCounter= 0;
+    status = UNKNOWN;
 
     for (int i = 0; i < 14; i++) {
         pieceBoards[i] = 0;
@@ -49444,6 +49480,102 @@ std::string Game::moveToString(Move move) {
     return str;
 }
 
-char Game::getStatus() {
 
+
+
+char Game::getStatus() {
+    if(status != UNKNOWN) {
+        return status;
+    }
+
+
+    uint64_t hash = std::hash<Game>{}(*this);
+    int sameCounter = 0;
+    for(int i = 0; i <= gameHistoryCounter; i++) {
+        sameCounter += pastHashes[i] == hash;
+    }
+    if(sameCounter >= REPETITIONS_TILL_DRAW) {
+        status = DRAW;
+        return status;
+    }
+
+
+    bool movesLeft = areMovesStillPlayable();
+    if (movesLeft == true) {
+        status = ON_GOING;
+        return ON_GOING;
+    }
+
+
+    int index = getIndex(COLOR_TO_PIECE[currentPlayer] | KING);
+    bool isCheck = isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING], index, COLOR_TO_PIECE[1 - currentPlayer]);
+
+    if (isCheck == true && currentPlayer == WHITE) status = BLACK_WON;
+    else if (isCheck == true && currentPlayer == BLACK) status = WHITE_WON;
+    else status = DRAW;
+    return status;
+}
+
+
+
+
+bool Game::areMovesStillPlayable() {
+
+    bitboard ownHitmap = 0;
+    bitboard enemyHitmap = 0;
+    for(int i = 0; i < 6; i++){
+        ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[currentPlayer]];
+        enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]];
+    }
+    bitboard hitmap = ownHitmap | enemyHitmap;
+
+    bitboard squareMask = 1;
+    for(int i = 0; i < 64; i++){
+
+        if(!(ownHitmap & squareMask)){
+            squareMask = squareMask << 1;
+            continue;
+        }
+
+
+        piece p = getPiece(squareMask);
+        p &= ~BLACK_PIECE;
+
+        std::vector<Move> pm;
+        pm.reserve(50);
+        switch (p) {
+            case PAWN:
+                pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case KNIGHT:
+                pm = getKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case BISHOP:
+                pm = getBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case ROOK:
+                pm = getRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case QUEEN:
+                pm = getQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            case KING:
+                pm = getKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+            break;
+            default:
+                break;
+        }
+
+        for (Move move : pm) {
+            doMove(move);
+            if(isPositionLegal()) {
+                undoMove();
+                return true;
+            }
+            undoMove();
+        }
+
+        squareMask = squareMask << 1;
+    }
+    return false;
 }

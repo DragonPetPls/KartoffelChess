@@ -48376,6 +48376,8 @@ enum Results {
     UNKNOWN
 };
 
+const int REPETITIONS_TILL_DRAW = 3;
+
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 const uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
 const uint8_t BLACK_SHORT_CASTLE_RIGHT = 4;
@@ -48452,8 +48454,10 @@ private:
 
 
     LastMove gameHistory[MAX_GAME_LENGTH];
+    uint64_t pastHashes[MAX_GAME_LENGTH];
     int gameHistoryCounter;
     char status;
+    int movesWithoutProgess;
 
 public:
 
@@ -48488,17 +48492,43 @@ public:
     void loadFen(const std::string& fen);
     static std::string moveToString(Move move);
     char getStatus();
+    bool areMovesStillPlayable();
 
 
     [[nodiscard]] int getGameHistoryCounter() const;
     piece getPiece(bitboard square);
 };
+
+namespace std {
+    template <>
+    struct hash<Game> {
+        std::size_t operator()(const Game& game) const noexcept {
+            std::size_t hashValue = 0;
+
+
+            hashValue ^= std::hash<int>{}(game.evaluation) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<color>{}(game.currentPlayer) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.enPassant) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= std::hash<uint8_t>{}(game.castleRights) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+
+
+            for (const auto& board : game.pieceBoards) {
+                hashValue ^= std::hash<bitboard>{}(board) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            }
+
+            return hashValue;
+        }
+    };
+}
 # 3 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/main.cpp" 2
 # 1 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h" 1
 # 12 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.h"
 class Test {
 private:
+    static int checkmates;
+
     static int perft(Game &g, int depth, bool printInfo = false);
+    static int perftStatus(Game &g, int depth, bool printInfo = false);
 public:
     static void testPrintGame();
     static void testDoMove();
@@ -48506,20 +48536,15 @@ public:
     static void testFen();
     static void perft();
     static void consolPerft();
+    static void statusPerft();
 };
 # 4 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/main.cpp" 2
 
 
 
 int main() {
-
-
-
-
-
-
-    Test::perft();
-
+# 16 "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/main.cpp"
+    Test::statusPerft();
 
     return 0;
 }
