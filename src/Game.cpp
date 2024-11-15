@@ -642,9 +642,12 @@ bool Game::isPositionLegal() {
 int Game::getIndex(const bitboard &board) {
 
     int index = 0;
-    for(int i = 0; i < 64; i++) {
-        index += i * ((board >> i) & 1);
-    }
+    index += 32 * ((INDEX_BOARDS[0] & board) == 0);
+    index += 16 * ((INDEX_BOARDS[1] & board) == 0);
+    index += 8 * ((INDEX_BOARDS[2] & board) == 0);
+    index += 4 * ((INDEX_BOARDS[3] & board) == 0);
+    index += 2 * ((INDEX_BOARDS[4] & board) == 0);
+    index += 1 * ((INDEX_BOARDS[5] & board) == 0);
 
     return index;
 }

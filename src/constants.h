@@ -101,4 +101,7 @@ const int MAX_GAME_LENGTH = 1000;
 
 const bitboard BACK_ROWS = 18374686479671623935;
 
+//These boards are used by getIndex to get the index of a square on a bitboard
+const bitboard INDEX_BOARDS[] = {4294967295, 281470681808895, 71777214294589695, 1085102592571150095, 3689348814741910323, 6148914691236517205};
+
 #endif //SRC_CONSTANTS_H
