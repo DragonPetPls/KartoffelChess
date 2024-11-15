@@ -12,6 +12,7 @@
 
 MagicTableSquare MagicBitboards::bishopTable[64];
 MagicTableSquare MagicBitboards::rookTable[64];
+Entry MagicBitboards::knightTable[64];
 bool MagicBitboards::isInit = false;
 
 /*
@@ -268,6 +269,7 @@ void MagicBitboards::init() {
     if(!isInit) {
         initBishopTable();
         initRookTable();
+        initKnightTable();
         isInit = true;
     }
 }
@@ -520,3 +522,71 @@ bitboard MagicBitboards::getRookReachableSquares(bitboard hitmap, int index) {
     return rookTable[index].entries[key].reachable;
 }
 
+/*
+ * Returns all pseudolegal knight moves from the given square, used to init the knight lookup tables
+ */
+std::vector<Move> MagicBitboards::generateKnightMoves(bitboard square, int index) {
+    std::vector<Move> moves;
+    moves.reserve(8);
+
+    int x = index % 8;
+    int y = index / 8;
+
+    for(int i = 0; i < 8; i++){
+        //Going over directions
+        int vx = 2 * (i == 0 || i == 1) + 1 * (i == 2 || i == 3) - 1 * (i == 4 || i == 5) - 2 * (i == 6 || i == 7);
+        int vy = 2 * (i == 2 || i == 4) + 1 * (i == 0 || i == 6) - 1 * (i == 1 || i == 7) - 2 * (i == 3 || i == 5);
+
+        //Generating target square
+        int tx = x + vx;
+        int ty = y + vy;
+        if(tx < 0 || tx > 7 || ty < 0 || ty > 7){
+            continue;
+        }
+
+        bitboard targetSquare = 1;
+        targetSquare = targetSquare << (tx + 8 * ty);
+
+        Move m;
+        m.toSquare = targetSquare;
+        m.fromSquare = square;
+        m.startingPiece = KNIGHT;
+        m.endingPiece = KNIGHT;
+        moves.push_back(m);
+
+    }
+
+    return moves;
+}
+
+/*
+ * Initialises the knight table
+ */
+void MagicBitboards::initKnightTable() {
+    for(int i = 0; i < 64; i++) {
+        bitboard square = ((bitboard) 1) << i;
+        auto moves = generateKnightMoves(square, i);
+        bitboard reachable = 0;
+        for(auto move : moves) {
+            reachable |= move.toSquare;
+        }
+        knightTable[i].moves = moves;
+        knightTable[i].reachable = reachable;
+        knightTable[i].isSet = true;
+    }
+}
+
+
+/*
+ * Returns all moves that a knight could do from the given index. Move should still be check afterwards if they attempt to capture a own piece
+ */
+std::vector<Move> MagicBitboards::getKnightMoves(int index) {
+    return knightTable[index].moves;
+}
+
+/*
+ * Returns all square a knight could potentiall reach from a given square
+ */
+bitboard MagicBitboards::getKnightReachableSquares(int index) {
+    return knightTable[index].reachable;
+}

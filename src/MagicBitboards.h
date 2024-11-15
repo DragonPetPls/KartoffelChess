@@ -53,6 +53,7 @@ private:
 
     static void initBishopTable();
     static void initRookTable();
+    static void initKnightTable();
     static bool isInit;
 
 public:
@@ -61,6 +62,9 @@ public:
 
     static std::vector<Move> getRookMoves(bitboard hitmap, int index);
     static bitboard getRookReachableSquares(bitboard hitmap, int index);
+
+    static std::vector<Move> getKnightMoves(int index);
+    static bitboard getKnightReachableSquares(int index);
 
     static void init();
 
@@ -78,6 +82,9 @@ private:
     [[nodiscard]] static std::vector<Move> generateRookMoves(bitboard square, int index, const bitboard& hitmap) ;
     static std::vector<bitboard> getAllRookBlockerConfigurations(int index);
     static bitboard getRookBlockerOverlay(int index);
+
+    [[nodiscard]] static std::vector<Move> generateKnightMoves(bitboard square, int index);
+
 };
 
 

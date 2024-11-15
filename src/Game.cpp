@@ -425,36 +425,13 @@ std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard 
  * Returns all pseudolegal knight moves from the given square, used by the getAllPseudoLegalMoves function
  */
 std::vector<Move> Game::getKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    std::vector<Move> moves;
-    moves.reserve(8);
-
-    int x = index % 8;
-    int y = index / 8;
-
-    for(int i = 0; i < 8; i++){
-        //Going over directions
-        int vx = 2 * (i == 0 || i == 1) + 1 * (i == 2 || i == 3) - 1 * (i == 4 || i == 5) - 2 * (i == 6 || i == 7);
-        int vy = 2 * (i == 2 || i == 4) + 1 * (i == 0 || i == 6) - 1 * (i == 1 || i == 7) - 2 * (i == 3 || i == 5);
-
-        //Generating target square
-        int tx = x + vx;
-        int ty = y + vy;
-        if(tx < 0 || tx > 7 || ty < 0 || ty > 7){
-            continue;
-        }
-
-        bitboard targetSquare = 1;
-        targetSquare = targetSquare << (tx + 8 * ty);
-        if(!(targetSquare & ownHitmap)){
-            Move m;
-            m.toSquare = targetSquare;
-            m.fromSquare = square;
-            m.startingPiece = KNIGHT;
-            m.endingPiece = KNIGHT;
-            moves.push_back(m);
+    auto moves = MagicBitboards::getKnightMoves(index);
+    for(int i = 0; i < moves.size(); i++) {
+        if(moves[i].toSquare & ownHitmap) {
+            moves.erase(moves.begin() + i);
+            i--;
         }
     }
-
     return moves;
 }
 
@@ -596,31 +573,14 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
     bitboard hitmap = ownHitmap | enemyHitmap;
 
     //Knights
-    int x = index % 8;
-    int y = index / 8;
-
-    for(int i = 0; i < 8; i++){
-        //Going over directions
-        int vx = 2 * (i == 0 || i == 1) + 1 * (i == 2 || i == 3) - 1 * (i == 4 || i == 5) - 2 * (i == 6 || i == 7);
-        int vy = 2 * (i == 2 || i == 4) + 1 * (i == 0 || i == 6) - 1 * (i == 1 || i == 7) - 2 * (i == 3 || i == 5);
-
-        //Generating target square
-        int tx = x + vx;
-        int ty = y + vy;
-        if(tx < 0 || tx > 7 || ty < 0 || ty > 7){
-            continue;
-        }
-
-        bitboard targetSquare = 1;
-        targetSquare = targetSquare << (tx + 8 * ty);
-        if(targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor] | KNIGHT]){
-            return true;
-        }
+    bitboard dangerousSquares = MagicBitboards::getKnightReachableSquares(index);
+    if(dangerousSquares & pieceBoards[COLOR_TO_PIECE[attackingColor] | KNIGHT]) {
+        return true;
     }
 
     //Diagonal attacks
     bitboard diagonalPieces = pieceBoards[BISHOP | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
-    bitboard dangerousSquares = MagicBitboards::getBishopReachableSquares(hitmap, index);
+    dangerousSquares = MagicBitboards::getBishopReachableSquares(hitmap, index);
     if(diagonalPieces & dangerousSquares) {
         return true;
     }
@@ -633,6 +593,8 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
     }
 
     //king attacks
+    int x = index % 8;
+    int y = index / 8;
     for(int i = 0; i < 8; i++) {
         //Going over directions
         int vx = 1 * (i == 0 || i == 3 || i == 4) - 1 * (i == 1 || i == 2 || i == 6); ;
