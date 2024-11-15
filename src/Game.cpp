@@ -462,41 +462,14 @@ std::vector<Move> Game::getKnightMoves(bitboard square, int index, const bitboar
  * Returns all pseudolegal bishop moves from the given square, used by the getAllPseudoLegalMoves function
  */
 std::vector<Move> Game::getBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    std::vector<Move> moves;
-    moves.reserve(16);
 
-    int x = index % 8;
-    int y = index / 8;
-    //Going over all 4 directions
-    for(int i = 0; i < 4; i++){
-        int vx = 1 * (i < 2) - 1 * (i >= 2);
-        int vy = 1 * (i == 0 || i == 2) - 1 * (i == 1 || i == 3);
-
-        //Going over distances
-        for (int distance = 1; distance < 8; distance++){
-            int tx = x + vx * distance;
-            int ty = y + vy * distance;
-
-            bitboard targetSquare = 1;
-            targetSquare = targetSquare << (tx + 8 * ty);
-
-            //Collisions and out of bounds
-            if((targetSquare & ownHitmap) || tx < 0 || tx > 7 || ty < 0 || ty > 7){
-                break;
-            }
-
-            //Adding the move
-            Move m;
-            m.toSquare = targetSquare;
-            m.fromSquare = square;
-            m.startingPiece = BISHOP;
-            m.endingPiece = BISHOP;
-            moves.push_back(m);
-
-            //Checking for capture
-            if(targetSquare & enemyHitmap){
-                break;
-            }
+    auto moves = MagicBitboards::getBishopMoves(hitmap, index);
+    //We only check the last for moves for collisions cause we generate our vectors in a way that this works
+    int size = moves.size();
+    for(int i = std::max(0, size - 4); i < moves.size(); i++) {
+        if(moves[i].toSquare & ownHitmap) {
+            moves.erase(moves.begin() + i);
+            i--;
         }
     }
 

@@ -8,16 +8,7 @@
 
 #include <vector>
 #include "constants.h"
-
-/*
- * This struct encodes everything necessary to represent a move
- */
-struct Move{
-    bitboard fromSquare;
-    bitboard toSquare;
-    piece startingPiece;
-    piece endingPiece; //ending piece is the same as starting piece unless promotion
-};
+#include "MagicBitboards.h"
 
 /*
  * This struct stores everything necessary to undo the move later.

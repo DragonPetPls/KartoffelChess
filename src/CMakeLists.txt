@@ -14,4 +14,7 @@ add_executable(src main.cpp
         Game.cpp
         Test.h
         Test.cpp
+        MagicBitboards.h
+        MagicBitboards.cpp
+        magicConstants.h
 )

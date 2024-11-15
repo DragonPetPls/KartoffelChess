@@ -67,6 +67,12 @@ build CMakeFiles/src.dir/Test.cpp.o: CXX_COMPILER__src_unscanned_Debug /home/fab
   OBJECT_DIR = CMakeFiles/src.dir
   OBJECT_FILE_DIR = CMakeFiles/src.dir
 
+build CMakeFiles/src.dir/MagicBitboards.cpp.o: CXX_COMPILER__src_unscanned_Debug /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/MagicBitboards.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/MagicBitboards.cpp.o.d
+  FLAGS = -O0 -g -O2 -g -std=gnu++14 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target src
@@ -75,7 +81,7 @@ build CMakeFiles/src.dir/Test.cpp.o: CXX_COMPILER__src_unscanned_Debug /home/fab
 #############################################
 # Link the executable src
 
-build src: CXX_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game.cpp.o CMakeFiles/src.dir/Test.cpp.o
+build src: CXX_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game.cpp.o CMakeFiles/src.dir/Test.cpp.o CMakeFiles/src.dir/MagicBitboards.cpp.o
   FLAGS = -O0 -g -O2 -g
   OBJECT_DIR = CMakeFiles/src.dir
   POST_BUILD = :
