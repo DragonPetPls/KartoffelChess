@@ -11,6 +11,7 @@
 #include "magicConstants.h"
 
 MagicTableSquare MagicBitboards::bishopTable[64];
+MagicTableSquare MagicBitboards::rookTable[64];
 bool MagicBitboards::isInit = false;
 
 /*
@@ -213,7 +214,7 @@ void MagicBitboards::initBishopTable() {
 }
 
 /*
- * Returns all bishop moves from the lookup table
+ * Returns all bishop moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
  */
 std::vector<Move> MagicBitboards::getBishopMoves(bitboard hitmap, int index) {
 
@@ -233,7 +234,7 @@ bitboard MagicBitboards::getBishopReachableSquares(bitboard hitmap, int index) {
 
 
 /*
- * Returns a mask of all relevant square for blockers
+ * Returns a mask of all relevant square for blockers for a bishop
  */
 bitboard MagicBitboards::getBishopBlockerOverlay(int index) {
 
@@ -266,6 +267,256 @@ bitboard MagicBitboards::getBishopBlockerOverlay(int index) {
 void MagicBitboards::init() {
     if(!isInit) {
         initBishopTable();
+        initRookTable();
         isInit = true;
     }
 }
+
+void MagicBitboards::generateRookMagicNumbers() {
+    const int STARTING_INDEX_SHIFT = 45;
+
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
+    std::uniform_int_distribution<uint64_t> dis(0, UINT64_MAX);
+
+    //Preparing blockers and index
+    std::vector<bitboard> blockers[64];
+    uint64_t magicNumbers[64];
+    int bestIndexShiftFound[64];
+    for (int i = 0; i < 64; i++) {
+        blockers[i] = getAllRookBlockerConfigurations(i);
+        bestIndexShiftFound[i] = STARTING_INDEX_SHIFT;
+        magicNumbers[i] = 0;
+    }
+
+    //Searching for numbers
+    while(true) {
+        int index = rand()%64;
+        int indexShift = bestIndexShiftFound[index] + 1;
+        uint64_t magicNumber = dis(gen);
+        bitboard square = ((bitboard) 1) << index;
+
+        bool foundMagicNumber = true;
+        uint64_t tableSize = ((uint64_t) 1) << (64 - indexShift);
+        auto *table = new calculationEntry[tableSize];
+
+        //now we just test all blockers
+        for(bitboard b : blockers[index]) {
+            uint64_t key = (b * magicNumber) >> indexShift;
+            bitboard reachable = 0;
+            auto moves = generateRookMoves(square, index, b);
+            for(auto move : moves) {
+                reachable |= move.toSquare;
+            }
+
+            if(table[key].isSet == false) {
+                table[key].isSet = true;
+                table[key].reachable = reachable;
+            } else if (table[key].reachable != reachable) {
+                foundMagicNumber = false;
+                break;
+            }
+        }
+
+        if(foundMagicNumber) {
+            magicNumbers[index] = magicNumber;
+            bestIndexShiftFound[index] = indexShift;
+            std::cout << "Found new number" << std::endl;
+            for(int i = 0; i < 64; i++) {
+                if(bestIndexShiftFound[i] != STARTING_INDEX_SHIFT) {
+                    std::cout << "Index: " << i <<  " Index Shift: " << bestIndexShiftFound[i] << " Magic number: " << magicNumbers[i] << std::endl;
+                }
+            }
+        }
+
+        delete[] table;
+    }
+}
+
+/*
+ * Returns all pseudolegal rook moves from the given square, used to init the rook table
+ */
+std::vector<Move> MagicBitboards::generateRookMoves(bitboard square, int index, const bitboard &hitmap) {
+    std::vector<Move> moves;
+    std::vector<Move> furthestMoves;
+    moves.reserve(16);
+
+    int x = index % 8;
+    int y = index / 8;
+    //Going over all 4 directions
+    for(int i = 0; i < 4; i++){
+        int vx = 1 * (i == 0) - 1 * (i == 2);
+        int vy = 1 * (i == 1) - 1 * (i == 3);
+
+        //Going over distances
+        for (int distance = 1; distance < 8; distance++){
+            int tx = x + vx * distance;
+            int ty = y + vy * distance;
+
+            //Collisions and out of bounds
+            if(tx < 0 || tx > 7 || ty < 0 || ty > 7){
+                break;
+            }
+
+            bitboard targetSquare = 1;
+            targetSquare = targetSquare << (tx + 8 * ty);
+
+            //Adding the move
+            Move m;
+            m.toSquare = targetSquare;
+            m.fromSquare = square;
+            m.startingPiece = ROOK;
+            m.endingPiece = ROOK;
+            moves.push_back(m);
+
+            //Checking for capture
+            if(targetSquare & hitmap){
+                break;
+            }
+        }
+
+        if (!moves.empty()) {
+            furthestMoves.push_back(moves.back());
+            moves.pop_back();
+        }
+    }
+
+    moves.insert(moves.end(), furthestMoves.begin(), furthestMoves.end());
+
+    return moves;
+}
+
+/*
+ * Returns a vector containing all possible blocker configurations for a rook on the index square
+ */
+std::vector<bitboard> MagicBitboards::getAllRookBlockerConfigurations(int index) {
+    int x = index % 8;
+    int y = index / 8;
+    std::vector<bitboard> blockers;
+    bitboard pieceSquare = 1;
+    pieceSquare = pieceSquare << index;
+
+    //How many squares do we actually still place blockers in each direction
+    int squaresInTopDirection = 7 - y;
+    int squaresInBottomDirection = y;
+    int squaresInLeftDirection = x;
+    int squaresInRightDirection = 7 - x;
+
+    //Going through those square combinations
+    for(int top = 0; top < pow(2, squaresInTopDirection); top++) {
+        for(int left = 0; left < pow(2, squaresInLeftDirection); left++) {
+            for(int right = 0; right < pow(2, squaresInRightDirection); right++) {
+                for(int bottom = 0; bottom < pow(2, squaresInBottomDirection); bottom++) {
+
+                    //Actually placing those square down
+                    bitboard b = 0;
+                    for(int i = 0; i < squaresInTopDirection; i++) {
+                        b |= (pieceSquare << (8 * i + 8)) * ((top >> i) & 1);
+                    }
+                    for(int i = 0; i < squaresInLeftDirection; i++) {
+                        b |= (pieceSquare >> (i+ 1)) * ((left >> i) & 1);
+                    }
+                    for(int i = 0; i < squaresInRightDirection; i++) {
+                        b |= (pieceSquare << (i + 1)) * ((right >> i) & 1);
+                    }
+                    for(int i = 0; i < squaresInBottomDirection; i++) {
+                        b |= (pieceSquare >> (8 * i + 8)) * ((bottom >> i) & 1);
+                    }
+                    blockers.push_back(b);
+                }
+            }
+        }
+    }
+
+    return blockers;
+}
+
+
+/*
+ * Returns a mask of all relevant square for blockers for a bishop
+ */
+bitboard MagicBitboards::getRookBlockerOverlay(int index) {
+
+    bitboard pieceSquare = 1;
+    pieceSquare = pieceSquare << index;
+    int x = index % 8;
+    int y = index / 8;
+    //Actually placing those square down
+    int squaresInTopDirection = 7 - y;
+    int squaresInBottomDirection = y;
+    int squaresInLeftDirection = x;
+    int squaresInRightDirection = 7 - x;
+
+    bitboard b = 0;
+    for(int i = 0; i < squaresInTopDirection; i++) {
+        b |= (pieceSquare << (8 * i + 8));
+    }
+    for(int i = 0; i < squaresInLeftDirection; i++) {
+        b |= (pieceSquare >> (i+ 1));
+    }
+    for(int i = 0; i < squaresInRightDirection; i++) {
+        b |= (pieceSquare << (i + 1));
+    }
+    for(int i = 0; i < squaresInBottomDirection; i++) {
+        b |= (pieceSquare >> (8 * i + 8));
+    }
+    return b;
+}
+
+/*
+ * Initialising the table for rook
+ */
+void MagicBitboards::initRookTable() {
+
+    for(int i = 0; i < 64; i++) {
+        rookTable[i].magicNumber = ROOK_MAGIC_NUMBERS[i];
+        rookTable[i].indexShift = ROOK_INDEX_SHIFTS[i];
+        uint64_t tableSize = ((uint64_t) 1) << (64 - rookTable[i].indexShift);
+        rookTable[i].entries.resize(tableSize);
+        rookTable[i].blockerOverlay = getRookBlockerOverlay(i);
+    }
+
+    //Actually setting all moves up
+    for(int i = 0; i < 64; i++) {
+        bitboard square = ((bitboard) 1) << i;
+        auto blockers = getAllRookBlockerConfigurations(i);
+
+        for(bitboard b : blockers) {
+            uint64_t key = (b * rookTable[i].magicNumber) >> rookTable[i].indexShift;
+            bitboard reachable = 0;
+            auto moves = generateRookMoves(square, i, b);
+            for(auto move : moves) {
+                reachable |= move.toSquare;
+            }
+
+            if(rookTable[i].entries[key].isSet == false) {
+                rookTable[i].entries[key].isSet = true;
+                rookTable[i].entries[key].reachable = reachable;
+                rookTable[i].entries[key].moves = moves;
+            } else if (rookTable[i].entries[key].reachable != reachable) {
+                std::cout << "Error in MagicBitboards::initRookTable() at " << i << std::endl;
+            }
+        }
+    }
+}
+
+/*
+ * Returns all rook moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
+ */
+std::vector<Move> MagicBitboards::getRookMoves(bitboard hitmap, int index) {
+
+    bitboard blockers = hitmap & rookTable[index].blockerOverlay;
+    uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
+    return rookTable[index].entries[key].moves;
+
+}
+
+/*
+ * Returns all squares a rook could reach from the given position
+ */
+bitboard MagicBitboards::getRookReachableSquares(bitboard hitmap, int index) {
+    bitboard blockers = hitmap & rookTable[index].blockerOverlay;
+    uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
+    return rookTable[index].entries[key].reachable;
+}
+

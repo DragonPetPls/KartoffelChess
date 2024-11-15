@@ -7,14 +7,15 @@
 int main() {
 
 //MagicBitboards::generateBishopMagicNumbers();
+    //MagicBitboards::generateRookMagicNumbers();
 
 #ifdef TEST
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();
-    Test::perft();
+    //Test::perft();
     //Test::consolPerft();
-    //Test::statusPerft();
+    Test::statusPerft();
 #endif
     return 0;
 }

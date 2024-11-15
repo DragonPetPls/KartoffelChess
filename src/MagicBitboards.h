@@ -48,23 +48,36 @@ struct calculationEntry {
 class MagicBitboards {
 private:
     static MagicTableSquare bishopTable[64];
+    static MagicTableSquare rookTable[64];
+    static Entry knightTable[64];
 
     static void initBishopTable();
+    static void initRookTable();
     static bool isInit;
 
 public:
     static std::vector<Move> getBishopMoves(bitboard hitmap, int index);
     static bitboard getBishopReachableSquares(bitboard hitmap, int index);
+
+    static std::vector<Move> getRookMoves(bitboard hitmap, int index);
+    static bitboard getRookReachableSquares(bitboard hitmap, int index);
+
     static void init();
 
 
 //Functions for generating magic numbers or initialisation
 public:
     static void generateBishopMagicNumbers();
+
+    static void generateRookMagicNumbers();
 private:
     [[nodiscard]] static std::vector<Move> generateBishopMoves(bitboard square, int index, const bitboard& hitmap) ;
     static std::vector<bitboard> getAllBishopBlockerConfigurations(int index);
     static bitboard getBishopBlockerOverlay(int index);
+
+    [[nodiscard]] static std::vector<Move> generateRookMoves(bitboard square, int index, const bitboard& hitmap) ;
+    static std::vector<bitboard> getAllRookBlockerConfigurations(int index);
+    static bitboard getRookBlockerOverlay(int index);
 };
 
 

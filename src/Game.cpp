@@ -480,44 +480,15 @@ std::vector<Move> Game::getBishopMoves(bitboard square, int index, const bitboar
  * Returns all pseudolegal rook moves from the given square, used by the getAllPseudoLegalMoves function
  */
 std::vector<Move> Game::getRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    std::vector<Move> moves;
-    moves.reserve(16);
-
-    int x = index % 8;
-    int y = index / 8;
-    //Going over all 4 directions
-    for(int i = 0; i < 4; i++){
-        int vx = 1 * (i == 0) - 1 * (i == 2);
-        int vy = 1 * (i == 1) - 1 * (i == 3);
-
-        //Going over distances
-        for (int distance = 1; distance < 8; distance++){
-            int tx = x + vx * distance;
-            int ty = y + vy * distance;
-
-            bitboard targetSquare = 1;
-            targetSquare = targetSquare << (tx + 8 * ty);
-
-            //Collisions and out of bounds
-            if((targetSquare & ownHitmap) || tx < 0 || tx > 7 || ty < 0 || ty > 7){
-                break;
-            }
-
-            //Adding the move
-            Move m;
-            m.toSquare = targetSquare;
-            m.fromSquare = square;
-            m.startingPiece = ROOK;
-            m.endingPiece = ROOK;
-            moves.push_back(m);
-
-            //Checking for capture
-            if(targetSquare & enemyHitmap){
-                break;
-            }
+    auto moves = MagicBitboards::getRookMoves(hitmap, index);
+    //We only check the last for moves for collisions cause we generate our vectors in a way that this works
+    int size = moves.size();
+    for(int i = std::max(0, size - 4); i < moves.size(); i++) {
+        if(moves[i].toSquare & ownHitmap) {
+            moves.erase(moves.begin() + i);
+            i--;
         }
     }
-
     return moves;
 }
 
@@ -654,49 +625,24 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
         return true;
     }
 
-    //Diagonal king attacks
-    for(int i = 0; i < 4; i++) {
-        //Going over directions
-        int vx = 1 * (i == 0 || i == 3) - 1 * (i == 1 || i == 2);
-        int vy = 1 * (i == 2 || i == 0) - 1 * (i == 3 || i == 1);
-        int tx = x + vx;
-        int ty = y + vy;
-        bitboard targetSquare = 1;
-        targetSquare = targetSquare << (tx + 8 * ty);
-        if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & pieceBoards[KING | COLOR_TO_PIECE[attackingColor]])){
-            return true;
-        }
-    }
-
     //Straight and straight king attacks
     bitboard straightPieces = pieceBoards[ROOK | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
-    for(int i = 0; i < 4; i++){
-        //Going over directions
-        int vx = 1 * (i == 0) - 1 * (i == 1);
-        int vy = 1 * (i == 2) - 1 * (i == 3);
+    dangerousSquares = MagicBitboards::getRookReachableSquares(hitmap, index);
+    if(straightPieces & dangerousSquares) {
+        return true;
+    }
 
-        //checking king checks
+    //king attacks
+    for(int i = 0; i < 8; i++) {
+        //Going over directions
+        int vx = 1 * (i == 0 || i == 3 || i == 4) - 1 * (i == 1 || i == 2 || i == 6); ;
+        int vy = 1 * (i == 2 || i == 0 || i == 7) - 1 * (i == 3 || i == 1 || i == 5);
         int tx = x + vx;
         int ty = y + vy;
         bitboard targetSquare = 1;
         targetSquare = targetSquare << (tx + 8 * ty);
         if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & pieceBoards[KING | COLOR_TO_PIECE[attackingColor]])){
             return true;
-        }
-
-        //Going over distances
-        for(int distance = 1; distance < 8; distance++){
-            tx = x + vx * distance;
-            ty = y + vy * distance;
-            targetSquare = 1;
-            targetSquare = targetSquare << (tx + 8 * ty);
-            bool straight = (vx == 0) || ( vy == 0);
-            if (straight && tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & straightPieces)){
-                return true;
-            }
-            if(tx < 0 || ty < 0 || tx > 7 || ty > 7 || (targetSquare & hitmap)){
-                break;
-            }
         }
     }
 
