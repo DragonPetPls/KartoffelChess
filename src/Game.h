@@ -55,7 +55,7 @@ private:
 
 public:
     //Functions
-    Game() = default;
+    Game();
     void loadStartingPosition();
     void printGame();
     void doMove(Move move);
@@ -95,6 +95,5 @@ namespace std {
         }
     };
 }
-
 
 #endif //SRC_GAME_H

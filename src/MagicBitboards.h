@@ -49,10 +49,13 @@ class MagicBitboards {
 private:
     static MagicTableSquare bishopTable[64];
 
+    static void initBishopTable();
+    static bool isInit;
 
 public:
     static std::vector<Move> getBishopMoves(bitboard hitmap, int index);
-    static void initBishopTable();
+    static bitboard getBishopReachableSquares(bitboard hitmap, int index);
+    static void init();
 
 
 //Functions for generating magic numbers or initialisation

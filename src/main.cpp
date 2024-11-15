@@ -6,7 +6,6 @@
 
 int main() {
 
-    MagicBitboards::initBishopTable();
 //MagicBitboards::generateBishopMagicNumbers();
 
 #ifdef TEST

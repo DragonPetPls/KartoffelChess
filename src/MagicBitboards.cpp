@@ -5,12 +5,13 @@
 #include "MagicBitboards.h"
 
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <random>
 
 #include "magicConstants.h"
 
 MagicTableSquare MagicBitboards::bishopTable[64];
+bool MagicBitboards::isInit = false;
 
 /*
  * Used to generate magic numbers for bishop, not neccesary after numbers ahave been calculated
@@ -221,6 +222,15 @@ std::vector<Move> MagicBitboards::getBishopMoves(bitboard hitmap, int index) {
     return bishopTable[index].entries[key].moves;
 }
 
+/*
+ * Returns all squares a bishop could reach from the given position
+ */
+bitboard MagicBitboards::getBishopReachableSquares(bitboard hitmap, int index) {
+    bitboard blockers = hitmap & bishopTable[index].blockerOverlay;
+    uint64_t key = (blockers * bishopTable[index].magicNumber) >> bishopTable[index].indexShift;
+    return bishopTable[index].entries[key].reachable;
+}
+
 
 /*
  * Returns a mask of all relevant square for blockers
@@ -251,4 +261,11 @@ bitboard MagicBitboards::getBishopBlockerOverlay(int index) {
         b |= pieceSquare >> (8 * i - i + 7);
     }
     return b;
+}
+
+void MagicBitboards::init() {
+    if(!isInit) {
+        initBishopTable();
+        isInit = true;
+    }
 }

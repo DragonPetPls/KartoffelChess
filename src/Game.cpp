@@ -647,14 +647,33 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
         }
     }
 
-    //Straight and diagonal and king
+    //Diagonal attacks
     bitboard diagonalPieces = pieceBoards[BISHOP | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
-    bitboard straightPieces = pieceBoards[ROOK | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
-    for(int i = 0; i < 8; i++){
-        //Going over directions
-        int vx = 1 * (i <= 2) - 1 * ((i > 2) && (i <= 5));
-        int vy = 1 * (i == 0 || i == 3 || i == 6) - 1 * (i == 1|| i == 4 || i == 7);
+    bitboard dangerousSquares = MagicBitboards::getBishopReachableSquares(hitmap, index);
+    if(diagonalPieces & dangerousSquares) {
+        return true;
+    }
 
+    //Diagonal king attacks
+    for(int i = 0; i < 4; i++) {
+        //Going over directions
+        int vx = 1 * (i == 0 || i == 3) - 1 * (i == 1 || i == 2);
+        int vy = 1 * (i == 2 || i == 0) - 1 * (i == 3 || i == 1);
+        int tx = x + vx;
+        int ty = y + vy;
+        bitboard targetSquare = 1;
+        targetSquare = targetSquare << (tx + 8 * ty);
+        if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & pieceBoards[KING | COLOR_TO_PIECE[attackingColor]])){
+            return true;
+        }
+    }
+
+    //Straight and straight king attacks
+    bitboard straightPieces = pieceBoards[ROOK | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
+    for(int i = 0; i < 4; i++){
+        //Going over directions
+        int vx = 1 * (i == 0) - 1 * (i == 1);
+        int vy = 1 * (i == 2) - 1 * (i == 3);
 
         //checking king checks
         int tx = x + vx;
@@ -672,11 +691,7 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
             targetSquare = 1;
             targetSquare = targetSquare << (tx + 8 * ty);
             bool straight = (vx == 0) || ( vy == 0);
-            bool diagonal = !straight;
             if (straight && tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & straightPieces)){
-                return true;
-            }
-            if (diagonal && tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & diagonalPieces)){
                 return true;
             }
             if(tx < 0 || ty < 0 || tx > 7 || ty > 7 || (targetSquare & hitmap)){
@@ -941,4 +956,12 @@ bool Game::areMovesStillPlayable() {
         squareMask = squareMask << 1;
     }
     return false;
+}
+
+
+/*
+ * Constructor
+ */
+Game::Game(){
+    MagicBitboards::init();
 }
