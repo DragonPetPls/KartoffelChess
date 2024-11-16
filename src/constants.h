@@ -53,6 +53,8 @@ enum Results {
     UNKNOWN
 };
 
+const int NUMBER_OF_ZOBRIST_KEYS = 781;
+
 const int REPETITIONS_TILL_DRAW = 3;
 
 const uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
@@ -103,5 +105,8 @@ const bitboard BACK_ROWS = 18374686479671623935;
 
 //These boards are used by getIndex to get the index of a square on a bitboard
 const bitboard INDEX_BOARDS[] = {4294967295, 281470681808895, 71777214294589695, 1085102592571150095, 3689348814741910323, 6148914691236517205};
+
+//These boards can be used to check if there is a bit within some of the next elements
+const bitboard NEXT_INDEX_BOARDS[] = {4294967295, 65535, 255, 15, 3, 1};
 
 #endif //SRC_CONSTANTS_H

@@ -81,14 +81,14 @@ namespace std {
             std::size_t hashValue = 0;
 
             // Combine the hash of each member, weighted by `std::hash_combine` pattern
-            hashValue ^= std::hash<int>{}(game.evaluation) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-            hashValue ^= std::hash<color>{}(game.currentPlayer) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-            hashValue ^= std::hash<uint8_t>{}(game.enPassant) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-            hashValue ^= std::hash<uint8_t>{}(game.castleRights) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= (game.evaluation) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= (game.currentPlayer) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= (game.enPassant) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+            hashValue ^= (game.castleRights) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
 
             // Hash each element in arrays
             for (const auto& board : game.pieceBoards) {
-                hashValue ^= std::hash<bitboard>{}(board) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+                hashValue ^= (board) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
             }
 
             return hashValue;

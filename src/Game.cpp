@@ -818,20 +818,40 @@ bool Game::areMovesStillPlayable() {
     }
     bitboard hitmap = ownHitmap | enemyHitmap;
 
+    int kingIndex = getIndex(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING]);
+    bitboard dangerousDiagonals = MagicBitboards::getBishopReachableSquares(enemyHitmap, kingIndex);
+    bitboard dangerousStraights = MagicBitboards::getRookReachableSquares(enemyHitmap, kingIndex);
+
+    bool rookThread = dangerousStraights & (pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | ROOK] | pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
+    bool bishopThread = dangerousDiagonals & (pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | BISHOP] | pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
+    bool isCheck = isSquareUnderAttack(((bitboard) 1) << kingIndex, kingIndex, 1 - currentPlayer);
+
     bitboard squareMask = 1;
     for(int i = 0; i < 64; i++){
-        //Skipping if there is no own piece
-        if(!(ownHitmap & squareMask)){
-            squareMask = squareMask << 1;
-            continue;
-        }
+
+        int skip = 32 * !((NEXT_INDEX_BOARDS[0] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 16 * !((NEXT_INDEX_BOARDS[1] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 8 * !((NEXT_INDEX_BOARDS[2] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 4 * !((NEXT_INDEX_BOARDS[3] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 2 * !((NEXT_INDEX_BOARDS[4] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 1 * !((NEXT_INDEX_BOARDS[5] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
 
         //Getting the piece without its color
         piece p = getPiece(squareMask);
-        p &= ~BLACK_PIECE;
-
+        p ^= COLOR_TO_PIECE[currentPlayer];
         std::vector<Move> pm;
-        pm.reserve(50);
         switch (p) {
             case PAWN:
                 pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
@@ -852,10 +872,15 @@ bool Game::areMovesStillPlayable() {
                 pm = getKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
             break;
             default:
-                break;
+                return false;
         }
 
         for (Move move : pm) {
+            if(!bishopThread && !rookThread && move.startingPiece != PAWN && move.startingPiece != KING && !isCheck
+                || (!isCheck && move.startingPiece != PAWN && move.startingPiece != KING && !((dangerousDiagonals | dangerousStraights) & move.startingPiece))) {
+                return true;
+            }
+
             doMove(move);
             if(isPositionLegal()) {
                 undoMove();
