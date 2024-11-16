@@ -275,20 +275,35 @@ std::vector<Move> Game::getAllPseudoLegalMoves() {
     }
     bitboard hitmap = ownHitmap | enemyHitmap;
 
+
+
     bitboard squareMask = 1;
     for(int i = 0; i < 64; i++){
         //Skipping if there is no own piece
-        if(!(ownHitmap & squareMask)){
-            squareMask = squareMask << 1;
-            continue;
-        }
+       int skip = 32 * !((NEXT_INDEX_BOARDS[0] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 16 * !((NEXT_INDEX_BOARDS[1] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 8 * !((NEXT_INDEX_BOARDS[2] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 4 * !((NEXT_INDEX_BOARDS[3] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 2 * !((NEXT_INDEX_BOARDS[4] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
+        skip = 1 * !((NEXT_INDEX_BOARDS[5] << i) & ownHitmap);
+        squareMask <<= skip;
+        i += skip;
 
         //Getting the piece without its color
         piece p = getPiece(squareMask);
-        p &= ~BLACK_PIECE;
+        p ^= COLOR_TO_PIECE[currentPlayer];
 
         std::vector<Move> pm;
-        pm.reserve(50);
         switch (p) {
             case PAWN:
                 pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
