@@ -223,11 +223,11 @@ void MagicBitboards::initBishopTable() {
 /*
  * Returns all bishop moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
  */
-Moves MagicBitboards::getBishopMoves(bitboard hitmap, int index) {
+void MagicBitboards::appendBishopMoves(bitboard hitmap, int index, Moves &moves) {
 
     bitboard blockers = hitmap & bishopTable[index].blockerOverlay;
     uint64_t key = (blockers * bishopTable[index].magicNumber) >> bishopTable[index].indexShift;
-    return *bishopTable[index].entries[key].moves;
+    moves.appendMoves(*bishopTable[index].entries[key].moves);
 }
 
 /*
@@ -515,11 +515,11 @@ void MagicBitboards::initRookTable() {
 /*
  * Returns all rook moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
  */
-Moves MagicBitboards::getRookMoves(bitboard hitmap, int index) {
+void MagicBitboards::appendRookMoves(bitboard hitmap, int index, Moves &moves) {
 
     bitboard blockers = hitmap & rookTable[index].blockerOverlay;
     uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
-    return *rookTable[index].entries[key].moves;
+    moves.appendMoves(*rookTable[index].entries[key].moves);
 
 }
 
@@ -596,8 +596,8 @@ void MagicBitboards::initKnightTable() {
 /*
  * Returns all moves that a knight could do from the given index. Move should still be check afterwards if they attempt to capture a own piece
  */
-Moves MagicBitboards::getKnightMoves(int index) {
-    return *knightTable[index].moves;
+void MagicBitboards::appendKnightMoves(int index, Moves &moves) {
+    moves.appendMoves(*knightTable[index].moves);
 }
 
 /*

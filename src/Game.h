@@ -55,12 +55,12 @@ private:
     static int getIndex(const bitboard& board);
     static int getZobristIndex(piece piece, color pieceColor, int index);
 
-    [[nodiscard]] Moves getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
-    [[nodiscard]] Moves getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] Moves getBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] Moves getRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] Moves getQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] Moves getKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    void appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const;
+    void appendKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
 
 public:
     //Functions

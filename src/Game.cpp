@@ -129,8 +129,8 @@ piece Game::getPiece(bitboard square) const {
     int p = -1;
 
     for(int i = 0; i < 6; i++){
-        p += (i + 1) * ((pieceBoards[i + WHITE_PIECE] & square) != 0);
-        p += (i + 1 + BLACK_PIECE) * ((pieceBoards[i + BLACK_PIECE] & square) != 0);
+        p += (i + 1) * ((pieceBoards[i | WHITE_PIECE] & square) != 0);
+        p += (i + 1 + BLACK_PIECE) * ((pieceBoards[i | BLACK_PIECE] & square) != 0);
     }
 
     p += (NO_PIECE + 1) * (p == -1);
@@ -336,31 +336,29 @@ Moves Game::getAllPseudoLegalMoves() const {
         piece p = getPiece(squareMask);
         p ^= COLOR_TO_PIECE[currentPlayer];
 
-        Moves pm;
         switch (p) {
             case PAWN:
-                pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
                 break;
             case KNIGHT:
-                pm = getKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
                 break;
             case BISHOP:
-                pm = getBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
                 break;
             case ROOK:
-                pm = getRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
                 break;
             case QUEEN:
-                pm = getQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
                 break;
             case KING:
-                pm = getKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
                 break;
             default:
                 break;
         }
 
-        moves.appendMoves(pm);
         squareMask = squareMask << 1;
     }
 
@@ -371,8 +369,7 @@ Moves Game::getAllPseudoLegalMoves() const {
 /*
  * Returns all pseudolegal pawn moves from the given square, used by the getAllPseudoLegalMoves function
  */
-Moves Game::getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    Moves moves;
+void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
     int verticalDirection = 1 * (currentPlayer == WHITE) - 1 * (currentPlayer == BLACK);
 
     //Advancing 1 square
@@ -464,30 +461,26 @@ Moves Game::getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, 
             moves.moves[moves.moveCount++] = m;
         }
     }
-
-    return moves;
 }
 
 /*
  * Returns all pseudolegal knight moves from the given square, used by the getAllPseudoLegalMoves function
  */
-Moves Game::getKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    auto moves = MagicBitboards::getKnightMoves(index);
+void Game::appendKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+    MagicBitboards::appendKnightMoves(index, moves);
     for(int i = 0; i < moves.moveCount; i++) {
         if(moves.moves[i].toSquare & ownHitmap) {
             moves.eraseMove(i);
             i--;
         }
     }
-    return moves;
 }
 
 /*
  * Returns all pseudolegal bishop moves from the given square, used by the getAllPseudoLegalMoves function
  */
-Moves Game::getBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-
-    auto moves = MagicBitboards::getBishopMoves(hitmap, index);
+void Game::appendBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+    MagicBitboards::appendBishopMoves(hitmap, index, moves);
     //We only check the last for moves for collisions cause we generate our vectors in a way that this works
     for(int i = std::max(0, moves.moveCount - 4); i < moves.moveCount; i++) {
         if(moves.moves[i].toSquare & ownHitmap) {
@@ -495,15 +488,13 @@ Moves Game::getBishopMoves(bitboard square, int index, const bitboard &ownHitmap
             i--;
         }
     }
-
-    return moves;
 }
 
 /*
  * Returns all pseudolegal rook moves from the given square, used by the getAllPseudoLegalMoves function
  */
-Moves Game::getRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    auto moves = MagicBitboards::getRookMoves(hitmap, index);
+void Game::appendRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+    MagicBitboards::appendRookMoves(hitmap, index, moves);
     //We only check the last for moves for collisions cause we generate our vectors in a way that this works;
     for(int i = std::max(0, moves.moveCount - 4); i < moves.moveCount; i++) {
         if(moves.moves[i].toSquare & ownHitmap) {
@@ -511,33 +502,28 @@ Moves Game::getRookMoves(bitboard square, int index, const bitboard &ownHitmap, 
             i--;
         }
     }
-    return moves;
 }
 
 /*
  * Returns all pseudolegal queen moves from the given square, used by the getAllPseudoLegalMoves function
  */
-Moves Game::getQueenMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-   Moves moves = getBishopMoves(square, index, ownHitmap, enemyHitmap, hitmap);
-    for(int i = 0; i < moves.moveCount; i++) {
+void Game::appendQueenMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+    int oldMoveCount = moves.moveCount;
+    appendBishopMoves(square, index, ownHitmap, enemyHitmap, hitmap, moves);
+
+    Moves straight;
+    appendRookMoves(square, index, ownHitmap, enemyHitmap, hitmap, straight);
+    moves.appendMoves(straight);
+    for(int i = oldMoveCount; i < moves.moveCount; i++) {
         moves.moves[i].startingPiece = QUEEN;
         moves.moves[i].endingPiece = QUEEN;
     }
-
-    auto straight = getRookMoves(square, index, ownHitmap, enemyHitmap, hitmap);
-    for(int i = 0; i < straight.moveCount; i++) {
-        straight.moves[i].startingPiece = QUEEN;
-        straight.moves[i].endingPiece = QUEEN;
-    }
-    moves.appendMoves(straight);
-    return moves;
 }
 
 /*
  * Returns all pseudolegal king moves from the given square, used by the getAllPseudoLegalMoves function
  */
-Moves Game::getKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    Moves moves;
+void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
 
     int x = index % 8;
     int y = index / 8;
@@ -594,8 +580,6 @@ Moves Game::getKingMoves(bitboard square, int index, const bitboard &ownHitmap, 
         m.endingPiece = KING;
         moves.moves[moves.moveCount++] = m;
     }
-
-    return moves;
 }
 
 /*
@@ -893,22 +877,22 @@ bool Game::areMovesStillPlayable() {
         Moves pm;
         switch (p) {
             case PAWN:
-                pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
             break;
             case KNIGHT:
-                pm = getKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
             break;
             case BISHOP:
-                pm = getBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
             break;
             case ROOK:
-                pm = getRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
             break;
             case QUEEN:
-                pm = getQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
             break;
             case KING:
-                pm = getKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
+                appendKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
             break;
             default:
                 return false;

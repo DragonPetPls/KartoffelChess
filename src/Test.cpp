@@ -176,7 +176,7 @@ void Test::statusPerft() {
     for(int i = 0; i < 4; i++) {
         g.loadFen(fen[i]);
         checkmates = 0;
-        int n = perftStatus(g, depth[i]);
+        int n = perftStatus(g, depth[i] + 1);
         nodesSearched += n;
         if(n == results[i] && checkmates == checkmatesResults[i]) {
             std::cout << "Test " << i << " successful" << std::endl;

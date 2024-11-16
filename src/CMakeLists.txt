@@ -3,10 +3,14 @@ project(KartoffelChess)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2")
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    # Apply maximum optimizations for release builds
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    # Apply debugging flags for debug builds
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
+endif()
 
 add_executable(src main.cpp
         Game.h

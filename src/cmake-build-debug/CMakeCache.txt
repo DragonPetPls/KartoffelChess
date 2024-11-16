@@ -224,6 +224,9 @@ KartoffelChess_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 KartoffelChess_SOURCE_DIR:STATIC=/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src
 
+//The directory containing a CMake configuration file for gperftools.
+gperftools_DIR:PATH=gperftools_DIR-NOTFOUND
+
 //Value Computed by CMake
 src_BINARY_DIR:STATIC=/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug
 
