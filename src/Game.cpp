@@ -5,7 +5,11 @@
 #include <iostream>
 #include "Game.h"
 
+#include <random>
 #include <strings.h>
+
+bool Game::isZobristInit = false;
+uint64_t Game::zobristKeys[NUMBER_OF_ZOBRIST_KEYS];
 
 /*
  * This function will set up the typical chess starting position
@@ -31,6 +35,7 @@ void Game::loadStartingPosition() {
     currentPlayer = WHITE;
 
     gameHistoryCounter = -1;
+    setHashValue();
 }
 
 /*
@@ -136,7 +141,7 @@ piece Game::getPiece(bitboard square) {
 /*
  * This function executes the move
  */
-void Game::doMove(Move move) {
+void Game::doMove(Move &move) {
 
     //Storing everything to undo this move later
     status = UNKNOWN;
@@ -145,15 +150,22 @@ void Game::doMove(Move move) {
     gameHistory[gameHistoryCounter].castleRights = this->castleRights;
     gameHistory[gameHistoryCounter].eval = this->evaluation;
     gameHistory[gameHistoryCounter].move = move;
-    pastHashes[gameHistoryCounter] = std::hash<Game>{}(*this);
+    pastHashes[gameHistoryCounter] = hashValue;
+
+    int fromIndex = getIndex(move.fromSquare);
+    int toIndex = getIndex(move.toSquare);
 
     //En passant
     bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
+    hashValue ^= zobristKeys[getZobristIndex(PAWN, 1 - currentPlayer, getIndex(enPassantCaptureSquare))] * ((enPassantCaptureSquare & pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]]) != 0) * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE));
     pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]] &= ~(enPassantCaptureSquare * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE)));
 
     //Transfering the piece
     pieceBoards[move.startingPiece | COLOR_TO_PIECE[currentPlayer]] &= ~move.fromSquare;
     pieceBoards[move.endingPiece | COLOR_TO_PIECE[currentPlayer]] |= move.toSquare;
+
+    hashValue ^= zobristKeys[getZobristIndex(move.startingPiece, currentPlayer, fromIndex)];
+    hashValue ^= zobristKeys[getZobristIndex(move.endingPiece, currentPlayer, toIndex)];
 
     //Removing captured pieces
     piece capturedPiece = NO_PIECE;
@@ -162,12 +174,17 @@ void Game::doMove(Move move) {
         pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] &= ~move.toSquare;
     }
     gameHistory[gameHistoryCounter].capturedPiece = capturedPiece;
+    hashValue ^= zobristKeys[getZobristIndex(capturedPiece, 1 - currentPlayer, toIndex)] * (capturedPiece != NO_PIECE);
 
     //Castling
     //short castle
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
     //Long castle
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
 
     //Setting castle rights.
     bitboard fromTo = move.fromSquare | move.toSquare;
@@ -176,12 +193,28 @@ void Game::doMove(Move move) {
     castleRights &= ~(BLACK_SHORT_CASTLE_RIGHT * ((fromTo & BLACK_SHORT_CASTLE_RIGHTS_MASK) != 0));
     castleRights &= ~(BLACK_LONG_CASTLE_RIGHT * ((fromTo & BLACK_LONG_CASTLE_RIGHTS_MASK) != 0));
 
+    hashValue ^= zobristKeys[ZOBRIST_WHITE_SHORT_CASTLE_INDEX] * ((fromTo & WHITE_SHORT_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & WHITE_SHORT_CASTLE_RIGHT));
+    hashValue ^= zobristKeys[ZOBRIST_WHITE_LONG_CASTLE_INDEX] * ((fromTo & WHITE_LONG_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & WHITE_LONG_CASTLE_RIGHT));
+    hashValue ^= zobristKeys[ZOBRIST_BLACK_SHORT_CASTLE_INDEX] * ((fromTo & BLACK_SHORT_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & BLACK_SHORT_CASTLE_RIGHT));
+    hashValue ^= zobristKeys[ZOBRIST_BLACK_LONG_CASTLE_INDEX] * ((fromTo & BLACK_LONG_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & BLACK_LONG_CASTLE_RIGHT));
+
     //Setting en passant rights
+    int enPassantIndex = 0;
+    for(int i = 0; i < 8; i++) {
+        enPassantIndex += i * ((enPassant >> i) & 1);
+    }
+    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassantIndex] * (enPassant != 0);
     enPassant = ((move.fromSquare >> 8) * ((move.startingPiece == PAWN) && (move.fromSquare & WHITE_EN_PASSANT_ROWS) &&  (move.toSquare & WHITE_EN_PASSANT_ROWS)));
     enPassant |= ((move.fromSquare >> 48) * ((move.startingPiece == PAWN) && (move.fromSquare & BLACK_EN_PASSANT_ROWS) &&  (move.toSquare & BLACK_EN_PASSANT_ROWS)));
+    enPassantIndex = 0;
+    for(int i = 0; i < 8; i++) {
+        enPassantIndex += i * ((enPassant >> i) & 1);
+    }
+    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassantIndex] * (enPassant != 0);
 
     //Changing who to move
     currentPlayer = BLACK * (currentPlayer == WHITE);
+    hashValue ^= zobristKeys[ZOBRIST_COLOR_INDEX];
 
     //Adjusting moves without progress
     movesWithoutProgess = (movesWithoutProgess + 1) * (move.startingPiece == PAWN || gameHistory[gameHistoryCounter].capturedPiece != NO_PIECE);
@@ -227,6 +260,7 @@ void Game::undoMove() {
     this->enPassant = gameHistory[gameHistoryCounter].enPassant;
     piece &capturedPiece = gameHistory[gameHistoryCounter].capturedPiece;
     Move &move = gameHistory[gameHistoryCounter].move;
+    hashValue = pastHashes[gameHistoryCounter];
 
     //En passant
     bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
@@ -755,6 +789,7 @@ void Game::loadFen(const std::string &fen) {
         }
         counter++;
     }
+    setHashValue();
 }
 
 /*
@@ -793,10 +828,9 @@ char Game::getStatus() {
     }
 
     //Checking threefold repetion
-    uint64_t hash = std::hash<Game>{}(*this);
     int sameCounter = 0;
     for(int i = 0; i <= gameHistoryCounter; i++) {
-        sameCounter += pastHashes[i] == hash;
+        sameCounter += pastHashes[i] == hashValue;
     }
     if(sameCounter >= REPETITIONS_TILL_DRAW) {
         status = DRAW;
@@ -915,4 +949,47 @@ bool Game::areMovesStillPlayable() {
  */
 Game::Game(){
     MagicBitboards::init();
+    if(!isZobristInit) {
+        std::random_device rd;
+        std::mt19937_64 gen(rd());
+        std::uniform_int_distribution<uint64_t> dis(0, UINT64_MAX);
+        for(int i = 0; i < NUMBER_OF_ZOBRIST_KEYS; i++) {
+            zobristKeys[i] = dis(gen);
+        }
+        isZobristInit = true;
+    }
+}
+
+/*
+ * Sets the hashValue to the value that corrisponds to the current position
+ */
+void Game::setHashValue() {
+    hashValue = 0;
+    for(int i = 0; i < 64; i++) {
+        for(int p = 0; p < 6; p++) {
+            hashValue ^= zobristKeys[getZobristIndex(p, WHITE, i)] * ((pieceBoards[p | WHITE_PIECE] >> i) & 1);
+            hashValue ^= zobristKeys[getZobristIndex(p, BLACK, i)] * ((pieceBoards[p | BLACK_PIECE] >> i) & 1);
+        }
+    }
+    hashValue ^= zobristKeys[ZOBRIST_COLOR_INDEX] * (currentPlayer == BLACK);
+    hashValue ^= zobristKeys[ZOBRIST_WHITE_SHORT_CASTLE_INDEX] * ((castleRights & WHITE_SHORT_CASTLE_RIGHT) != 0);
+    hashValue ^= zobristKeys[ZOBRIST_WHITE_LONG_CASTLE_INDEX] * ((castleRights & WHITE_LONG_CASTLE_RIGHT) != 0);
+    hashValue ^= zobristKeys[ZOBRIST_BLACK_SHORT_CASTLE_INDEX] * ((castleRights & BLACK_SHORT_CASTLE_RIGHT) != 0);
+    hashValue ^= zobristKeys[ZOBRIST_BLACK_LONG_CASTLE_INDEX] * ((castleRights & BLACK_LONG_CASTLE_RIGHT) != 0);
+    int enPassantIndex = 0;
+    for(int i = 0; i < 8; i++) {
+        enPassantIndex += i * ((enPassant >> i) & 1);
+    }
+    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassantIndex] * (enPassant != 0);
+}
+
+/*
+ * Returns the index of the zobrist key for a piece of a certain color on a given square
+ */
+int Game::getZobristIndex(piece piece, color pieceColor, int index) {
+    int zobristIndex = 0;
+    zobristIndex += index;
+    zobristIndex = 6 * zobristIndex + piece;
+    zobristIndex = 2 * zobristIndex + pieceColor;
+    return zobristIndex;
 }

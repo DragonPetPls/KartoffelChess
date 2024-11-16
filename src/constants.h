@@ -85,6 +85,11 @@ const char INT_TO_CHAR[6] = {'p', 'n', 'b', 'r', 'q', 'k'};
 const bitboard SHORT_CASTLE_ROOK[2] = {160, 11529215046068469760};
 const bitboard LONG_CASTLE_ROOK[2] = {9, 648518346341351424};
 
+const int SHORT_CASTLE_ROOK_STARTING_INDEX[2] = {7, 63};
+const int SHORT_CASTLE_ROOK_ENDING_INDEX[2] = {5, 61};
+const int LONG_CASTLE_ROOK_STARTING_INDEX[2] = {0, 56};
+const int LONG_CASTLE_ROOK_ENDING_INDEX[2] = {3, 59};
+
 const bitboard SHORT_CASTLE_KING = 5764607523034234960;
 const bitboard LONG_CASTLE_KING = 1441151880758558740;
 
@@ -108,5 +113,12 @@ const bitboard INDEX_BOARDS[] = {4294967295, 281470681808895, 71777214294589695,
 
 //These boards can be used to check if there is a bit within some of the next elements
 const bitboard NEXT_INDEX_BOARDS[] = {4294967295, 65535, 255, 15, 3, 1};
+
+const int ZOBRIST_COLOR_INDEX = 768;
+const int ZOBRIST_WHITE_SHORT_CASTLE_INDEX = 769;
+const int ZOBRIST_WHITE_LONG_CASTLE_INDEX = 770;
+const int ZOBRIST_BLACK_SHORT_CASTLE_INDEX = 771;
+const int ZOBRIST_BLACK_LONG_CASTLE_INDEX = 772;
+const int ZOBRIST_EN_PASSANT_INDEX = 773;
 
 #endif //SRC_CONSTANTS_H

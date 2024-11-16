@@ -220,3 +220,70 @@ int Test::perftStatus(Game &g, int depth, bool printInfo) {
     }
     return n;
 }
+
+void Test::zobristPerft() {
+    Game g;
+    std::string fen[4] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+    "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
+    "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "};
+
+    int depth[4] = {5, 4, 4, 4};
+    int results[4] = {4865609, 4085603, 43238, 422333};
+    int nodesSearched = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+    for(int i = 0; i < 4; i++) {
+        g.loadFen(fen[i]);
+        int n = perftZobrist(g, depth[i]);
+        nodesSearched += n;
+        if(n == results[i]) {
+            std::cout << "Test " << i << " successful" << std::endl;
+        } else {
+            std::cout << "Error in test " << i << ". Result: " << n <<  std::endl;
+        }
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
+    std::cout << nodesSearched << " nodes were searched." << std::endl;
+    std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
+}
+
+int Test::perftZobrist(Game &g, int depth, bool printInfo) {
+    //g.printGame();
+    if(depth == 0) {
+        return 1;
+    }
+
+    auto next = g.getAllPseudoLegalMoves();
+    int n = 0;
+    for(Move m: next) {
+        g.doMove(m);
+        if(!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+
+        //checking if the hashing worked:
+        uint64_t hash = g.hashValue;
+        g.setHashValue();
+        if(hash != g.hashValue) {
+            std::cout << "error: move hash: " << hash << " calc hash: " << g.hashValue << std::endl;
+            g.printGame();
+            std::cout << Game::moveToString(m) << std::endl;
+            g.undoMove();
+            std::cout << "old hash: " << g.hashValue << std::endl;
+            g.doMove(m);
+            std::cout << "re hash: " << g.hashValue << std::endl;
+        }
+
+        int p = perftZobrist(g, depth - 1);
+        n += p;
+
+        if(printInfo) {
+            std::cout << Game::moveToString(m) << ": " << p << std::endl;
+        }
+        g.undoMove();
+    }
+    return n;
+}

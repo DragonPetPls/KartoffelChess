@@ -15,6 +15,7 @@ private:
 
     static int perft(Game &g, int depth, bool printInfo = false);
     static int perftStatus(Game &g, int depth, bool printInfo = false);
+    static int perftZobrist(Game &g, int depth, bool printInfo = false);
 public:
     static void testPrintGame();
     static void testDoMove();
@@ -23,6 +24,8 @@ public:
     static void perft();
     static void consolPerft();
     static void statusPerft();
+    static void zobristPerft();
+
 };
 
 

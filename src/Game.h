@@ -25,6 +25,8 @@ struct LastMove{
 class Game {
 private:
     //Attributes
+    static uint64_t zobristKeys[NUMBER_OF_ZOBRIST_KEYS];
+    static bool isZobristInit;
 
     //The game history array keeps track of last moves in order to be able to undo them, the game historyCounter points to the last move.
     //If the gameHistoryCounter = -1 no move can be undone
@@ -42,9 +44,14 @@ public:
     uint8_t enPassant; // stores the row in which an en passant is playable in a way a bitboard does
     uint8_t castleRights; //Stores castle rights in the first for bits
 
+    //We store the hash value here and update it after every move
+    uint64_t hashValue;
+    void setHashValue();
+
 private:
     //Functions
     static int getIndex(const bitboard& board);
+    static int getZobristIndex(piece piece, color pieceColor, int index);
 
     [[nodiscard]] std::vector<Move> getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
     [[nodiscard]] std::vector<Move> getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
@@ -58,7 +65,7 @@ public:
     Game();
     void loadStartingPosition();
     void printGame();
-    void doMove(Move move);
+    void doMove(Move &move);
     void undoMove();
     void doMoveAsString(std::string moveStr);
     std::vector<Move> getAllPseudoLegalMoves();
@@ -73,27 +80,5 @@ public:
     [[nodiscard]] int getGameHistoryCounter() const;
     piece getPiece(bitboard square);
 };
-
-namespace std {
-    template <>
-    struct hash<Game> {
-        std::size_t operator()(const Game& game) const noexcept {
-            std::size_t hashValue = 0;
-
-            // Combine the hash of each member, weighted by `std::hash_combine` pattern
-            hashValue ^= (game.evaluation) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-            hashValue ^= (game.currentPlayer) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-            hashValue ^= (game.enPassant) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-            hashValue ^= (game.castleRights) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-
-            // Hash each element in arrays
-            for (const auto& board : game.pieceBoards) {
-                hashValue ^= (board) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-            }
-
-            return hashValue;
-        }
-    };
-}
 
 #endif //SRC_GAME_H
