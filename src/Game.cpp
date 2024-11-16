@@ -41,7 +41,7 @@ void Game::loadStartingPosition() {
 /*
  * Print the current board and all other relevant data
  */
-void Game::printGame() {
+void Game::printGame() const {
 
     std::string currentPlayerStr;
     if(currentPlayer == WHITE){
@@ -125,7 +125,7 @@ void Game::printGame() {
  * Returns the piece covered by the square,
  * only use it with bitboards that have only one bit true
  */
-piece Game::getPiece(bitboard square) {
+piece Game::getPiece(bitboard square) const {
     int p = -1;
 
     for(int i = 0; i < 6; i++){
@@ -141,7 +141,7 @@ piece Game::getPiece(bitboard square) {
 /*
  * This function executes the move
  */
-void Game::doMove(Move &move) {
+void Game::doMove(const Move &move) {
 
     //Storing everything to undo this move later
     status = UNKNOWN;
@@ -296,9 +296,8 @@ int Game::getGameHistoryCounter() const {
 /*
  * Returns all pseudolegal moves that could be played next
  */
-std::vector<Move> Game::getAllPseudoLegalMoves() {
-    std::vector<Move> pseudoLegalMoves;
-    pseudoLegalMoves.reserve(100);
+Moves Game::getAllPseudoLegalMoves() const {
+    Moves moves;
 
     //Generating hitmaps
     bitboard ownHitmap = 0;
@@ -337,7 +336,7 @@ std::vector<Move> Game::getAllPseudoLegalMoves() {
         piece p = getPiece(squareMask);
         p ^= COLOR_TO_PIECE[currentPlayer];
 
-        std::vector<Move> pm;
+        Moves pm;
         switch (p) {
             case PAWN:
                 pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
@@ -360,21 +359,20 @@ std::vector<Move> Game::getAllPseudoLegalMoves() {
             default:
                 break;
         }
-        pseudoLegalMoves.insert(pseudoLegalMoves.end(), pm.begin(), pm.end());
+
+        moves.appendMoves(pm);
         squareMask = squareMask << 1;
     }
 
-    return pseudoLegalMoves;
+    return moves;
 }
 
 
 /*
  * Returns all pseudolegal pawn moves from the given square, used by the getAllPseudoLegalMoves function
  */
-std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    std::vector<Move> moves;
-    moves.reserve(20);
-
+Moves Game::getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    Moves moves;
     int verticalDirection = 1 * (currentPlayer == WHITE) - 1 * (currentPlayer == BLACK);
 
     //Advancing 1 square
@@ -390,16 +388,16 @@ std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard 
         if(targetSquare & BACK_ROWS){
             //Promotion
             m.endingPiece = QUEEN;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = ROOK;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = BISHOP;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = KNIGHT;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
         } else {
             m.endingPiece = PAWN;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
         }
     }
 
@@ -414,7 +412,7 @@ std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard 
         m.toSquare = targetSquare;
         m.startingPiece = PAWN;
         m.endingPiece = PAWN;
-        moves.push_back(m);
+        moves.moves[moves.moveCount++] = m;
     }
 
     //Capture to the left
@@ -429,16 +427,16 @@ std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard 
         if(targetSquare & BACK_ROWS){
             //Promotion
             m.endingPiece = QUEEN;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = ROOK;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = BISHOP;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = KNIGHT;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
         } else {
             m.endingPiece = PAWN;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
         }
     }
 
@@ -454,16 +452,16 @@ std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard 
         if(targetSquare & BACK_ROWS){
             //Promotion
             m.endingPiece = QUEEN;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = ROOK;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = BISHOP;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
             m.endingPiece = KNIGHT;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
         } else {
             m.endingPiece = PAWN;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
         }
     }
 
@@ -473,11 +471,11 @@ std::vector<Move> Game::getPawnMoves(bitboard square, int index, const bitboard 
 /*
  * Returns all pseudolegal knight moves from the given square, used by the getAllPseudoLegalMoves function
  */
-std::vector<Move> Game::getKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+Moves Game::getKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
     auto moves = MagicBitboards::getKnightMoves(index);
-    for(int i = 0; i < moves.size(); i++) {
-        if(moves[i].toSquare & ownHitmap) {
-            moves.erase(moves.begin() + i);
+    for(int i = 0; i < moves.moveCount; i++) {
+        if(moves.moves[i].toSquare & ownHitmap) {
+            moves.eraseMove(i);
             i--;
         }
     }
@@ -487,14 +485,13 @@ std::vector<Move> Game::getKnightMoves(bitboard square, int index, const bitboar
 /*
  * Returns all pseudolegal bishop moves from the given square, used by the getAllPseudoLegalMoves function
  */
-std::vector<Move> Game::getBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+Moves Game::getBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
 
     auto moves = MagicBitboards::getBishopMoves(hitmap, index);
     //We only check the last for moves for collisions cause we generate our vectors in a way that this works
-    int size = moves.size();
-    for(int i = std::max(0, size - 4); i < moves.size(); i++) {
-        if(moves[i].toSquare & ownHitmap) {
-            moves.erase(moves.begin() + i);
+    for(int i = std::max(0, moves.moveCount - 4); i < moves.moveCount; i++) {
+        if(moves.moves[i].toSquare & ownHitmap) {
+            moves.eraseMove(i);
             i--;
         }
     }
@@ -505,13 +502,12 @@ std::vector<Move> Game::getBishopMoves(bitboard square, int index, const bitboar
 /*
  * Returns all pseudolegal rook moves from the given square, used by the getAllPseudoLegalMoves function
  */
-std::vector<Move> Game::getRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+Moves Game::getRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
     auto moves = MagicBitboards::getRookMoves(hitmap, index);
-    //We only check the last for moves for collisions cause we generate our vectors in a way that this works
-    int size = moves.size();
-    for(int i = std::max(0, size - 4); i < moves.size(); i++) {
-        if(moves[i].toSquare & ownHitmap) {
-            moves.erase(moves.begin() + i);
+    //We only check the last for moves for collisions cause we generate our vectors in a way that this works;
+    for(int i = std::max(0, moves.moveCount - 4); i < moves.moveCount; i++) {
+        if(moves.moves[i].toSquare & ownHitmap) {
+            moves.eraseMove(i);
             i--;
         }
     }
@@ -521,33 +517,27 @@ std::vector<Move> Game::getRookMoves(bitboard square, int index, const bitboard 
 /*
  * Returns all pseudolegal queen moves from the given square, used by the getAllPseudoLegalMoves function
  */
-std::vector<Move> Game::getQueenMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    std::vector<Move> moves;
-    moves.reserve(50);
-
-    auto diagonal = getBishopMoves(square, index, ownHitmap, enemyHitmap, hitmap);
-    for(Move &m: diagonal) {
-        m.startingPiece = QUEEN;
-        m.endingPiece = QUEEN;
+Moves Game::getQueenMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+   Moves moves = getBishopMoves(square, index, ownHitmap, enemyHitmap, hitmap);
+    for(int i = 0; i < moves.moveCount; i++) {
+        moves.moves[i].startingPiece = QUEEN;
+        moves.moves[i].endingPiece = QUEEN;
     }
-    moves.insert(moves.end(), diagonal.begin(), diagonal.end());
 
     auto straight = getRookMoves(square, index, ownHitmap, enemyHitmap, hitmap);
-    for(Move &m: straight) {
-        m.startingPiece = QUEEN;
-        m.endingPiece = QUEEN;
+    for(int i = 0; i < straight.moveCount; i++) {
+        straight.moves[i].startingPiece = QUEEN;
+        straight.moves[i].endingPiece = QUEEN;
     }
-    moves.insert(moves.end(), straight.begin(), straight.end());
-
+    moves.appendMoves(straight);
     return moves;
 }
 
 /*
  * Returns all pseudolegal king moves from the given square, used by the getAllPseudoLegalMoves function
  */
-std::vector<Move> Game::getKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
-    std::vector<Move> moves;
-    moves.reserve(8);
+Moves Game::getKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const {
+    Moves moves;
 
     int x = index % 8;
     int y = index / 8;
@@ -568,7 +558,7 @@ std::vector<Move> Game::getKingMoves(bitboard square, int index, const bitboard 
             m.toSquare = targetSquare;
             m.startingPiece = KING;
             m.endingPiece = KING;
-            moves.push_back(m);
+            moves.moves[moves.moveCount++] = m;
         }
     }
 
@@ -587,7 +577,7 @@ std::vector<Move> Game::getKingMoves(bitboard square, int index, const bitboard 
         m.toSquare = square << 2;
         m.startingPiece = KING;
         m.endingPiece = KING;
-        moves.push_back(m);
+        moves.moves[moves.moveCount++] = m;
     }
 
     //Long Castle
@@ -602,7 +592,7 @@ std::vector<Move> Game::getKingMoves(bitboard square, int index, const bitboard 
         m.toSquare = square >> 2;
         m.startingPiece = KING;
         m.endingPiece = KING;
-        moves.push_back(m);
+        moves.moves[moves.moveCount++] = m;
     }
 
     return moves;
@@ -680,7 +670,7 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
  * Checks if the king of the player not to move can be captured.
  * After performing a pseudo legal move the position should be check via this function
  */
-bool Game::isPositionLegal() {
+bool Game::isPositionLegal() const {
     int kingPosition = getIndex(pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | KING]);
     return !isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | KING], kingPosition, currentPlayer);
 }
@@ -705,7 +695,7 @@ int Game::getIndex(const bitboard &board) {
  * Loads a chess position using a fen as an input
  */
 void Game::loadFen(const std::string &fen) {
-    gameHistoryCounter= 0;
+    gameHistoryCounter= -1;
     status = UNKNOWN;
 
     for (int i = 0; i < 14; i++) {
@@ -828,7 +818,7 @@ char Game::getStatus() {
     }
 
     //Checking threefold repetion
-    int sameCounter = 0;
+    int sameCounter = 1;
     for(int i = 0; i <= gameHistoryCounter; i++) {
         sameCounter += pastHashes[i] == hashValue;
     }
@@ -900,7 +890,7 @@ bool Game::areMovesStillPlayable() {
         //Getting the piece without its color
         piece p = getPiece(squareMask);
         p ^= COLOR_TO_PIECE[currentPlayer];
-        std::vector<Move> pm;
+        Moves pm;
         switch (p) {
             case PAWN:
                 pm = getPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap);
@@ -924,13 +914,18 @@ bool Game::areMovesStillPlayable() {
                 return false;
         }
 
-        for (Move move : pm) {
-            if(!bishopThread && !rookThread && move.startingPiece != PAWN && move.startingPiece != KING && !isCheck
-                || (!isCheck && move.startingPiece != PAWN && move.startingPiece != KING && !((dangerousDiagonals | dangerousStraights) & move.startingPiece))) {
+        for (int j = 0; j < pm.moveCount; j++) {
+            bitboard enPassantCaptureSquare = ((pm.moves[j].fromSquare << 1) | (pm.moves[j].fromSquare >> 1)) & ((pm.moves[j].toSquare >> 8) | (pm.moves[j].toSquare << 8));
+            if(!bishopThread && !rookThread
+                && !(pm.moves[j].startingPiece == PAWN && enPassant != 0 && pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | PAWN] & enPassantCaptureSquare)
+                && pm.moves[j].startingPiece != KING && !isCheck
+                || (!isCheck
+                    && !(pm.moves[j].startingPiece == PAWN && enPassant != 0 && pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | PAWN] & enPassantCaptureSquare)
+                    && pm.moves[j].startingPiece != KING && !((dangerousDiagonals | dangerousStraights) & pm.moves[j].startingPiece))) {
                 return true;
             }
 
-            doMove(move);
+            doMove(pm.moves[j]);
             if(isPositionLegal()) {
                 undoMove();
                 return true;

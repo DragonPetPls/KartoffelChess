@@ -10,6 +10,8 @@
 #include "constants.h"
 #include "MagicBitboards.h"
 
+
+
 /*
  * This struct stores everything necessary to undo the move later.
  * capturedPiece has to remain NO_PIECE if a capture was done using en passant
@@ -53,24 +55,24 @@ private:
     static int getIndex(const bitboard& board);
     static int getZobristIndex(piece piece, color pieceColor, int index);
 
-    [[nodiscard]] std::vector<Move> getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
-    [[nodiscard]] std::vector<Move> getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] std::vector<Move> getBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] std::vector<Move> getRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] std::vector<Move> getQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
-    [[nodiscard]] std::vector<Move> getKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] Moves getPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap) const;
+    [[nodiscard]] Moves getKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] Moves getBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] Moves getRookMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] Moves getQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
+    [[nodiscard]] Moves getKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap) const;
 
 public:
     //Functions
     Game();
     void loadStartingPosition();
-    void printGame();
-    void doMove(Move &move);
+    void printGame() const;
+    void doMove(const Move &move);
     void undoMove();
     void doMoveAsString(std::string moveStr);
-    std::vector<Move> getAllPseudoLegalMoves();
+    Moves getAllPseudoLegalMoves() const;
     bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
-    bool isPositionLegal();
+    bool isPositionLegal() const;
     void loadFen(const std::string& fen);
     static std::string moveToString(Move move);
     char getStatus();
@@ -78,7 +80,7 @@ public:
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;
-    piece getPiece(bitboard square);
+    piece getPiece(bitboard square) const;
 };
 
 #endif //SRC_GAME_H

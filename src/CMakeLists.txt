@@ -17,4 +17,5 @@ add_executable(src main.cpp
         MagicBitboards.h
         MagicBitboards.cpp
         magicConstants.h
+        Move.h
 )

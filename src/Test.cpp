@@ -51,8 +51,8 @@ void Test::testMoveGen() {
     Game g;
     g.loadStartingPosition();
     auto next = g.getAllPseudoLegalMoves();
-    for(Move m: next){
-        g.doMove(m);
+    for(int i = 0; i < next.moveCount; i++){
+        g.doMove(next.moves[i]);
         g.printGame();
         g.undoMove();
     }
@@ -115,8 +115,8 @@ int Test::perft(Game &g, int depth, bool printInfo) {
 
     auto next = g.getAllPseudoLegalMoves();
     int n = 0;
-    for(Move m: next) {
-        g.doMove(m);
+    for(int i = 0; i < next.moveCount; i++) {
+        g.doMove(next.moves[i]);
         if(!g.isPositionLegal()) {
             g.undoMove();
             continue;
@@ -125,7 +125,7 @@ int Test::perft(Game &g, int depth, bool printInfo) {
         n += p;
 
         if(printInfo) {
-            std::cout << Game::moveToString(m) << ": " << p << std::endl;
+            std::cout << Game::moveToString(next.moves[i]) << ": " << p << std::endl;
         }
         g.undoMove();
     }
@@ -204,8 +204,8 @@ int Test::perftStatus(Game &g, int depth, bool printInfo) {
 
     auto next = g.getAllPseudoLegalMoves();
     int n = 0;
-    for(Move m: next) {
-        g.doMove(m);
+    for(int i = 0; i < next.moveCount; i++) {
+        g.doMove(next.moves[i]);
         if(!g.isPositionLegal()) {
             g.undoMove();
             continue;
@@ -214,7 +214,7 @@ int Test::perftStatus(Game &g, int depth, bool printInfo) {
         n += p;
 
         if(printInfo) {
-            std::cout << Game::moveToString(m) << ": " << p << std::endl;
+            std::cout << Game::moveToString(next.moves[i]) << ": " << p << std::endl;
         }
         g.undoMove();
     }
@@ -257,8 +257,8 @@ int Test::perftZobrist(Game &g, int depth, bool printInfo) {
 
     auto next = g.getAllPseudoLegalMoves();
     int n = 0;
-    for(Move m: next) {
-        g.doMove(m);
+    for(int i = 0; i < next.moveCount; i++) {
+        g.doMove(next.moves[i]);
         if(!g.isPositionLegal()) {
             g.undoMove();
             continue;
@@ -270,10 +270,10 @@ int Test::perftZobrist(Game &g, int depth, bool printInfo) {
         if(hash != g.hashValue) {
             std::cout << "error: move hash: " << hash << " calc hash: " << g.hashValue << std::endl;
             g.printGame();
-            std::cout << Game::moveToString(m) << std::endl;
+            std::cout << Game::moveToString(next.moves[i]) << std::endl;
             g.undoMove();
             std::cout << "old hash: " << g.hashValue << std::endl;
-            g.doMove(m);
+            g.doMove(next.moves[i]);
             std::cout << "re hash: " << g.hashValue << std::endl;
         }
 
@@ -281,7 +281,7 @@ int Test::perftZobrist(Game &g, int depth, bool printInfo) {
         n += p;
 
         if(printInfo) {
-            std::cout << Game::moveToString(m) << ": " << p << std::endl;
+            std::cout << Game::moveToString(next.moves[i]) << ": " << p << std::endl;
         }
         g.undoMove();
     }

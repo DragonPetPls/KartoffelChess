@@ -7,24 +7,15 @@
 
 #include <vector>
 #include "constants.h"
-
-/*
- * This struct encodes everything necessary to represent a move
- */
-struct Move{
-    bitboard fromSquare;
-    bitboard toSquare;
-    piece startingPiece;
-    piece endingPiece; //ending piece is the same as starting piece unless promotion
-};
+#include "Move.h"
 
 /*
  * This struct is a single entry in one of the lookup tables
  */
 struct Entry {
-    bitboard reachable = 0;
-    std::vector<Move> moves;
-    bool isSet = false;
+    bitboard reachable;
+    Moves *moves;
+    bool isSet;
 };
 
 /*
@@ -57,13 +48,13 @@ private:
     static bool isInit;
 
 public:
-    static std::vector<Move> getBishopMoves(bitboard hitmap, int index);
+    static Moves getBishopMoves(bitboard hitmap, int index);
     static bitboard getBishopReachableSquares(bitboard hitmap, int index);
 
-    static std::vector<Move> getRookMoves(bitboard hitmap, int index);
+    static Moves getRookMoves(bitboard hitmap, int index);
     static bitboard getRookReachableSquares(bitboard hitmap, int index);
 
-    static std::vector<Move> getKnightMoves(int index);
+    static Moves getKnightMoves(int index);
     static bitboard getKnightReachableSquares(int index);
 
     static void init();
@@ -75,15 +66,15 @@ public:
 
     static void generateRookMagicNumbers();
 private:
-    [[nodiscard]] static std::vector<Move> generateBishopMoves(bitboard square, int index, const bitboard& hitmap) ;
+    [[nodiscard]] static Moves generateBishopMoves(bitboard square, int index, const bitboard& hitmap) ;
     static std::vector<bitboard> getAllBishopBlockerConfigurations(int index);
     static bitboard getBishopBlockerOverlay(int index);
 
-    [[nodiscard]] static std::vector<Move> generateRookMoves(bitboard square, int index, const bitboard& hitmap) ;
+    [[nodiscard]] static Moves generateRookMoves(bitboard square, int index, const bitboard& hitmap) ;
     static std::vector<bitboard> getAllRookBlockerConfigurations(int index);
     static bitboard getRookBlockerOverlay(int index);
 
-    [[nodiscard]] static std::vector<Move> generateKnightMoves(bitboard square, int index);
+    [[nodiscard]] static Moves generateKnightMoves(bitboard square, int index);
 
 };
 

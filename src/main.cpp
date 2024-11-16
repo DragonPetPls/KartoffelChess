@@ -6,9 +6,6 @@
 
 int main() {
 
-//MagicBitboards::generateBishopMagicNumbers();
-    //MagicBitboards::generateRookMagicNumbers();
-
 #ifdef TEST
     //Test::testDoMove();
     //Test::testMoveGen();

@@ -51,8 +51,8 @@ void MagicBitboards::generateBishopMagicNumbers() {
             uint64_t key = (b * magicNumber) >> indexShift;
             bitboard reachable = 0;
             auto moves = generateBishopMoves(square, index, b);
-            for(auto move : moves) {
-                reachable |= move.toSquare;
+            for(int i = 0; i < moves.moveCount; i++) {
+                reachable |= moves.moves[i].toSquare;
             }
 
             if(table[key].isSet == false) {
@@ -82,7 +82,7 @@ void MagicBitboards::generateBishopMagicNumbers() {
 /*
  * Returns all pseudolegal bishop moves from the given square, used to initialise the magic bitboard table function
  */
-std::vector<Move> MagicBitboards::generateBishopMoves(bitboard square, int index, const bitboard &hitmap) {
+Moves MagicBitboards::generateBishopMoves(bitboard square, int index, const bitboard &hitmap) {
     std::vector<Move> moves;
     std::vector<Move> furthestMoves;
     furthestMoves.reserve(4);
@@ -129,7 +129,11 @@ std::vector<Move> MagicBitboards::generateBishopMoves(bitboard square, int index
     }
 
     moves.insert(moves.end(), furthestMoves.begin(), furthestMoves.end());
-    return moves;
+    Moves m;
+    for(int i = 0; i < moves.size(); i++) {
+        m.moves[m.moveCount++] = moves[i];
+    }
+    return m;
 }
 
 /*
@@ -199,14 +203,16 @@ void MagicBitboards::initBishopTable() {
             uint64_t key = (b * bishopTable[i].magicNumber) >> bishopTable[i].indexShift;
             bitboard reachable = 0;
             auto moves = generateBishopMoves(square, i, b);
-            for(auto move : moves) {
-                reachable |= move.toSquare;
+            for(int j = 0; j < moves.moveCount; j++) {
+                reachable |= moves.moves[j].toSquare;
             }
 
             if(bishopTable[i].entries[key].isSet == false) {
                 bishopTable[i].entries[key].isSet = true;
                 bishopTable[i].entries[key].reachable = reachable;
-                bishopTable[i].entries[key].moves = moves;
+                auto *m = new Moves();
+                m->copy(moves);
+                bishopTable[i].entries[key].moves = m;
             } else if (bishopTable[i].entries[key].reachable != reachable) {
                 std::cout << "Error in MagicBitboards::initBishopTable()" << std::endl;
             }
@@ -217,11 +223,11 @@ void MagicBitboards::initBishopTable() {
 /*
  * Returns all bishop moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
  */
-std::vector<Move> MagicBitboards::getBishopMoves(bitboard hitmap, int index) {
+Moves MagicBitboards::getBishopMoves(bitboard hitmap, int index) {
 
     bitboard blockers = hitmap & bishopTable[index].blockerOverlay;
     uint64_t key = (blockers * bishopTable[index].magicNumber) >> bishopTable[index].indexShift;
-    return bishopTable[index].entries[key].moves;
+    return *bishopTable[index].entries[key].moves;
 }
 
 /*
@@ -307,8 +313,8 @@ void MagicBitboards::generateRookMagicNumbers() {
             uint64_t key = (b * magicNumber) >> indexShift;
             bitboard reachable = 0;
             auto moves = generateRookMoves(square, index, b);
-            for(auto move : moves) {
-                reachable |= move.toSquare;
+            for(int i = 0; i < moves.moveCount; i++) {
+                reachable |= moves.moves[i].toSquare;
             }
 
             if(table[key].isSet == false) {
@@ -338,7 +344,7 @@ void MagicBitboards::generateRookMagicNumbers() {
 /*
  * Returns all pseudolegal rook moves from the given square, used to init the rook table
  */
-std::vector<Move> MagicBitboards::generateRookMoves(bitboard square, int index, const bitboard &hitmap) {
+Moves MagicBitboards::generateRookMoves(bitboard square, int index, const bitboard &hitmap) {
     std::vector<Move> moves;
     std::vector<Move> furthestMoves;
     moves.reserve(16);
@@ -382,10 +388,12 @@ std::vector<Move> MagicBitboards::generateRookMoves(bitboard square, int index, 
             moves.pop_back();
         }
     }
-
     moves.insert(moves.end(), furthestMoves.begin(), furthestMoves.end());
-
-    return moves;
+    Moves m;
+    for(int i = 0; i < moves.size(); i++) {
+        m.moves[m.moveCount++] = moves[i];
+    }
+    return m;
 }
 
 /*
@@ -487,14 +495,16 @@ void MagicBitboards::initRookTable() {
             uint64_t key = (b * rookTable[i].magicNumber) >> rookTable[i].indexShift;
             bitboard reachable = 0;
             auto moves = generateRookMoves(square, i, b);
-            for(auto move : moves) {
-                reachable |= move.toSquare;
+            for(int i = 0; i < moves.moveCount; i++) {
+                reachable |= moves.moves[i].toSquare;
             }
 
             if(rookTable[i].entries[key].isSet == false) {
                 rookTable[i].entries[key].isSet = true;
                 rookTable[i].entries[key].reachable = reachable;
-                rookTable[i].entries[key].moves = moves;
+                auto *m = new Moves();
+                m->copy(moves);
+                rookTable[i].entries[key].moves = m;
             } else if (rookTable[i].entries[key].reachable != reachable) {
                 std::cout << "Error in MagicBitboards::initRookTable() at " << i << std::endl;
             }
@@ -505,11 +515,11 @@ void MagicBitboards::initRookTable() {
 /*
  * Returns all rook moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
  */
-std::vector<Move> MagicBitboards::getRookMoves(bitboard hitmap, int index) {
+Moves MagicBitboards::getRookMoves(bitboard hitmap, int index) {
 
     bitboard blockers = hitmap & rookTable[index].blockerOverlay;
     uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
-    return rookTable[index].entries[key].moves;
+    return *rookTable[index].entries[key].moves;
 
 }
 
@@ -525,7 +535,7 @@ bitboard MagicBitboards::getRookReachableSquares(bitboard hitmap, int index) {
 /*
  * Returns all pseudolegal knight moves from the given square, used to init the knight lookup tables
  */
-std::vector<Move> MagicBitboards::generateKnightMoves(bitboard square, int index) {
+Moves MagicBitboards::generateKnightMoves(bitboard square, int index) {
     std::vector<Move> moves;
     moves.reserve(8);
 
@@ -556,7 +566,11 @@ std::vector<Move> MagicBitboards::generateKnightMoves(bitboard square, int index
 
     }
 
-    return moves;
+    Moves m;
+    for(int i = 0; i < moves.size(); i++) {
+        m.moves[m.moveCount++] = moves[i];
+    }
+    return m;
 }
 
 /*
@@ -567,10 +581,12 @@ void MagicBitboards::initKnightTable() {
         bitboard square = ((bitboard) 1) << i;
         auto moves = generateKnightMoves(square, i);
         bitboard reachable = 0;
-        for(auto move : moves) {
-            reachable |= move.toSquare;
+        for(int i = 0; i < moves.moveCount; i++) {
+            reachable |= moves.moves[i].toSquare;
         }
-        knightTable[i].moves = moves;
+        auto *m = new Moves();
+        m->copy(moves);
+        knightTable[i].moves = m;
         knightTable[i].reachable = reachable;
         knightTable[i].isSet = true;
     }
@@ -580,8 +596,8 @@ void MagicBitboards::initKnightTable() {
 /*
  * Returns all moves that a knight could do from the given index. Move should still be check afterwards if they attempt to capture a own piece
  */
-std::vector<Move> MagicBitboards::getKnightMoves(int index) {
-    return knightTable[index].moves;
+Moves MagicBitboards::getKnightMoves(int index) {
+    return *knightTable[index].moves;
 }
 
 /*
