@@ -7,11 +7,13 @@
 #include <iostream>
 #include <cmath>
 #include <random>
+#include <strings.h>
 
 #include "magicConstants.h"
 
 MagicTableSquare MagicBitboards::bishopTable[64];
 MagicTableSquare MagicBitboards::rookTable[64];
+Entry MagicBitboards::kingTable[64];
 Entry MagicBitboards::knightTable[64];
 bool MagicBitboards::isInit = false;
 
@@ -276,6 +278,7 @@ void MagicBitboards::init() {
         initBishopTable();
         initRookTable();
         initKnightTable();
+        initKingTable();
         isInit = true;
     }
 }
@@ -605,4 +608,51 @@ void MagicBitboards::appendKnightMoves(int index, Moves &moves) {
  */
 bitboard MagicBitboards::getKnightReachableSquares(int index) {
     return knightTable[index].reachable;
+}
+
+/*
+ * Initialises the king table. The king table does not store castling
+ */
+void MagicBitboards::initKingTable() {
+    for(int j = 0; j < 64; j++) {
+        kingTable[j].moves = new Moves();kingTable[j].moves = new Moves();
+        bitboard square = ((bitboard) 1) << j;
+        bitboard reachable = 0;
+        int x = j % 8;
+        int y = j / 8;
+        for(int i = 0; i < 8; i++) {
+            //Going over directions
+            int vx = 1 * (i == 0 || i == 3 || i == 4) - 1 * (i == 1 || i == 2 || i == 6); ;
+            int vy = 1 * (i == 2 || i == 0 || i == 7) - 1 * (i == 3 || i == 1 || i == 5);
+            int tx = x + vx;
+            int ty = y + vy;
+            bitboard targetSquare = 1;
+            targetSquare = targetSquare << (tx + 8 * ty);
+            if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8){
+                Move m;
+                m.fromSquare = square;
+                m.toSquare = targetSquare;
+                m.startingPiece = KING;
+                m.endingPiece = KING;
+                kingTable[j].moves->moves[kingTable[j].moves->moveCount++] = m;
+                reachable |= targetSquare;
+            }
+        }
+        kingTable[j].reachable = reachable;
+    }
+}
+
+
+/*
+ * Returns all moves that a king could do from the given index except castling. Move should still be check afterwards if they attempt to capture a own piece
+ */
+void MagicBitboards::appendKingMoves(int index, Moves &moves) {
+    moves.appendMoves(*kingTable[index].moves);
+}
+
+/*
+ * Returns all square a king could potentially reach from a given square excluding castling
+ */
+bitboard MagicBitboards::getKingReachableSquares(int index) {
+    return kingTable[index].reachable;
 }

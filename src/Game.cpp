@@ -525,26 +525,11 @@ void Game::appendQueenMoves(bitboard square, int index, const bitboard &ownHitma
  */
 void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
 
-    int x = index % 8;
-    int y = index / 8;
-
-    //Going over all directions
-    for(int i = 0; i < 8; i++){
-        int vx = 1 * (i <= 2) - 1 * ((i > 2) && (i <= 5));
-        int vy = 1 * (i == 0 || i == 3 || i == 6) - 1 * (i == 1|| i == 4 || i == 7);
-
-        //Generating target location
-        int tx = x + vx;
-        int ty = y + vy;
-        bitboard targetSquare = 1;
-        targetSquare = targetSquare << (tx + 8 * ty);
-        if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & ~ownHitmap)){
-            Move m;
-            m.fromSquare = square;
-            m.toSquare = targetSquare;
-            m.startingPiece = KING;
-            m.endingPiece = KING;
-            moves.moves[moves.moveCount++] = m;
+    MagicBitboards::appendKingMoves(index, moves);
+    for(int i = std::max(0, moves.moveCount - 8); i < moves.moveCount; i++) {
+        if(moves.moves[i].toSquare & ownHitmap) {
+            moves.eraseMove(i);
+            i--;
         }
     }
 
@@ -608,27 +593,17 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
         return true;
     }
 
-    //Straight and straight king attacks
+    //Straight attacks
     bitboard straightPieces = pieceBoards[ROOK | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
     dangerousSquares = MagicBitboards::getRookReachableSquares(hitmap, index);
     if(straightPieces & dangerousSquares) {
         return true;
     }
 
-    //king attacks
-    int x = index % 8;
-    int y = index / 8;
-    for(int i = 0; i < 8; i++) {
-        //Going over directions
-        int vx = 1 * (i == 0 || i == 3 || i == 4) - 1 * (i == 1 || i == 2 || i == 6); ;
-        int vy = 1 * (i == 2 || i == 0 || i == 7) - 1 * (i == 3 || i == 1 || i == 5);
-        int tx = x + vx;
-        int ty = y + vy;
-        bitboard targetSquare = 1;
-        targetSquare = targetSquare << (tx + 8 * ty);
-        if (tx >= 0 && tx < 8 && ty >= 0 && ty < 8 && (targetSquare & pieceBoards[KING | COLOR_TO_PIECE[attackingColor]])){
-            return true;
-        }
+    //King attacks
+    dangerousSquares = MagicBitboards::getKingReachableSquares(index);
+    if(pieceBoards[COLOR_TO_PIECE[attackingColor] | KING] & dangerousSquares) {
+        return true;
     }
 
     //Pawn attacks

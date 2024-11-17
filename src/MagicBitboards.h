@@ -41,10 +41,13 @@ private:
     static MagicTableSquare bishopTable[64];
     static MagicTableSquare rookTable[64];
     static Entry knightTable[64];
+    static Entry kingTable[64];
 
     static void initBishopTable();
     static void initRookTable();
     static void initKnightTable();
+    static void initKingTable();
+
     static bool isInit;
 
 public:
@@ -56,6 +59,9 @@ public:
 
     static void appendKnightMoves(int index, Moves &moves);
     static bitboard getKnightReachableSquares(int index);
+
+    static void appendKingMoves(int index, Moves &moves);
+    static bitboard getKingReachableSquares(int index);
 
     static void init();
 

@@ -168,15 +168,16 @@ void Test::statusPerft() {
     "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
     "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "};
 
-    int depth[4] = {5, 4, 4, 4};
-    int results[4] = {4865609, 4085603, 43238, 422333};
-    int checkmatesResults[4] = {347, 43, 17, 5};
+    int depth[4] = {5, 4, 6, 5};
+    int results[4] = {4865609, 4085603, 11030083, 15833292};
+    int checkmatesResults[4] = {347, 43, 2733, 50562};
     int nodesSearched = 0;
+    std::cout << "Starting test" << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
     for(int i = 0; i < 4; i++) {
         g.loadFen(fen[i]);
         checkmates = 0;
-        int n = perftStatus(g, depth[i] + 1);
+        int n = perftStatus(g, depth[i]);
         nodesSearched += n;
         if(n == results[i] && checkmates == checkmatesResults[i]) {
             std::cout << "Test " << i << " successful" << std::endl;
