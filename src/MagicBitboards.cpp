@@ -225,11 +225,11 @@ void MagicBitboards::initBishopTable() {
 /*
  * Returns all bishop moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
  */
-void MagicBitboards::appendBishopMoves(bitboard hitmap, int index, Moves &moves) {
+void MagicBitboards::appendBishopMoves(bitboard hitmap, int index, Moves &moves, bitboard collisions) {
 
     bitboard blockers = hitmap & bishopTable[index].blockerOverlay;
     uint64_t key = (blockers * bishopTable[index].magicNumber) >> bishopTable[index].indexShift;
-    moves.appendMoves(*bishopTable[index].entries[key].moves);
+    moves.appendMovesWithoutCollision(*bishopTable[index].entries[key].moves, collisions, 4);
 }
 
 /*
@@ -518,12 +518,11 @@ void MagicBitboards::initRookTable() {
 /*
  * Returns all rook moves from the lookup table, the last 4 moves should be checked in case the might attempt to capture an own piece
  */
-void MagicBitboards::appendRookMoves(bitboard hitmap, int index, Moves &moves) {
+void MagicBitboards::appendRookMoves(bitboard hitmap, int index, Moves &moves, bitboard collisions) {
 
     bitboard blockers = hitmap & rookTable[index].blockerOverlay;
     uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
-    moves.appendMoves(*rookTable[index].entries[key].moves);
-
+    moves.appendMovesWithoutCollision(*rookTable[index].entries[key].moves, collisions, 4);
 }
 
 /*
@@ -599,8 +598,8 @@ void MagicBitboards::initKnightTable() {
 /*
  * Returns all moves that a knight could do from the given index. Move should still be check afterwards if they attempt to capture a own piece
  */
-void MagicBitboards::appendKnightMoves(int index, Moves &moves) {
-    moves.appendMoves(*knightTable[index].moves);
+void MagicBitboards::appendKnightMoves(int index, Moves &moves, bitboard collisions) {
+    moves.appendMovesWithoutCollision(*knightTable[index].moves, collisions);
 }
 
 /*
@@ -646,8 +645,8 @@ void MagicBitboards::initKingTable() {
 /*
  * Returns all moves that a king could do from the given index except castling. Move should still be check afterwards if they attempt to capture a own piece
  */
-void MagicBitboards::appendKingMoves(int index, Moves &moves) {
-    moves.appendMoves(*kingTable[index].moves);
+void MagicBitboards::appendKingMoves(int index, Moves &moves, bitboard collisions) {
+    moves.appendMovesWithoutCollision(*kingTable[index].moves, collisions);
 }
 
 /*

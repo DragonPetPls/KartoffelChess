@@ -51,16 +51,16 @@ private:
     static bool isInit;
 
 public:
-    static void appendBishopMoves(bitboard hitmap, int index, Moves &moves);
+    static void appendBishopMoves(bitboard hitmap, int index, Moves &moves, bitboard collisions);
     static bitboard getBishopReachableSquares(bitboard hitmap, int index);
 
-    static void appendRookMoves(bitboard hitmap, int index, Moves &moves);
+    static void appendRookMoves(bitboard hitmap, int index, Moves &moves, bitboard collisions);
     static bitboard getRookReachableSquares(bitboard hitmap, int index);
 
-    static void appendKnightMoves(int index, Moves &moves);
+    static void appendKnightMoves(int index, Moves &moves, bitboard collisions);
     static bitboard getKnightReachableSquares(int index);
 
-    static void appendKingMoves(int index, Moves &moves);
+    static void appendKingMoves(int index, Moves &moves, bitboard collisions);
     static bitboard getKingReachableSquares(int index);
 
     static void init();

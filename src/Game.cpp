@@ -467,41 +467,21 @@ void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap
  * Returns all pseudolegal knight moves from the given square, used by the getAllPseudoLegalMoves function
  */
 void Game::appendKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
-    MagicBitboards::appendKnightMoves(index, moves);
-    for(int i = 0; i < moves.moveCount; i++) {
-        if(moves.moves[i].toSquare & ownHitmap) {
-            moves.eraseMove(i);
-            i--;
-        }
-    }
+    MagicBitboards::appendKnightMoves(index, moves, ownHitmap);
 }
 
 /*
  * Returns all pseudolegal bishop moves from the given square, used by the getAllPseudoLegalMoves function
  */
 void Game::appendBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
-    MagicBitboards::appendBishopMoves(hitmap, index, moves);
-    //We only check the last for moves for collisions cause we generate our vectors in a way that this works
-    for(int i = std::max(0, moves.moveCount - 4); i < moves.moveCount; i++) {
-        if(moves.moves[i].toSquare & ownHitmap) {
-            moves.eraseMove(i);
-            i--;
-        }
-    }
+    MagicBitboards::appendBishopMoves(hitmap, index, moves, ownHitmap);
 }
 
 /*
  * Returns all pseudolegal rook moves from the given square, used by the getAllPseudoLegalMoves function
  */
 void Game::appendRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
-    MagicBitboards::appendRookMoves(hitmap, index, moves);
-    //We only check the last for moves for collisions cause we generate our vectors in a way that this works;
-    for(int i = std::max(0, moves.moveCount - 4); i < moves.moveCount; i++) {
-        if(moves.moves[i].toSquare & ownHitmap) {
-            moves.eraseMove(i);
-            i--;
-        }
-    }
+    MagicBitboards::appendRookMoves(hitmap, index, moves, ownHitmap);
 }
 
 /*
@@ -511,9 +491,7 @@ void Game::appendQueenMoves(bitboard square, int index, const bitboard &ownHitma
     int oldMoveCount = moves.moveCount;
     appendBishopMoves(square, index, ownHitmap, enemyHitmap, hitmap, moves);
 
-    Moves straight;
-    appendRookMoves(square, index, ownHitmap, enemyHitmap, hitmap, straight);
-    moves.appendMoves(straight);
+    appendRookMoves(square, index, ownHitmap, enemyHitmap, hitmap, moves);
     for(int i = oldMoveCount; i < moves.moveCount; i++) {
         moves.moves[i].startingPiece = QUEEN;
         moves.moves[i].endingPiece = QUEEN;
@@ -525,13 +503,7 @@ void Game::appendQueenMoves(bitboard square, int index, const bitboard &ownHitma
  */
 void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
 
-    MagicBitboards::appendKingMoves(index, moves);
-    for(int i = std::max(0, moves.moveCount - 8); i < moves.moveCount; i++) {
-        if(moves.moves[i].toSquare & ownHitmap) {
-            moves.eraseMove(i);
-            i--;
-        }
-    }
+    MagicBitboards::appendKingMoves(index, moves, ownHitmap);
 
     //Castle
     uint8_t shortCastleRights[2] = {WHITE_SHORT_CASTLE_RIGHT, BLACK_SHORT_CASTLE_RIGHT};
