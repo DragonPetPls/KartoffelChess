@@ -22,4 +22,5 @@ add_executable(src main.cpp
         MagicBitboards.cpp
         magicConstants.h
         Move.h
+        Test.h
 )

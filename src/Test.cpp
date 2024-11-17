@@ -12,6 +12,7 @@
 #include "Game.h"
 
 int Test::checkmates;
+std::unordered_map<GameKey, testNode> Test::transpositionTable;
 
 void Test::testPrintGame() {
     Game g;
@@ -23,7 +24,8 @@ void Test::testDoMove() {
     Game g;
     g.loadStartingPosition();
 
-    std::string gameStr = "d2d4 g8f6 c2c4 e7e6 g1f3 d7d5 b1c3 d5c4 e2e4 f8b4 c1g5 c7c5 f1c4 c5d4 f3d4 c8d7 e1g1 b8c6 a1c1 a7a6 a2a3 b4c3 b2c3 e8g8 h2h3 c6e5 c4b3 e5g6 e4e5 g6e5 f2f4 e5c6 b3c4 h7h6 g5h4 d8e7 d1b3 c6a5 b3b4 e7b4 c3b4 a5c4 c1c4 f6d5 c4c1 a8c8 c1c5 b7b6 c5c8 f8c8 f1f3 c8c1 g1h2 c1d1 h4f2 d5f6 d4b3 f6d5 b3d4 d5f6 d4b3 d7a4 b3d4 f6e4 f2e3 d1d3 e3g1 d3d1 g1e3 d1d3 e3g1 d3d2 f3f1 b6b5 f1e1 e4f2 d4f3 d2b2 f3e5 b2d2 e1c1 f7f6 e5f3 d2b2 g1f2 b2f2 c1c6 a4b3 h2g3 f2c2 c6a6 b3d5 a6b6 d5c6 b6b8 g8h7 h3h4 c2c3 b8c8 h7g6 g3h2 c3c4 c8c7 c6f3 c7c4 b5c4 g2f3 c4c3 h2g3 c3c2 b4b5 c2c1q a3a4 c1g1 g3h3 g6f5 b5b6 f5f4 b6b7 g1g3";
+    std::string gameStr =
+            "d2d4 g8f6 c2c4 e7e6 g1f3 d7d5 b1c3 d5c4 e2e4 f8b4 c1g5 c7c5 f1c4 c5d4 f3d4 c8d7 e1g1 b8c6 a1c1 a7a6 a2a3 b4c3 b2c3 e8g8 h2h3 c6e5 c4b3 e5g6 e4e5 g6e5 f2f4 e5c6 b3c4 h7h6 g5h4 d8e7 d1b3 c6a5 b3b4 e7b4 c3b4 a5c4 c1c4 f6d5 c4c1 a8c8 c1c5 b7b6 c5c8 f8c8 f1f3 c8c1 g1h2 c1d1 h4f2 d5f6 d4b3 f6d5 b3d4 d5f6 d4b3 d7a4 b3d4 f6e4 f2e3 d1d3 e3g1 d3d1 g1e3 d1d3 e3g1 d3d2 f3f1 b6b5 f1e1 e4f2 d4f3 d2b2 f3e5 b2d2 e1c1 f7f6 e5f3 d2b2 g1f2 b2f2 c1c6 a4b3 h2g3 f2c2 c6a6 b3d5 a6b6 d5c6 b6b8 g8h7 h3h4 c2c3 b8c8 h7g6 g3h2 c3c4 c8c7 c6f3 c7c4 b5c4 g2f3 c4c3 h2g3 c3c2 b4b5 c2c1q a3a4 c1g1 g3h3 g6f5 b5b6 f5f4 b6b7 g1g3";
 
     //gameStr = "d2d4 h7h5 d4d5 e7e5 d5e6 h5h4 g2g4 h4g3 e6d7 e8e7 b2b4 c7c5 b4b5 b8c6 b5c6";
 
@@ -31,17 +33,17 @@ void Test::testDoMove() {
     std::stringstream ss(gameStr);
     std::string ms;
 
-    while(ss >> ms){
+    while (ss >> ms) {
         moveStr.push_back(ms);
     }
 
-    for(int i = 0; i < moveStr.size(); i++){
+    for (int i = 0; i < moveStr.size(); i++) {
         std::cout << moveStr[i] << std::endl;
         g.doMoveAsString(moveStr[i]);
         g.printGame();
     }
-    while(g.getGameHistoryCounter() != -1){
-        std::cout << moveStr[g.getGameHistoryCounter()] <<std::endl;
+    while (g.getGameHistoryCounter() != -1) {
+        std::cout << moveStr[g.getGameHistoryCounter()] << std::endl;
         g.undoMove();
         g.printGame();
     }
@@ -51,7 +53,7 @@ void Test::testMoveGen() {
     Game g;
     g.loadStartingPosition();
     auto next = g.getAllPseudoLegalMoves();
-    for(int i = 0; i < next.moveCount; i++){
+    for (int i = 0; i < next.moveCount; i++) {
         g.doMove(next.moves[i]);
         g.printGame();
         g.undoMove();
@@ -60,11 +62,13 @@ void Test::testMoveGen() {
 
 void Test::testFen() {
     Game g;
-    std::string fen[4] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-                        "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
-                        "rnbq1bnr/pppkpppp/8/3p4/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3",
-                            "8/8/8/8/8/5k2/2K5/8 w - - 0 1"};
-    for(int i = 0; i < 4; i++) {
+    std::string fen[4] = {
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+        "rnbq1bnr/pppkpppp/8/3p4/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3",
+        "8/8/8/8/8/5k2/2K5/8 w - - 0 1"
+    };
+    for (int i = 0; i < 4; i++) {
         std::cout << "===========================" << std::endl;
         std::cout << fen[i] << std::endl;
         g.loadFen(fen[i]);
@@ -74,26 +78,28 @@ void Test::testFen() {
 
 void Test::perft() {
     Game g;
-    std::string fen[10] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    std::string fen[10] = {
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
         "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
         "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
         "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1",
         "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8 ",
-    "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10",
-    "4k3/1P6/8/8/8/8/K7/8 w - - 0 1",
+        "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10",
+        "4k3/1P6/8/8/8/8/K7/8 w - - 0 1",
         "K1k5/8/P7/8/8/8/8/8 w - - 0 1",
         "r3k2r/1b4bq/8/8/8/8/7B/R3K2R w KQkq - 0 1",
-        "8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"};
+        "8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"
+    };
 
     int depth[10] = {5, 4, 5, 4, 4, 4, 6, 6, 4, 6};
     int results[10] = {4865609, 4085603, 674624, 422333, 2103487, 3894594, 217342, 2217, 1274206, 824064};
     int nodesSearched = 0;
     auto start = std::chrono::high_resolution_clock::now();
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
         g.loadFen(fen[i]);
         int n = perft(g, depth[i]);
         nodesSearched += n;
-        if(n == results[i]) {
+        if (n == results[i]) {
             std::cout << "Test " << i << " successful" << std::endl;
         } else {
             std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << std::endl;
@@ -104,27 +110,26 @@ void Test::perft() {
     std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
     std::cout << nodesSearched << " nodes were searched." << std::endl;
     std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
-
 }
 
-int Test::perft(Game &g, int depth, bool printInfo) {
+uint64_t Test::perft(Game &g, int depth, bool printInfo) {
     //g.printGame();
-    if(depth == 0) {
+    if (depth == 0) {
         return 1;
     }
 
     auto next = g.getAllPseudoLegalMoves();
     int n = 0;
-    for(int i = 0; i < next.moveCount; i++) {
+    for (int i = 0; i < next.moveCount; i++) {
         g.doMove(next.moves[i]);
-        if(!g.isPositionLegal()) {
+        if (!g.isPositionLegal()) {
             g.undoMove();
             continue;
         }
         int p = perft(g, depth - 1);
         n += p;
 
-        if(printInfo) {
+        if (printInfo) {
             std::cout << Game::moveToString(next.moves[i]) << ": " << p << std::endl;
         }
         g.undoMove();
@@ -133,27 +138,37 @@ int Test::perft(Game &g, int depth, bool printInfo) {
 }
 
 void Test::consolPerft() {
-
     int depth = 0;
     std::string input;
     std::string fen;
-    while(true) {
+    while (true) {
         Game g;
         getline(std::cin, input);
-        if(input == "go" || input == "GO") {
-            g.loadFen(fen);
+        if (input == "go" || input == "GO") {
+            if (fen == "") {
+                g.loadStartingPosition();
+            } else {
+                g.loadFen(fen);
+            }
             g.printGame();
-            std::cout << perft(g, depth, true) << std::endl;
+            uint64_t nodesSearched = 0;
+            auto start = std::chrono::high_resolution_clock::now();
+            nodesSearched = perftTransposition(g, depth, true);
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> elapsed = end - start;
+            std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
+            std::cout << nodesSearched << " nodes were searched." << std::endl;
+            std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
             continue;
         }
         if (input == "print") {
             g.printGame();
         }
-        if(input.size() > 3) {
+        if (input.size() > 3) {
             fen = input;
             std::cout << "fen: " << fen << std::endl;
         } else {
-            if(input.size() == 1) {
+            if (input.size() == 1) {
                 depth = input[0] - '0';
                 std::cout << "depth: " << depth << std::endl;
             }
@@ -163,10 +178,12 @@ void Test::consolPerft() {
 
 void Test::statusPerft() {
     Game g;
-    std::string fen[4] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-    "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
-    "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
-    "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "};
+    std::string fen[4] = {
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+        "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
+        "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "
+    };
 
     int depth[4] = {5, 4, 6, 5};
     int results[4] = {4865609, 4085603, 11030083, 15833292};
@@ -174,15 +191,16 @@ void Test::statusPerft() {
     int nodesSearched = 0;
     std::cout << "Starting test" << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         g.loadFen(fen[i]);
         checkmates = 0;
         int n = perftStatus(g, depth[i]);
         nodesSearched += n;
-        if(n == results[i] && checkmates == checkmatesResults[i]) {
+        if (n == results[i] && checkmates == checkmatesResults[i]) {
             std::cout << "Test " << i << " successful" << std::endl;
         } else {
-            std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << " Checkmates: " << checkmates << " Correct: " << checkmatesResults[i] <<  std::endl;
+            std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << " Checkmates: " <<
+                    checkmates << " Correct: " << checkmatesResults[i] << std::endl;
         }
     }
     auto end = std::chrono::high_resolution_clock::now();
@@ -190,31 +208,31 @@ void Test::statusPerft() {
     std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
     std::cout << nodesSearched << " nodes were searched." << std::endl;
     std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
-
 }
 
 int Test::perftStatus(Game &g, int depth, bool printInfo) {
     //g.printGame();
-    if(depth == 0) {
-        char status = g.getStatus();
-        if (status == WHITE_WON || status == BLACK_WON) {
-            checkmates++;
-        }
+    char status = g.getStatus();
+    if (status == WHITE_WON || status == BLACK_WON) {
+        checkmates += depth == 0;
+    }
+
+    if (depth == 0) {
         return 1;
     }
 
     auto next = g.getAllPseudoLegalMoves();
     int n = 0;
-    for(int i = 0; i < next.moveCount; i++) {
+    for (int i = 0; i < next.moveCount; i++) {
         g.doMove(next.moves[i]);
-        if(!g.isPositionLegal()) {
+        if (!g.isPositionLegal()) {
             g.undoMove();
             continue;
         }
         int p = perftStatus(g, depth - 1);
         n += p;
 
-        if(printInfo) {
+        if (printInfo) {
             std::cout << Game::moveToString(next.moves[i]) << ": " << p << std::endl;
         }
         g.undoMove();
@@ -224,23 +242,25 @@ int Test::perftStatus(Game &g, int depth, bool printInfo) {
 
 void Test::zobristPerft() {
     Game g;
-    std::string fen[4] = {"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-    "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
-    "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
-    "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "};
+    std::string fen[4] = {
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+        "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
+        "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "
+    };
 
     int depth[4] = {5, 4, 4, 4};
     int results[4] = {4865609, 4085603, 43238, 422333};
     int nodesSearched = 0;
     auto start = std::chrono::high_resolution_clock::now();
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         g.loadFen(fen[i]);
         int n = perftZobrist(g, depth[i]);
         nodesSearched += n;
-        if(n == results[i]) {
+        if (n == results[i]) {
             std::cout << "Test " << i << " successful" << std::endl;
         } else {
-            std::cout << "Error in test " << i << ". Result: " << n <<  std::endl;
+            std::cout << "Error in test " << i << ". Result: " << n << std::endl;
         }
     }
     auto end = std::chrono::high_resolution_clock::now();
@@ -252,15 +272,15 @@ void Test::zobristPerft() {
 
 int Test::perftZobrist(Game &g, int depth, bool printInfo) {
     //g.printGame();
-    if(depth == 0) {
+    if (depth == 0) {
         return 1;
     }
 
     auto next = g.getAllPseudoLegalMoves();
     int n = 0;
-    for(int i = 0; i < next.moveCount; i++) {
+    for (int i = 0; i < next.moveCount; i++) {
         g.doMove(next.moves[i]);
-        if(!g.isPositionLegal()) {
+        if (!g.isPositionLegal()) {
             g.undoMove();
             continue;
         }
@@ -268,7 +288,7 @@ int Test::perftZobrist(Game &g, int depth, bool printInfo) {
         //checking if the hashing worked:
         uint64_t hash = g.hashValue;
         g.setHashValue();
-        if(hash != g.hashValue) {
+        if (hash != g.hashValue) {
             std::cout << "error: move hash: " << hash << " calc hash: " << g.hashValue << std::endl;
             g.printGame();
             std::cout << Game::moveToString(next.moves[i]) << std::endl;
@@ -281,10 +301,122 @@ int Test::perftZobrist(Game &g, int depth, bool printInfo) {
         int p = perftZobrist(g, depth - 1);
         n += p;
 
-        if(printInfo) {
+        if (printInfo) {
             std::cout << Game::moveToString(next.moves[i]) << ": " << p << std::endl;
         }
         g.undoMove();
     }
+    return n;
+}
+
+void Test::zobristTest() {
+    Game g;
+    g.loadStartingPosition();
+    g.loadStartingPosition();
+    g.doMoveAsString("e2e4");
+    g.doMoveAsString("d7d5");
+    g.doMoveAsString("g1f3");
+    g.printGame();
+    std::cout << g.hashValue << std::endl;
+
+    g.loadStartingPosition();
+    g.doMoveAsString("e2e3");
+    g.doMoveAsString("d7d5");
+    g.doMoveAsString("e3e4");
+    g.doMoveAsString("d8d6");
+    g.doMoveAsString("d1e2");
+    g.doMoveAsString("d6d7");
+    g.doMoveAsString("e2d1");
+    g.doMoveAsString("d7d8");
+    g.doMoveAsString("g1f3");
+    g.printGame();
+    std::cout << g.hashValue << std::endl;
+
+    std::cout << "==============" << std::endl;
+
+    g.loadStartingPosition();
+    std::cout << g.hashValue << std::endl;
+    g.doMoveAsString("b1c3");
+    g.doMoveAsString("b8b6");
+    g.doMoveAsString("c3b1");
+    g.doMoveAsString("b6b8");
+    g.printGame();
+    std::cout << g.hashValue << std::endl;
+}
+
+void Test::transpositionPerft() {
+    Game g;
+    std::string fen[10] = {
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
+        "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
+        "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1",
+        "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8 ",
+        "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10",
+        "4k3/1P6/8/8/8/8/K7/8 w - - 0 1",
+        "K1k5/8/P7/8/8/8/8/8 w - - 0 1",
+        "r3k2r/1b4bq/8/8/8/8/7B/R3K2R w KQkq - 0 1",
+        "8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"
+    };
+
+    int depth[10] = {5, 4, 5, 4, 4, 4, 6, 6, 4, 6};
+    int results[10] = {4865609, 4085603, 674624, 422333, 2103487, 3894594, 217342, 2217, 1274206, 824064};
+    int nodesSearched = 0;
+    transpositionTable.reserve(100000000);
+    auto start = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 10; i++) {
+        g.loadFen(fen[i]);
+        transpositionTable.clear();
+        uint64_t n = perftTransposition(g, depth[i]);
+        nodesSearched += n;
+        if (n == results[i]) {
+            std::cout << "Test " << i << " successful" << std::endl;
+        } else {
+            std::cout << "Error in test " << i << ". Result: " << n << " Correct: " << results[i] << std::endl;
+        }
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
+    std::cout << nodesSearched << " nodes were searched." << std::endl;
+    std::cout << nodesSearched / (elapsed.count() * 1000000) << " million nodes per second" << std::endl;
+}
+
+uint64_t Test::perftTransposition(Game &g, int depth, bool printInfo) {
+    //g.printGame();
+    if (depth == 0) {
+        return 1;
+    }
+
+    bool newEntry;
+    if(transpositionTable.find(g.key()) != transpositionTable.end()) {
+        if(transpositionTable[g.key()].depth == depth) {
+            return transpositionTable[g.key()].nodes;
+        }
+        newEntry = false;
+    } else {
+        newEntry = true;
+    }
+
+    auto next = g.getAllPseudoLegalMoves();
+    uint64_t n = 0;
+    for (int i = 0; i < next.moveCount; i++) {
+        g.doMove(next.moves[i]);
+        if (!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+        uint64_t p = perftTransposition(g, depth - 1);
+        n += p;
+
+        if (printInfo) {
+            std::cout << Game::moveToString(next.moves[i]) << ": " << p << std::endl;
+        }
+        g.undoMove();
+    }
+    if(newEntry) {
+        transpositionTable.insert(std::make_pair(g.key(), testNode{n, depth}));
+    }
+
     return n;
 }

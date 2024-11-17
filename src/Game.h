@@ -10,6 +10,34 @@
 #include "constants.h"
 #include "MagicBitboards.h"
 
+/*
+ * Instead of storing a Game object for hashtables, storing a GameKey struct is faster since we do not care about the game history
+ */
+struct GameKey {
+    bitboard pieceBoards[4]; //We compress the boards to reduce the size by overlaying different pieces onto single boards
+    uint8_t enPassant;
+    uint8_t castleRights;
+    color currentPlayer;
+    uint64_t hashValue;
+
+    bool operator==(const GameKey& other) const {
+        return this->pieceBoards[0] == other.pieceBoards[0] &&
+            this->pieceBoards[1] == other.pieceBoards[1] &&
+                this->pieceBoards[2] == other.pieceBoards[2] &&
+                    this->pieceBoards[3] == other.pieceBoards[3] &&
+                        this->enPassant == other.enPassant &&
+                            this->castleRights == other.castleRights &&
+                                this->currentPlayer == other.currentPlayer;
+    }
+};
+namespace std {
+    template<>
+    struct hash<GameKey> {
+        size_t operator()(const GameKey& key) const {
+            return key.hashValue;
+        }
+    };
+}
 
 
 /*
@@ -19,8 +47,8 @@
 struct LastMove{
     Move move;
     int eval;
-    int enPassant;
-    int castleRights;
+    uint8_t enPassant;
+    uint8_t castleRights;
     piece capturedPiece;
 };
 
@@ -55,6 +83,8 @@ private:
     static int getIndex(const bitboard& board);
     static int getZobristIndex(piece piece, color pieceColor, int index);
 
+    static void fastForwardIndex(int &index, bitboard& square, bitboard& board);
+
     void appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const;
     void appendKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
     void appendBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
@@ -77,6 +107,7 @@ public:
     static std::string moveToString(Move move);
     char getStatus();
     bool areMovesStillPlayable();
+    GameKey key() const;
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;

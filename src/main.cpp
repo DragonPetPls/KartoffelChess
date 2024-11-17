@@ -12,10 +12,12 @@ int main() {
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();
-    Test::perft();
+    //Test::perft();
     //Test::consolPerft();
-    Test::statusPerft();
+    //Test::statusPerft();
     //Test::zobristPerft();
+    //Test::zobristTest();
+    Test::transpositionPerft();
 #endif
     return 0;
 }

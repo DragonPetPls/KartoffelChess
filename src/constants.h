@@ -53,9 +53,9 @@ enum Results {
     UNKNOWN
 };
 
-constexpr int NUMBER_OF_ZOBRIST_KEYS = 781;
+constexpr int NUMBER_OF_ZOBRIST_KEYS = 900;
 
-constexpr int REPETITIONS_TILL_DRAW = 3;
+constexpr int REPETITIONS_TILL_DRAW = 2;
 
 constexpr uint8_t WHITE_SHORT_CASTLE_RIGHT = 1;
 constexpr uint8_t WHITE_LONG_CASTLE_RIGHT = 2;
@@ -119,6 +119,6 @@ constexpr int ZOBRIST_WHITE_SHORT_CASTLE_INDEX = 769;
 constexpr int ZOBRIST_WHITE_LONG_CASTLE_INDEX = 770;
 constexpr int ZOBRIST_BLACK_SHORT_CASTLE_INDEX = 771;
 constexpr int ZOBRIST_BLACK_LONG_CASTLE_INDEX = 772;
-constexpr int ZOBRIST_EN_PASSANT_INDEX = 773;
+constexpr int ZOBRIST_EN_PASSANT_INDEX = 772;
 
 #endif //SRC_CONSTANTS_H

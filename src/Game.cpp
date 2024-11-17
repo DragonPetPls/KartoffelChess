@@ -30,7 +30,8 @@ void Game::loadStartingPosition() {
     pieceBoards[BLACK_QUEEN] = BLACK_QUEEN_STARTING_POSITION;
     pieceBoards[BLACK_KING] = BLACK_KING_STARTING_POSITION;
 
-    castleRights = WHITE_SHORT_CASTLE_RIGHT | WHITE_LONG_CASTLE_RIGHT | BLACK_SHORT_CASTLE_RIGHT | BLACK_LONG_CASTLE_RIGHT;
+    castleRights = WHITE_SHORT_CASTLE_RIGHT | WHITE_LONG_CASTLE_RIGHT | BLACK_SHORT_CASTLE_RIGHT |
+                   BLACK_LONG_CASTLE_RIGHT;
     enPassant = NO_EN_PASSANT;
     currentPlayer = WHITE;
 
@@ -42,9 +43,8 @@ void Game::loadStartingPosition() {
  * Print the current board and all other relevant data
  */
 void Game::printGame() const {
-
     std::string currentPlayerStr;
-    if(currentPlayer == WHITE){
+    if (currentPlayer == WHITE) {
         currentPlayerStr = "white";
     } else {
         currentPlayerStr = "black";
@@ -55,7 +55,7 @@ void Game::printGame() const {
     bitboard iterator = 1;
     iterator = iterator << 56;
     int counter = 0;
-    while(iterator > 0){
+    while (iterator > 0) {
         switch (getPiece(iterator)) {
             case WHITE_PAWN:
                 std::cout << " P ";
@@ -97,7 +97,7 @@ void Game::printGame() const {
                 std::cout << " . ";
         }
         counter++;
-        if(counter % 8 == 0){
+        if (counter % 8 == 0) {
             std::cout << "\n";
             iterator = iterator >> 15;
         } else {
@@ -106,16 +106,16 @@ void Game::printGame() const {
     }
     std::cout << "En passant " << (int) enPassant << std::endl;
     std::cout << "Castle Rights: ";
-    if(castleRights & WHITE_SHORT_CASTLE_RIGHT){
+    if (castleRights & WHITE_SHORT_CASTLE_RIGHT) {
         std::cout << "ws ";
     }
-    if(castleRights & WHITE_LONG_CASTLE_RIGHT){
+    if (castleRights & WHITE_LONG_CASTLE_RIGHT) {
         std::cout << "wl ";
     }
-    if(castleRights & BLACK_SHORT_CASTLE_RIGHT){
+    if (castleRights & BLACK_SHORT_CASTLE_RIGHT) {
         std::cout << "bs ";
     }
-    if(castleRights & BLACK_LONG_CASTLE_RIGHT){
+    if (castleRights & BLACK_LONG_CASTLE_RIGHT) {
         std::cout << "bl ";
     }
     std::cout << std::endl;
@@ -128,7 +128,7 @@ void Game::printGame() const {
 piece Game::getPiece(bitboard square) const {
     int p = -1;
 
-    for(int i = 0; i < 6; i++){
+    for (int i = 0; i < 6; i++) {
         p += (i + 1) * ((pieceBoards[i | WHITE_PIECE] & square) != 0);
         p += (i + 1 + BLACK_PIECE) * ((pieceBoards[i | BLACK_PIECE] & square) != 0);
     }
@@ -142,7 +142,6 @@ piece Game::getPiece(bitboard square) const {
  * This function executes the move
  */
 void Game::doMove(const Move &move) {
-
     //Storing everything to undo this move later
     status = UNKNOWN;
     gameHistoryCounter++;
@@ -156,9 +155,13 @@ void Game::doMove(const Move &move) {
     int toIndex = getIndex(move.toSquare);
 
     //En passant
-    bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
-    hashValue ^= zobristKeys[getZobristIndex(PAWN, 1 - currentPlayer, getIndex(enPassantCaptureSquare))] * ((enPassantCaptureSquare & pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]]) != 0) * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE));
-    pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]] &= ~(enPassantCaptureSquare * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE)));
+    bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & (
+                                          (move.toSquare >> 8) | (move.toSquare << 8));
+    hashValue ^= zobristKeys[getZobristIndex(PAWN, 1 - currentPlayer, getIndex(enPassantCaptureSquare))] * (
+        (enPassantCaptureSquare & pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]]) != 0) * (
+        (move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE));
+    pieceBoards[PAWN | COLOR_TO_PIECE[1 - currentPlayer]] &= ~(
+        enPassantCaptureSquare * ((move.startingPiece == PAWN) && (getPiece(move.toSquare) == NO_PIECE)));
 
     //Transfering the piece
     pieceBoards[move.startingPiece | COLOR_TO_PIECE[currentPlayer]] &= ~move.fromSquare;
@@ -169,8 +172,9 @@ void Game::doMove(const Move &move) {
 
     //Removing captured pieces
     piece capturedPiece = NO_PIECE;
-    for(int i = 0; i < 6; i++){
-        capturedPiece = capturedPiece * !(pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) + i * ((pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) != 0);
+    for (int i = 0; i < 6; i++) {
+        capturedPiece = capturedPiece * !(pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) + i * (
+                            (pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] & move.toSquare) != 0);
         pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]] &= ~move.toSquare;
     }
     gameHistory[gameHistoryCounter].capturedPiece = capturedPiece;
@@ -178,13 +182,19 @@ void Game::doMove(const Move &move) {
 
     //Castling
     //short castle
-    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
-    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
-    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING)
+            * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * (
+        (move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * (
+        (move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
     //Long castle
-    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
-    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
-    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING)
+            * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * (
+        (move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+    hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * (
+        (move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
 
     //Setting castle rights.
     bitboard fromTo = move.fromSquare | move.toSquare;
@@ -193,31 +203,35 @@ void Game::doMove(const Move &move) {
     castleRights &= ~(BLACK_SHORT_CASTLE_RIGHT * ((fromTo & BLACK_SHORT_CASTLE_RIGHTS_MASK) != 0));
     castleRights &= ~(BLACK_LONG_CASTLE_RIGHT * ((fromTo & BLACK_LONG_CASTLE_RIGHTS_MASK) != 0));
 
-    hashValue ^= zobristKeys[ZOBRIST_WHITE_SHORT_CASTLE_INDEX] * ((fromTo & WHITE_SHORT_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & WHITE_SHORT_CASTLE_RIGHT));
-    hashValue ^= zobristKeys[ZOBRIST_WHITE_LONG_CASTLE_INDEX] * ((fromTo & WHITE_LONG_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & WHITE_LONG_CASTLE_RIGHT));
-    hashValue ^= zobristKeys[ZOBRIST_BLACK_SHORT_CASTLE_INDEX] * ((fromTo & BLACK_SHORT_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & BLACK_SHORT_CASTLE_RIGHT));
-    hashValue ^= zobristKeys[ZOBRIST_BLACK_LONG_CASTLE_INDEX] * ((fromTo & BLACK_LONG_CASTLE_RIGHTS_MASK) != 0 && (gameHistory[gameHistoryCounter].castleRights & BLACK_LONG_CASTLE_RIGHT));
+    hashValue ^= zobristKeys[ZOBRIST_WHITE_SHORT_CASTLE_INDEX] * (
+        (fromTo & WHITE_SHORT_CASTLE_RIGHTS_MASK) != 0 && (
+            gameHistory[gameHistoryCounter].castleRights & WHITE_SHORT_CASTLE_RIGHT));
+    hashValue ^= zobristKeys[ZOBRIST_WHITE_LONG_CASTLE_INDEX] * (
+        (fromTo & WHITE_LONG_CASTLE_RIGHTS_MASK) != 0 && (
+            gameHistory[gameHistoryCounter].castleRights & WHITE_LONG_CASTLE_RIGHT));
+    hashValue ^= zobristKeys[ZOBRIST_BLACK_SHORT_CASTLE_INDEX] * (
+        (fromTo & BLACK_SHORT_CASTLE_RIGHTS_MASK) != 0 && (
+            gameHistory[gameHistoryCounter].castleRights & BLACK_SHORT_CASTLE_RIGHT));
+    hashValue ^= zobristKeys[ZOBRIST_BLACK_LONG_CASTLE_INDEX] * (
+        (fromTo & BLACK_LONG_CASTLE_RIGHTS_MASK) != 0 && (
+            gameHistory[gameHistoryCounter].castleRights & BLACK_LONG_CASTLE_RIGHT));
 
     //Setting en passant rights
-    int enPassantIndex = 0;
-    for(int i = 0; i < 8; i++) {
-        enPassantIndex += i * ((enPassant >> i) & 1);
-    }
-    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassantIndex] * (enPassant != 0);
-    enPassant = ((move.fromSquare >> 8) * ((move.startingPiece == PAWN) && (move.fromSquare & WHITE_EN_PASSANT_ROWS) &&  (move.toSquare & WHITE_EN_PASSANT_ROWS)));
-    enPassant |= ((move.fromSquare >> 48) * ((move.startingPiece == PAWN) && (move.fromSquare & BLACK_EN_PASSANT_ROWS) &&  (move.toSquare & BLACK_EN_PASSANT_ROWS)));
-    enPassantIndex = 0;
-    for(int i = 0; i < 8; i++) {
-        enPassantIndex += i * ((enPassant >> i) & 1);
-    }
-    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassantIndex] * (enPassant != 0);
+    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassant] * (enPassant != 0);
+    enPassant = ((move.fromSquare >> 8) * ((move.startingPiece == PAWN) && (move.fromSquare & WHITE_EN_PASSANT_ROWS) &&
+                                           (move.toSquare & WHITE_EN_PASSANT_ROWS)));
+    enPassant |= ((move.fromSquare >> 48) * ((move.startingPiece == PAWN) && (move.fromSquare & BLACK_EN_PASSANT_ROWS)
+                                             && (move.toSquare & BLACK_EN_PASSANT_ROWS)));
+
+    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassant] * (enPassant != 0);
 
     //Changing who to move
     currentPlayer = BLACK * (currentPlayer == WHITE);
     hashValue ^= zobristKeys[ZOBRIST_COLOR_INDEX];
 
     //Adjusting moves without progress
-    movesWithoutProgess = (movesWithoutProgess + 1) * (move.startingPiece == PAWN || gameHistory[gameHistoryCounter].capturedPiece != NO_PIECE);
+    movesWithoutProgess = (movesWithoutProgess + 1) * (
+                              move.startingPiece == PAWN || gameHistory[gameHistoryCounter].capturedPiece != NO_PIECE);
 }
 
 /*
@@ -238,9 +252,9 @@ void Game::doMoveAsString(std::string moveStr) {
     move.startingPiece = getPiece(move.fromSquare) - BLACK_PIECE * (currentPlayer == BLACK);
     move.endingPiece = move.startingPiece;
 
-    if(moveStr.length() > 4) {
-        for(int i = 0; i < 6; i++){
-            if(INT_TO_CHAR[i] == moveStr[4]){
+    if (moveStr.length() > 4) {
+        for (int i = 0; i < 6; i++) {
+            if (INT_TO_CHAR[i] == moveStr[4]) {
                 move.endingPiece = i;
             }
         }
@@ -263,8 +277,11 @@ void Game::undoMove() {
     hashValue = pastHashes[gameHistoryCounter];
 
     //En passant
-    bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & ((move.toSquare >> 8) | (move.toSquare << 8));
-    pieceBoards[PAWN | COLOR_TO_PIECE[currentPlayer]] |= (enPassantCaptureSquare * ((move.startingPiece == PAWN) && (capturedPiece == NO_PIECE) && (enPassantCaptureSquare != move.fromSquare)));
+    bitboard enPassantCaptureSquare = ((move.fromSquare << 1) | (move.fromSquare >> 1)) & (
+                                          (move.toSquare >> 8) | (move.toSquare << 8));
+    pieceBoards[PAWN | COLOR_TO_PIECE[currentPlayer]] |= (
+        enPassantCaptureSquare * ((move.startingPiece == PAWN) && (capturedPiece == NO_PIECE) && (
+                                      enPassantCaptureSquare != move.fromSquare)));
 
     //Transfering the piece
     pieceBoards[move.startingPiece | COLOR_TO_PIECE[1 - currentPlayer]] |= move.fromSquare;
@@ -278,9 +295,11 @@ void Game::undoMove() {
 
     //Castling
     //short castle
-    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING)
+            * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
     //Long castle
-    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING) * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+    pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING)
+            * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
 
     gameHistoryCounter--;
     movesWithoutProgess = (movesWithoutProgess - 1) * (movesWithoutProgess > 0);
@@ -302,18 +321,17 @@ Moves Game::getAllPseudoLegalMoves() const {
     //Generating hitmaps
     bitboard ownHitmap = 0;
     bitboard enemyHitmap = 0;
-    for(int i = 0; i < 6; i++){
+    for (int i = 0; i < 6; i++) {
         ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[currentPlayer]];
         enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]];
     }
     bitboard hitmap = ownHitmap | enemyHitmap;
 
 
-
     bitboard squareMask = 1;
-    for(int i = 0; i < 64; i++){
+    for (int i = 0; i < 64; i++) {
         //Skipping if there is no own piece
-       int skip = 32 * !((NEXT_INDEX_BOARDS[0] << i) & ownHitmap);
+        int skip = 32 * !((NEXT_INDEX_BOARDS[0] << i) & ownHitmap);
         squareMask <<= skip;
         i += skip;
         skip = 16 * !((NEXT_INDEX_BOARDS[1] << i) & ownHitmap);
@@ -369,20 +387,21 @@ Moves Game::getAllPseudoLegalMoves() const {
 /*
  * Returns all pseudolegal pawn moves from the given square, used by the getAllPseudoLegalMoves function
  */
-void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+                           const bitboard &hitmap, Moves &moves) const {
     int verticalDirection = 1 * (currentPlayer == WHITE) - 1 * (currentPlayer == BLACK);
 
     //Advancing 1 square
     bitboard targetSquare = square >> 8;
     targetSquare = targetSquare << (8 * (verticalDirection + 1));
 
-    if(targetSquare & ~hitmap){
+    if (targetSquare & ~hitmap) {
         Move m{};
         m.fromSquare = square;
         m.toSquare = targetSquare;
         m.startingPiece = PAWN;
         //Checking for promotion
-        if(targetSquare & BACK_ROWS){
+        if (targetSquare & BACK_ROWS) {
             //Promotion
             m.endingPiece = QUEEN;
             moves.moves[moves.moveCount++] = m;
@@ -402,8 +421,10 @@ void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap
     bitboard intermediateSquare = targetSquare;
     targetSquare = intermediateSquare >> 8;
     targetSquare = targetSquare << (8 * (verticalDirection + 1));
-    if(!((targetSquare | intermediateSquare) & hitmap) //No piece in the way
-    && (((currentPlayer == WHITE) && (square & WHITE_PAWN_STARTING_POSITION)) || ((currentPlayer == BLACK) && (square & BLACK_PAWN_STARTING_POSITION))) ){ //is pawn in starting ppos
+    if (!((targetSquare | intermediateSquare) & hitmap) //No piece in the way
+        && (((currentPlayer == WHITE) && (square & WHITE_PAWN_STARTING_POSITION)) || (
+                (currentPlayer == BLACK) && (square & BLACK_PAWN_STARTING_POSITION)))) {
+        //is pawn in starting ppos
         Move m{};
         m.fromSquare = square;
         m.toSquare = targetSquare;
@@ -415,13 +436,14 @@ void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap
     //Capture to the left
     targetSquare = 1;
     targetSquare = targetSquare << (index + verticalDirection * 8 - 1);
-    if(((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
-        && (index % 8 != 0)){
+    if (((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (
+                                              currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
+        && (index % 8 != 0)) {
         Move m{};
         m.fromSquare = square;
         m.toSquare = targetSquare;
         m.startingPiece = PAWN;
-        if(targetSquare & BACK_ROWS){
+        if (targetSquare & BACK_ROWS) {
             //Promotion
             m.endingPiece = QUEEN;
             moves.moves[moves.moveCount++] = m;
@@ -440,13 +462,14 @@ void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap
     //Capture to the right
     targetSquare = 1;
     targetSquare = targetSquare << (index + verticalDirection * 8 + 1);
-    if(((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
-        && (index % 8 != 7)){
+    if (((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (
+                                              currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
+        && (index % 8 != 7)) {
         Move m{};
         m.fromSquare = square;
         m.toSquare = targetSquare;
         m.startingPiece = PAWN;
-        if(targetSquare & BACK_ROWS){
+        if (targetSquare & BACK_ROWS) {
             //Promotion
             m.endingPiece = QUEEN;
             moves.moves[moves.moveCount++] = m;
@@ -466,33 +489,37 @@ void Game::appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap
 /*
  * Returns all pseudolegal knight moves from the given square, used by the getAllPseudoLegalMoves function
  */
-void Game::appendKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+void Game::appendKnightMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+                             const bitboard &hitmap, Moves &moves) const {
     MagicBitboards::appendKnightMoves(index, moves, ownHitmap);
 }
 
 /*
  * Returns all pseudolegal bishop moves from the given square, used by the getAllPseudoLegalMoves function
  */
-void Game::appendBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+void Game::appendBishopMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+                             const bitboard &hitmap, Moves &moves) const {
     MagicBitboards::appendBishopMoves(hitmap, index, moves, ownHitmap);
 }
 
 /*
  * Returns all pseudolegal rook moves from the given square, used by the getAllPseudoLegalMoves function
  */
-void Game::appendRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+void Game::appendRookMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+                           const bitboard &hitmap, Moves &moves) const {
     MagicBitboards::appendRookMoves(hitmap, index, moves, ownHitmap);
 }
 
 /*
  * Returns all pseudolegal queen moves from the given square, used by the getAllPseudoLegalMoves function
  */
-void Game::appendQueenMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+void Game::appendQueenMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+                            const bitboard &hitmap, Moves &moves) const {
     int oldMoveCount = moves.moveCount;
     appendBishopMoves(square, index, ownHitmap, enemyHitmap, hitmap, moves);
 
     appendRookMoves(square, index, ownHitmap, enemyHitmap, hitmap, moves);
-    for(int i = oldMoveCount; i < moves.moveCount; i++) {
+    for (int i = oldMoveCount; i < moves.moveCount; i++) {
         moves.moves[i].startingPiece = QUEEN;
         moves.moves[i].endingPiece = QUEEN;
     }
@@ -501,8 +528,8 @@ void Game::appendQueenMoves(bitboard square, int index, const bitboard &ownHitma
 /*
  * Returns all pseudolegal king moves from the given square, used by the getAllPseudoLegalMoves function
  */
-void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
-
+void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+                           const bitboard &hitmap, Moves &moves) const {
     MagicBitboards::appendKingMoves(index, moves, ownHitmap);
 
     //Castle
@@ -510,11 +537,11 @@ void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap
     uint8_t longCastleRights[2] = {WHITE_LONG_CASTLE_RIGHT, BLACK_LONG_CASTLE_RIGHT};
 
     //Short Castle
-    if((castleRights & shortCastleRights[currentPlayer])
-    && !isSquareUnderAttack(square, index, 1 - currentPlayer) //King not in check
-    && !isSquareUnderAttack(square << 1, index + 1, 1 - currentPlayer)
-    && !(hitmap & (square << 1))
-    && !(hitmap & (square << 2))){
+    if ((castleRights & shortCastleRights[currentPlayer])
+        && !isSquareUnderAttack(square, index, 1 - currentPlayer) //King not in check
+        && !isSquareUnderAttack(square << 1, index + 1, 1 - currentPlayer)
+        && !(hitmap & (square << 1))
+        && !(hitmap & (square << 2))) {
         Move m;
         m.fromSquare = square;
         m.toSquare = square << 2;
@@ -524,12 +551,12 @@ void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap
     }
 
     //Long Castle
-    if((castleRights & longCastleRights[currentPlayer])
-       && !isSquareUnderAttack(square, index, 1 - currentPlayer) //King not in check
-       && !isSquareUnderAttack(square >> 1, index - 1, 1 - currentPlayer)
-       && !(hitmap & (square >> 1))
-       && !(hitmap & (square >> 2))
-       && !(hitmap & (square >> 3))){
+    if ((castleRights & longCastleRights[currentPlayer])
+        && !isSquareUnderAttack(square, index, 1 - currentPlayer) //King not in check
+        && !isSquareUnderAttack(square >> 1, index - 1, 1 - currentPlayer)
+        && !(hitmap & (square >> 1))
+        && !(hitmap & (square >> 2))
+        && !(hitmap & (square >> 3))) {
         Move m;
         m.fromSquare = square;
         m.toSquare = square >> 2;
@@ -546,7 +573,7 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
     //Generating hitmaps
     bitboard ownHitmap = 0;
     bitboard enemyHitmap = 0;
-    for(int i = 0; i < 6; i++){
+    for (int i = 0; i < 6; i++) {
         ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - attackingColor]];
         enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[attackingColor]];
     }
@@ -554,27 +581,29 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
 
     //Knights
     bitboard dangerousSquares = MagicBitboards::getKnightReachableSquares(index);
-    if(dangerousSquares & pieceBoards[COLOR_TO_PIECE[attackingColor] | KNIGHT]) {
+    if (dangerousSquares & pieceBoards[COLOR_TO_PIECE[attackingColor] | KNIGHT]) {
         return true;
     }
 
     //Diagonal attacks
-    bitboard diagonalPieces = pieceBoards[BISHOP | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
+    bitboard diagonalPieces = pieceBoards[BISHOP | COLOR_TO_PIECE[attackingColor]] | pieceBoards[
+                                  QUEEN | COLOR_TO_PIECE[attackingColor]];
     dangerousSquares = MagicBitboards::getBishopReachableSquares(hitmap, index);
-    if(diagonalPieces & dangerousSquares) {
+    if (diagonalPieces & dangerousSquares) {
         return true;
     }
 
     //Straight attacks
-    bitboard straightPieces = pieceBoards[ROOK | COLOR_TO_PIECE[attackingColor]] | pieceBoards[QUEEN | COLOR_TO_PIECE[attackingColor]];
+    bitboard straightPieces = pieceBoards[ROOK | COLOR_TO_PIECE[attackingColor]] | pieceBoards[
+                                  QUEEN | COLOR_TO_PIECE[attackingColor]];
     dangerousSquares = MagicBitboards::getRookReachableSquares(hitmap, index);
-    if(straightPieces & dangerousSquares) {
+    if (straightPieces & dangerousSquares) {
         return true;
     }
 
     //King attacks
     dangerousSquares = MagicBitboards::getKingReachableSquares(index);
-    if(pieceBoards[COLOR_TO_PIECE[attackingColor] | KING] & dangerousSquares) {
+    if (pieceBoards[COLOR_TO_PIECE[attackingColor] | KING] & dangerousSquares) {
         return true;
     }
 
@@ -583,15 +612,15 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
     //Capture to the left
     bitboard targetSquare = 1;
     targetSquare = targetSquare << (index + verticalDirection * 8 + 1);
-    if((targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor]]) && (index % 8 != 7)){
+    if ((targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor]]) && (index % 8 != 7)) {
         return true;
     }
 
     //Capture to the right
     targetSquare = 1;
     targetSquare = targetSquare << (index + verticalDirection * 8 - 1);
-    if((targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor]]) && (index % 8 != 0)){
-       return true;
+    if ((targetSquare & pieceBoards[COLOR_TO_PIECE[attackingColor]]) && (index % 8 != 0)) {
+        return true;
     }
 
     return false;
@@ -610,7 +639,6 @@ bool Game::isPositionLegal() const {
  * Takes in a board with exactly one piece and returns the index of it
  */
 int Game::getIndex(const bitboard &board) {
-
     int index = 0;
     index += 32 * ((INDEX_BOARDS[0] & board) == 0);
     index += 16 * ((INDEX_BOARDS[1] & board) == 0);
@@ -626,7 +654,7 @@ int Game::getIndex(const bitboard &board) {
  * Loads a chess position using a fen as an input
  */
 void Game::loadFen(const std::string &fen) {
-    gameHistoryCounter= -1;
+    gameHistoryCounter = -1;
     status = UNKNOWN;
 
     for (int i = 0; i < 14; i++) {
@@ -645,24 +673,37 @@ void Game::loadFen(const std::string &fen) {
         int skip = 0;
         char c = fen[counter];
 
-        if(c > '0' &&  c <= '9') {
+        if (c > '0' && c <= '9') {
             skip = c - '0';
         } else {
-            switch(c) {
-                case 'P': p = PAWN | WHITE_PIECE; break;
-                case 'N': p = KNIGHT | WHITE_PIECE; break;
-                case 'B': p = BISHOP | WHITE_PIECE; break;
-                case 'R': p = ROOK | WHITE_PIECE; break;
-                case 'Q': p = QUEEN | WHITE_PIECE; break;
-                case 'K': p = KING | WHITE_PIECE; break;
+            switch (c) {
+                case 'P': p = PAWN | WHITE_PIECE;
+                    break;
+                case 'N': p = KNIGHT | WHITE_PIECE;
+                    break;
+                case 'B': p = BISHOP | WHITE_PIECE;
+                    break;
+                case 'R': p = ROOK | WHITE_PIECE;
+                    break;
+                case 'Q': p = QUEEN | WHITE_PIECE;
+                    break;
+                case 'K': p = KING | WHITE_PIECE;
+                    break;
 
-                case 'p': p = PAWN | BLACK_PIECE; break;
-                case 'n': p = KNIGHT | BLACK_PIECE; break;
-                case 'b': p = BISHOP | BLACK_PIECE; break;
-                case 'r': p = ROOK | BLACK_PIECE; break;
-                case 'q': p = QUEEN | BLACK_PIECE; break;
-                case 'k': p = KING | BLACK_PIECE; break;
-                default: p = NO_PIECE; break;
+                case 'p': p = PAWN | BLACK_PIECE;
+                    break;
+                case 'n': p = KNIGHT | BLACK_PIECE;
+                    break;
+                case 'b': p = BISHOP | BLACK_PIECE;
+                    break;
+                case 'r': p = ROOK | BLACK_PIECE;
+                    break;
+                case 'q': p = QUEEN | BLACK_PIECE;
+                    break;
+                case 'k': p = KING | BLACK_PIECE;
+                    break;
+                default: p = NO_PIECE;
+                    break;
             }
         }
 
@@ -681,7 +722,6 @@ void Game::loadFen(const std::string &fen) {
     bool castle = false;
     castleRights = 0;
     while (counter < fen.size()) {
-
         if (fen[counter] == 'w') {
             currentPlayer = WHITE;
         } else if (fen[counter] == 'b') {
@@ -727,7 +767,6 @@ std::string Game::moveToString(Move move) {
     for (int i = 0; i < 2; i++) {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-
                 if (mb[i] >> (7 - x + 8 * y) == 1) {
                     //Found the square
                     char c = 'a' + 7 - x;
@@ -741,19 +780,20 @@ std::string Game::moveToString(Move move) {
 }
 
 /*
- * Returns the state of the game as WHITE_WON, BLACK_WON, DRAW or ON_GOING
+ * Returns the state of the game as WHITE_WON, BLACK_WON, DRAW or ON_GOING,
+ * Overall this function is rather slow and should therefor not be used to much
  */
 char Game::getStatus() {
-    if(status != UNKNOWN) {
+    if (status != UNKNOWN) {
         return status;
     }
 
     //Checking threefold repetion
     int sameCounter = 1;
-    for(int i = 0; i <= gameHistoryCounter; i++) {
+    for (int i = 0; i <= gameHistoryCounter; i++) {
         sameCounter += pastHashes[i] == hashValue;
     }
-    if(sameCounter >= REPETITIONS_TILL_DRAW) {
+    if (sameCounter >= REPETITIONS_TILL_DRAW) {
         status = DRAW;
         return status;
     }
@@ -782,41 +822,27 @@ bool Game::areMovesStillPlayable() {
     //Generating hitmaps
     bitboard ownHitmap = 0;
     bitboard enemyHitmap = 0;
-    for(int i = 0; i < 6; i++){
+    for (int i = 0; i < 6; i++) {
         ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[currentPlayer]];
         enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]];
     }
     bitboard hitmap = ownHitmap | enemyHitmap;
 
+    bitboard squareMask = 1;
+
     int kingIndex = getIndex(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING]);
     bitboard dangerousDiagonals = MagicBitboards::getBishopReachableSquares(enemyHitmap, kingIndex);
     bitboard dangerousStraights = MagicBitboards::getRookReachableSquares(enemyHitmap, kingIndex);
 
-    bool rookThread = dangerousStraights & (pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | ROOK] | pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
-    bool bishopThread = dangerousDiagonals & (pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | BISHOP] | pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
+    bool rookThread = dangerousStraights & (pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | ROOK] | pieceBoards[
+                                                COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
+    bool bishopThread = dangerousDiagonals & (pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | BISHOP] | pieceBoards[
+                                                  COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
     bool isCheck = isSquareUnderAttack(((bitboard) 1) << kingIndex, kingIndex, 1 - currentPlayer);
 
-    bitboard squareMask = 1;
-    for(int i = 0; i < 64; i++){
-
+    for (int i = 0; i < 64; i++) {
         int skip = 32 * !((NEXT_INDEX_BOARDS[0] << i) & ownHitmap);
-        squareMask <<= skip;
-        i += skip;
-        skip = 16 * !((NEXT_INDEX_BOARDS[1] << i) & ownHitmap);
-        squareMask <<= skip;
-        i += skip;
-        skip = 8 * !((NEXT_INDEX_BOARDS[2] << i) & ownHitmap);
-        squareMask <<= skip;
-        i += skip;
-        skip = 4 * !((NEXT_INDEX_BOARDS[3] << i) & ownHitmap);
-        squareMask <<= skip;
-        i += skip;
-        skip = 2 * !((NEXT_INDEX_BOARDS[4] << i) & ownHitmap);
-        squareMask <<= skip;
-        i += skip;
-        skip = 1 * !((NEXT_INDEX_BOARDS[5] << i) & ownHitmap);
-        squareMask <<= skip;
-        i += skip;
+        fastForwardIndex(i, squareMask, ownHitmap);
 
         //Getting the piece without its color
         piece p = getPiece(squareMask);
@@ -825,39 +851,43 @@ bool Game::areMovesStillPlayable() {
         switch (p) {
             case PAWN:
                 appendPawnMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
-            break;
+                break;
             case KNIGHT:
                 appendKnightMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
-            break;
+                break;
             case BISHOP:
                 appendBishopMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
-            break;
+                break;
             case ROOK:
                 appendRookMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
-            break;
+                break;
             case QUEEN:
                 appendQueenMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
-            break;
+                break;
             case KING:
                 appendKingMoves(squareMask, i, ownHitmap, enemyHitmap, hitmap, pm);
-            break;
+                break;
             default:
                 return false;
         }
 
         for (int j = 0; j < pm.moveCount; j++) {
-            bitboard enPassantCaptureSquare = ((pm.moves[j].fromSquare << 1) | (pm.moves[j].fromSquare >> 1)) & ((pm.moves[j].toSquare >> 8) | (pm.moves[j].toSquare << 8));
-            if(!bishopThread && !rookThread
-                && !(pm.moves[j].startingPiece == PAWN && enPassant != 0 && pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | PAWN] & enPassantCaptureSquare)
+            bitboard enPassantCaptureSquare = ((pm.moves[j].fromSquare << 1) | (pm.moves[j].fromSquare >> 1)) & (
+                                                  (pm.moves[j].toSquare >> 8) | (pm.moves[j].toSquare << 8));
+            if (!bishopThread && !rookThread
+                && !(pm.moves[j].startingPiece == PAWN && enPassant != 0 && pieceBoards[
+                         COLOR_TO_PIECE[1 - currentPlayer] | PAWN] & enPassantCaptureSquare)
                 && pm.moves[j].startingPiece != KING && !isCheck
                 || (!isCheck
-                    && !(pm.moves[j].startingPiece == PAWN && enPassant != 0 && pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | PAWN] & enPassantCaptureSquare)
-                    && pm.moves[j].startingPiece != KING && !((dangerousDiagonals | dangerousStraights) & pm.moves[j].startingPiece))) {
+                    && !(pm.moves[j].startingPiece == PAWN && enPassant != 0 && pieceBoards[
+                             COLOR_TO_PIECE[1 - currentPlayer] | PAWN] & enPassantCaptureSquare)
+                    && pm.moves[j].startingPiece != KING && !(
+                        (dangerousDiagonals | dangerousStraights) & pm.moves[j].startingPiece))) {
                 return true;
             }
 
             doMove(pm.moves[j]);
-            if(isPositionLegal()) {
+            if (isPositionLegal()) {
                 undoMove();
                 return true;
             }
@@ -866,20 +896,48 @@ bool Game::areMovesStillPlayable() {
 
         squareMask = squareMask << 1;
     }
+    /* */
     return false;
+}
+
+/*
+ * Moves the index and square forward till it reaches the next entry or the last square on the board
+ */
+void Game::fastForwardIndex(int &index, bitboard &square, bitboard &board) {
+    int skip = 32 * !((NEXT_INDEX_BOARDS[0] << index) & board);
+    square <<= skip;
+    index += skip;
+    skip = 16 * !((NEXT_INDEX_BOARDS[1] << index) & board);
+    square <<= skip;
+    index += skip;
+    skip = 8 * !((NEXT_INDEX_BOARDS[2] << index) & board);
+    square <<= skip;
+    index += skip;
+    skip = 4 * !((NEXT_INDEX_BOARDS[3] << index) & board);
+    square <<= skip;
+    index += skip;
+    skip = 2 * !((NEXT_INDEX_BOARDS[4] << index) & board);
+    square <<= skip;
+    index += skip;
+    skip = 1 * !((NEXT_INDEX_BOARDS[5] << index) & board);
+    square <<= skip;
+    index += skip;
+    skip = 1 * !((NEXT_INDEX_BOARDS[5] << index) & board);
+    square <<= skip;
+    index += skip;
 }
 
 
 /*
  * Constructor
  */
-Game::Game(){
+Game::Game() {
     MagicBitboards::init();
-    if(!isZobristInit) {
+    if (!isZobristInit) {
         std::random_device rd;
         std::mt19937_64 gen(rd());
         std::uniform_int_distribution<uint64_t> dis(0, UINT64_MAX);
-        for(int i = 0; i < NUMBER_OF_ZOBRIST_KEYS; i++) {
+        for (int i = 0; i < NUMBER_OF_ZOBRIST_KEYS; i++) {
             zobristKeys[i] = dis(gen);
         }
         isZobristInit = true;
@@ -891,8 +949,8 @@ Game::Game(){
  */
 void Game::setHashValue() {
     hashValue = 0;
-    for(int i = 0; i < 64; i++) {
-        for(int p = 0; p < 6; p++) {
+    for (int i = 0; i < 64; i++) {
+        for (int p = 0; p < 6; p++) {
             hashValue ^= zobristKeys[getZobristIndex(p, WHITE, i)] * ((pieceBoards[p | WHITE_PIECE] >> i) & 1);
             hashValue ^= zobristKeys[getZobristIndex(p, BLACK, i)] * ((pieceBoards[p | BLACK_PIECE] >> i) & 1);
         }
@@ -902,11 +960,7 @@ void Game::setHashValue() {
     hashValue ^= zobristKeys[ZOBRIST_WHITE_LONG_CASTLE_INDEX] * ((castleRights & WHITE_LONG_CASTLE_RIGHT) != 0);
     hashValue ^= zobristKeys[ZOBRIST_BLACK_SHORT_CASTLE_INDEX] * ((castleRights & BLACK_SHORT_CASTLE_RIGHT) != 0);
     hashValue ^= zobristKeys[ZOBRIST_BLACK_LONG_CASTLE_INDEX] * ((castleRights & BLACK_LONG_CASTLE_RIGHT) != 0);
-    int enPassantIndex = 0;
-    for(int i = 0; i < 8; i++) {
-        enPassantIndex += i * ((enPassant >> i) & 1);
-    }
-    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassantIndex] * (enPassant != 0);
+    hashValue ^= zobristKeys[ZOBRIST_EN_PASSANT_INDEX + enPassant] * (enPassant != 0);
 }
 
 /*
@@ -918,4 +972,20 @@ int Game::getZobristIndex(piece piece, color pieceColor, int index) {
     zobristIndex = 6 * zobristIndex + piece;
     zobristIndex = 2 * zobristIndex + pieceColor;
     return zobristIndex;
+}
+
+/*
+ * Returns the Game object in its key form, useful for hash tables
+ */
+GameKey Game::key() const {
+    GameKey key;
+    key.pieceBoards[0] = pieceBoards[WHITE_PAWN] | pieceBoards[WHITE_BISHOP] | pieceBoards[WHITE_QUEEN] | pieceBoards[BLACK_PAWN] | pieceBoards[BLACK_BISHOP] | pieceBoards[BLACK_QUEEN];
+    key.pieceBoards[1] = pieceBoards[WHITE_KNIGHT] | pieceBoards[WHITE_BISHOP] | pieceBoards[WHITE_KING] | pieceBoards[BLACK_PAWN] | pieceBoards[BLACK_ROOK] | pieceBoards[BLACK_QUEEN];
+    key.pieceBoards[2] = pieceBoards[WHITE_ROOK] | pieceBoards[WHITE_QUEEN] | pieceBoards[WHITE_KING] | pieceBoards[BLACK_PAWN] | pieceBoards[BLACK_KING];
+    key.pieceBoards[3] = pieceBoards[BLACK_KNIGHT] | pieceBoards[BLACK_BISHOP] | pieceBoards[BLACK_ROOK] | pieceBoards[BLACK_QUEEN] | pieceBoards[BLACK_KING];
+    key.enPassant = enPassant;
+    key.castleRights = castleRights;
+    key.currentPlayer = currentPlayer;
+    key.hashValue = hashValue;
+    return key;
 }

@@ -655,3 +655,35 @@ void MagicBitboards::appendKingMoves(int index, Moves &moves, bitboard collision
 bitboard MagicBitboards::getKingReachableSquares(int index) {
     return kingTable[index].reachable;
 }
+
+/*
+ * Returns a ptr to an entry from the lookup table, usefull for fast looksups without copying
+ */
+const Entry *MagicBitboards::getBishopEntry(bitboard hitmap, int index) {
+    bitboard blockers = hitmap & bishopTable[index].blockerOverlay;
+    uint64_t key = (blockers * bishopTable[index].magicNumber) >> bishopTable[index].indexShift;
+    return &bishopTable[index].entries[key];
+}
+
+/*
+ * Returns a ptr to an entry from the lookup table, usefull for fast looksups without copying
+ */
+const Entry *MagicBitboards::getRookEntry(bitboard hitmap, int index) {
+    bitboard blockers = hitmap & rookTable[index].blockerOverlay;
+    uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
+    return &rookTable[index].entries[key];
+}
+
+/*
+ * Returns all square a king could potentially reach from a given square excluding castling
+ */
+const Entry *MagicBitboards::getKingEntry(int index) {
+    return &kingTable[index];
+}
+
+/*
+ * Returns all square a king could potentially reach from a given square excluding castling
+ */
+const Entry *MagicBitboards::getKnightEntry(int index) {
+    return &knightTable[index];
+}
