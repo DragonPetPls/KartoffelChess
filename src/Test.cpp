@@ -153,7 +153,7 @@ void Test::consolPerft() {
             g.printGame();
             uint64_t nodesSearched = 0;
             auto start = std::chrono::high_resolution_clock::now();
-            nodesSearched = perftTransposition(g, depth, true);
+            nodesSearched = perft(g, depth, true);
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> elapsed = end - start;
             std::cout << "The test took " << elapsed.count() << " seconds" << std::endl;
@@ -242,18 +242,24 @@ int Test::perftStatus(Game &g, int depth, bool printInfo) {
 
 void Test::zobristPerft() {
     Game g;
-    std::string fen[4] = {
+    std::string fen[10] = {
         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
         "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",
         "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - ",
-        "r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1 "
+        "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1",
+        "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8 ",
+        "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10",
+        "4k3/1P6/8/8/8/8/K7/8 w - - 0 1",
+        "K1k5/8/P7/8/8/8/8/8 w - - 0 1",
+        "r3k2r/1b4bq/8/8/8/8/7B/R3K2R w KQkq - 0 1",
+        "8/5bk1/8/2Pp4/8/1K6/8/8 w - d6 0 1"
     };
 
-    int depth[4] = {5, 4, 4, 4};
-    int results[4] = {4865609, 4085603, 43238, 422333};
+    int depth[10] = {5, 4, 5, 4, 4, 4, 6, 6, 4, 6};
+    int results[10] = {4865609, 4085603, 674624, 422333, 2103487, 3894594, 217342, 2217, 1274206, 824064};
     int nodesSearched = 0;
     auto start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 10; i++) {
         g.loadFen(fen[i]);
         int n = perftZobrist(g, depth[i]);
         nodesSearched += n;
@@ -406,6 +412,7 @@ uint64_t Test::perftTransposition(Game &g, int depth, bool printInfo) {
             g.undoMove();
             continue;
         }
+
         uint64_t p = perftTransposition(g, depth - 1);
         n += p;
 

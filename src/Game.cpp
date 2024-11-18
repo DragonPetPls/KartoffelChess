@@ -185,16 +185,16 @@ void Game::doMove(const Move &move) {
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= SHORT_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING)
             * ((move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
     hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * (
-        (move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+        (move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING) && (move.startingPiece == KING));
     hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, SHORT_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * (
-        (move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING));
+        (move.toSquare & SHORT_CASTLE_KING) && (move.fromSquare & SHORT_CASTLE_KING) && (move.startingPiece == KING));
     //Long castle
     pieceBoards[ROOK | COLOR_TO_PIECE[currentPlayer]] ^= LONG_CASTLE_ROOK[currentPlayer] * (move.startingPiece == KING)
             * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
     hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_STARTING_INDEX[currentPlayer])] * (
-        (move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+        (move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING) && (move.startingPiece == KING));
     hashValue ^= zobristKeys[getZobristIndex(ROOK, currentPlayer, LONG_CASTLE_ROOK_ENDING_INDEX[currentPlayer])] * (
-        (move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
+        (move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING) && (move.startingPiece == KING));
 
     //Setting castle rights.
     bitboard fromTo = move.fromSquare | move.toSquare;

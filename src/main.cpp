@@ -17,7 +17,7 @@ int main() {
     //Test::statusPerft();
     //Test::zobristPerft();
     //Test::zobristTest();
-    Test::transpositionPerft();
+    //Test::transpositionPerft();
 #endif
     return 0;
 }
