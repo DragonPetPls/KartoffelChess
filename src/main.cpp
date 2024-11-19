@@ -1,4 +1,6 @@
 #include <iostream>
+
+#include "Communication.h"
 #include "Game.h"
 #include "Test.h"
 
@@ -6,13 +8,14 @@
 
 int main() {
 
-
+    Communication c;
+    c.startCommunication();
 
 #ifdef TEST
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();
-    Test::perft();
+    //Test::perft();
     //Test::consolPerft();
     //Test::statusPerft();
     //Test::zobristPerft();
