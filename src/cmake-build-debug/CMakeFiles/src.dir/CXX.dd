@@ -1,0 +1,7 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/src.dir/main.cpp.o: dyndep
+
+build CMakeFiles/src.dir/Game.cpp.o: dyndep
+
+build CMakeFiles/src.dir/Test.cpp.o: dyndep
+
