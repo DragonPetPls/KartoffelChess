@@ -113,6 +113,7 @@ void Test::perft() {
 }
 
 uint64_t Test::perft(Game &g, int depth, bool printInfo) {
+
     //g.printGame();
     if (depth == 0) {
         return 1;

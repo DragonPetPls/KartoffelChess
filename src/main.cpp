@@ -12,7 +12,7 @@ int main() {
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();
-    //Test::perft();
+    Test::perft();
     //Test::consolPerft();
     //Test::statusPerft();
     //Test::zobristPerft();

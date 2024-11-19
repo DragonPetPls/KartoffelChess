@@ -231,7 +231,7 @@ void Game::doMove(const Move &move) {
 
     //Adjusting moves without progress
     movesWithoutProgess = (movesWithoutProgess + 1) * (
-                              move.startingPiece == PAWN || gameHistory[gameHistoryCounter].capturedPiece != NO_PIECE);
+                              move.startingPiece != PAWN && gameHistory[gameHistoryCounter].capturedPiece == NO_PIECE);
 }
 
 /*
@@ -798,6 +798,11 @@ char Game::getStatus() {
         return status;
     }
 
+    if(movesWithoutProgess >= 100) {
+        status = DRAW;
+        return status;
+    }
+
     //checking if there are legal moves left to be played
     bool movesLeft = areMovesStillPlayable();
     if (movesLeft == true) {
@@ -989,3 +994,38 @@ GameKey Game::key() const {
     key.hashValue = hashValue;
     return key;
 }
+
+/*
+ * Returns a true if the position is a repetition or a draw due to 50 move rule
+ */
+bool Game::checkForRepetition() {
+    if (status == DRAW) {
+        return true;
+    }
+
+    //Checking threefold repetion
+    int sameCounter = 1;
+    for (int i = 0; i <= gameHistoryCounter; i++) {
+        sameCounter += pastHashes[i] == hashValue;
+    }
+    if (sameCounter >= REPETITIONS_TILL_DRAW) {
+        status = DRAW;
+        return true;
+    }
+
+    //Checking 50 move rule
+    if(movesWithoutProgess >= 100) {
+        status = DRAW;
+        return true;
+    }
+    return false;
+}
+
+/*
+ * returns true if the king of the given color is in check
+ */
+bool Game::isKingInCheck(color kingColor) const {
+    int kingPosition = getIndex(pieceBoards[COLOR_TO_PIECE[kingColor] | KING]);
+    return isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[kingColor] | KING], kingPosition, 1 - kingColor);
+}
+

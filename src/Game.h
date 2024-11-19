@@ -108,6 +108,8 @@ public:
     char getStatus();
     bool areMovesStillPlayable();
     GameKey key() const;
+    bool checkForRepetition();
+    bool isKingInCheck(color kingColor) const;
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;
