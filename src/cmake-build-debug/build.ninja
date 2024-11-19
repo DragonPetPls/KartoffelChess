@@ -73,6 +73,18 @@ build CMakeFiles/src.dir/MagicBitboards.cpp.o: CXX_COMPILER__src_unscanned_Debug
   OBJECT_DIR = CMakeFiles/src.dir
   OBJECT_FILE_DIR = CMakeFiles/src.dir
 
+build CMakeFiles/src.dir/Communication.cpp.o: CXX_COMPILER__src_unscanned_Debug /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Communication.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Communication.cpp.o.d
+  FLAGS = -O0 -g -g -std=gnu++14 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir
+
+build CMakeFiles/src.dir/Engine.cpp.o: CXX_COMPILER__src_unscanned_Debug /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Engine.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Engine.cpp.o.d
+  FLAGS = -O0 -g -g -std=gnu++14 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target src
@@ -81,7 +93,7 @@ build CMakeFiles/src.dir/MagicBitboards.cpp.o: CXX_COMPILER__src_unscanned_Debug
 #############################################
 # Link the executable src
 
-build src: CXX_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game.cpp.o CMakeFiles/src.dir/Test.cpp.o CMakeFiles/src.dir/MagicBitboards.cpp.o
+build src: CXX_EXECUTABLE_LINKER__src_Debug CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game.cpp.o CMakeFiles/src.dir/Test.cpp.o CMakeFiles/src.dir/MagicBitboards.cpp.o CMakeFiles/src.dir/Communication.cpp.o CMakeFiles/src.dir/Engine.cpp.o
   FLAGS = -O0 -g -g
   OBJECT_DIR = CMakeFiles/src.dir
   POST_BUILD = :

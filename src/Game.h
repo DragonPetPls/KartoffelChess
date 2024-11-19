@@ -9,6 +9,7 @@
 #include <vector>
 #include "constants.h"
 #include "MagicBitboards.h"
+#include <iostream>
 
 /*
  * Instead of storing a Game object for hashtables, storing a GameKey struct is faster since we do not care about the game history
@@ -80,7 +81,6 @@ public:
 
 private:
     //Functions
-    static int getIndex(const bitboard& board);
     static int getZobristIndex(piece piece, color pieceColor, int index);
 
     static void fastForwardIndex(int &index, bitboard& square, bitboard& board);
@@ -110,6 +110,7 @@ public:
     GameKey key() const;
     bool checkForRepetition();
     bool isKingInCheck(color kingColor) const;
+    static int getIndex(const bitboard& board);
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;

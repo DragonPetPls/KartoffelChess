@@ -23,4 +23,8 @@ add_executable(src main.cpp
         magicConstants.h
         Move.h
         Test.h
+        Communication.h
+        Communication.cpp
+        Engine.cpp
+        Engine.h
 )
