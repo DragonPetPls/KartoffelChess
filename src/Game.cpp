@@ -124,6 +124,7 @@ void Game::printGame() const {
 /*
  * Returns the piece covered by the square,
  * only use it with bitboards that have only one bit true
+ * Piece returned does encode color
  */
 piece Game::getPiece(bitboard square) const {
     int p = -1;

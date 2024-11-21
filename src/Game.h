@@ -83,8 +83,6 @@ private:
     //Functions
     static int getZobristIndex(piece piece, color pieceColor, int index);
 
-    static void fastForwardIndex(int &index, bitboard& square, bitboard& board);
-
     void appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const;
     void appendKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
     void appendBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
@@ -111,6 +109,7 @@ public:
     bool checkForRepetition();
     bool isKingInCheck(color kingColor) const;
     static int getIndex(const bitboard& board);
+    static void fastForwardIndex(int &index, bitboard& square, bitboard& board);
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;

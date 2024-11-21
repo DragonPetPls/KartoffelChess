@@ -29,4 +29,6 @@ add_executable(src main.cpp
         Engine.h
         Search.h
         Search.cpp
+        Evaluation.h
+        Evaluation.cpp
 )

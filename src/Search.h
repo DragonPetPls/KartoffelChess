@@ -26,7 +26,7 @@ private:
 public:
 
     void search(Game &g, const std::atomic<bool> &stop);
-    int negamax(Game &g, int alpha, int beta, int depth);
+    int negamax(Game &g, int alpha, int beta, int depth, int maxDepth);
 
     const Node* getNodeFromTable(Game &g) const {
         if(transpositionTable.find(g.key()) == transpositionTable.end()) {

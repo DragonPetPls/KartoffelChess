@@ -8,6 +8,8 @@
 #include <thread>
 #include <sstream>
 #include "Communication.h"
+
+#include "Evaluation.h"
 #include "Game.h"
 
 void Communication::startCommunication() {
@@ -108,16 +110,17 @@ void Communication::go(const std::string& command) {
     int toX = toIndex % 8;
     int toY = toIndex / 8;
     std::cout << "bestmove " << numberToLetter(fromX) << (fromY + 1)
-    << numberToLetter(toX) << toY + 1 << std::endl;
+    << numberToLetter(toX) << toY + 1;
     if(m.startingPiece != m.endingPiece) {
-        switch (m.startingPiece) {
-            case QUEEN: std::cout << "q" << std::endl; break;
-            case ROOK: std::cout << "r" << std::endl; break;
-            case BISHOP: std::cout << "b" << std::endl; break;
-            case KNIGHT: std::cout << "n" << std::endl; break;
+        switch (m.endingPiece) {
+            case QUEEN: std::cout << "q"; break;
+            case ROOK: std::cout << "r"; break;
+            case BISHOP: std::cout << "b"; break;
+            case KNIGHT: std::cout << "n"; break;
             default: std::cout << std::endl;
         }
     }
+    std::cout << std::endl;
     output.unlock();
 }
 
@@ -237,7 +240,7 @@ void Communication::worker() {
         } else if (subcommand == "go"){
             std::thread(&Communication::go, this, command).detach();
         } else if (subcommand == "eval"){
-         //   std::cout << "Eval: " << Evaluator::evalPosition(g, MINUS_INF) << std::endl;
+            std::cout << "Eval: " << Evaluation::evaluate(g) << std::endl;
         }
     }
 }
