@@ -12,9 +12,15 @@
 constexpr int INF = 1000000;
 constexpr int WIN = 100000;
 
+constexpr int EXACT = 0;
+constexpr int UPPERBOUND = 1;
+constexpr int LOWERBOUND = 2;
+
 struct Node {
     int value;
     int bestMoveIndex;
+    char flag;
+    int depth;
 };
 
 class Search {
