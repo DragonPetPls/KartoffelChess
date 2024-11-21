@@ -4,6 +4,10 @@
 
 #include "Evaluation.h"
 
+#include <algorithm>
+
+uint64_t Evaluation::evaluationCount = 0;
+
 const int Evaluation::PAWN_TABLE[64] = {
     0, 0, 0, 0, 0, 0, 0, 0,
     50, 50, 50, 50, 50, 50, 50, 50,
@@ -79,6 +83,7 @@ const int Evaluation::PIECE_VALUES[6] = {100, 320, 330, 500, 900, 0};
  * Performs the static evaluation at the end of the search
  */
 int Evaluation::evaluate(const Game &g) {
+    evaluationCount++;
     int eval = 0;
 
     bitboard hitmap = 0;
@@ -136,6 +141,44 @@ int Evaluation::getPieceValue(int index, piece p, color c) {
             value += KING_TABLE[index];
             break;
         default: break;
+    }
+    return value;
+}
+
+/*
+ * Returns a vector of ints in the order that moves should be searched further
+ */
+std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int prevBestIndex) {
+    std::vector<Order> order;
+    order.resize(moves.moveCount);
+
+    for(int i = 0; i < moves.moveCount; i++) {
+        order[i].index = i;
+        order[i].value = i == prevBestIndex ? 1000000 : getMoveValue(moves.moves[i], g);
+    }
+
+    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
+        return a.value > b.value;
+    });
+
+    std::vector<int> result;
+    result.resize(order.size());
+    for(int i = 0; i < order.size(); i++) {
+        result[i] = order[i].index;
+    }
+    return result;
+}
+
+/*
+ * returns a value that if represents how high on the priority list searching this move should be
+ */
+int Evaluation::getMoveValue(const Move& move, const Game &g) {
+    int value = 0;
+
+    piece capturedPiece = g.getPiece(move.toSquare);
+    capturedPiece &= ~BLACK_PIECE; //Removing color
+    if(capturedPiece < 6) {
+        value += PIECE_VALUES[capturedPiece];
     }
     return value;
 }

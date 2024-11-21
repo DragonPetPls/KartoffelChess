@@ -36,7 +36,7 @@ public:
     static void zobristPerft();
     static void zobristTest();
     static void transpositionPerft();
-
+    static void searchTest();
 };
 
 

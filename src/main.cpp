@@ -4,14 +4,17 @@
 #include "Game.h"
 #include "Test.h"
 
-#define TEST
+//#define TEST
 
 int main() {
 
+#ifndef TEST
     Communication c;
     c.startCommunication();
+#endif
 
 #ifdef TEST
+    Test::searchTest();
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();

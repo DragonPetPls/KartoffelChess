@@ -26,6 +26,7 @@ private:
 public:
 
     void search(Game &g, const std::atomic<bool> &stop);
+    void searchToDepth(Game &g, int toDepth);
     int negamax(Game &g, int alpha, int beta, int depth, int maxDepth);
 
     const Node* getNodeFromTable(Game &g) const {

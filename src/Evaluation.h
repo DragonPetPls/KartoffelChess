@@ -9,6 +9,12 @@
 
 class Evaluation {
 private:
+
+    struct Order {
+        int index;
+        int value;
+    };
+
     static const int PAWN_TABLE[64];
     static const int KNIGHT_TABLE[64];
     static const int BISHOP_TABLE[64];
@@ -19,9 +25,11 @@ private:
     static const int PIECE_VALUES[6];
 
     static int getPieceValue(int index, piece p, color c);
-
+    static int getMoveValue(const Move &move, const Game &g);
 public:
     static int evaluate(const Game &g);
+    static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex);
+    static uint64_t evaluationCount;
 };
 
 
