@@ -28,12 +28,13 @@ class Search {
 private:
     std::unordered_map<GameKey, Node> transpositionTable;
     const std::atomic<bool>* stop = nullptr;
+    int historyTable[6][64];
 
 public:
 
     void search(Game &g, const std::atomic<bool> &stop);
     void searchToDepth(Game &g, int toDepth);
-    int negamax(Game &g, int alpha, int beta, int depth, int maxDepth);
+    int negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves& killerMoves);
 
     const Node* getNodeFromTable(Game &g) const {
         if(transpositionTable.find(g.key()) == transpositionTable.end()) {

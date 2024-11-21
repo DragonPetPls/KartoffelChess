@@ -6,6 +6,7 @@
 #define EVALUATION_H
 #include "Game.h"
 
+constexpr int MAX_HISTORY = 75000;
 
 class Evaluation {
 private:
@@ -25,10 +26,10 @@ private:
     static const int PIECE_VALUES[6];
 
     static int getPieceValue(int index, piece p, color c);
-    static int getMoveValue(const Move &move, const Game &g);
+    static int getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]);
 public:
     static int evaluate(const Game &g);
-    static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex);
+    static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]);
     static uint64_t evaluationCount;
 };
 

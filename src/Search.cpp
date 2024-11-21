@@ -12,6 +12,11 @@
 void Search::search(Game &g, const std::atomic<bool> &stop) {
 
     transpositionTable.clear();
+    for(int i = 0; i < 6; i++) {
+        for(int j = 0; j < 64; j++) {
+            historyTable[i][j] = 0;
+        }
+    }
 
     int depth = 0;
     this->stop = &stop;
@@ -19,8 +24,9 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
     //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with consol outputs
     while (!stop && depth < 1000) {
         depth++;
-        int eval = negamax(g, -INF, INF, depth, depth);
-        std::cout << depth << ": " << eval << std::endl;
+        Moves killer;
+        int eval = negamax(g, -INF, INF, depth, depth, killer);
+        std::cout << "info depth " << depth << " score " << eval << std::endl;
     }
 }
 
@@ -37,7 +43,8 @@ void Search::searchToDepth(Game &g, int toDepth) {
     //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with consol outputs
     while (depth < toDepth) {
         depth++;
-        int eval = negamax(g, -INF, INF, depth, depth);
+        Moves m;
+        int eval = negamax(g, -INF, INF, depth, depth, m);
         std::cout << depth << ": " << eval << std::endl;
     }
 }
@@ -45,7 +52,7 @@ void Search::searchToDepth(Game &g, int toDepth) {
 /*
  * Performs a recursive negamax search, depth is how much deeper should be searched, maxDepth is how far it should look at max
  */
-int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth) {
+int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves &killerMoves) {
     if(*stop) {
         return 0;
     }
@@ -90,7 +97,8 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth) {
     int bestIndex = 0;
     bool legalMoveExists = false;
     Moves next = g.getAllPseudoLegalMoves();
-    auto order = Evaluation::rankMoves(g, next, prevBestIndex);
+    auto order = Evaluation::rankMoves(g, next, prevBestIndex, killerMoves, historyTable);
+    Moves newKillerMoves;
 
     for(int index = 0; index < next.moveCount; index++) {
 
@@ -103,8 +111,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth) {
         }
         legalMoveExists = true;
 
-        int score = -negamax(g, -beta, -alpha, depth - 1, maxDepth);
-        g.undoMove();
+        int score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
 
         if(score > bestScore) {
             bestIndex = i;
@@ -114,8 +121,16 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth) {
             }
         }
         if(alpha >= beta) {
+            killerMoves.moves[++killerMoves.moveCount] = next.moves[i];
+            if(g.getLastMove().capturedPiece != NO_PIECE) {
+                int clampedBonus = std::min(depth, MAX_HISTORY);
+                int to = Game::getIndex(next.moves[i].toSquare);
+                historyTable[next.moves[i].startingPiece][to] += clampedBonus - historyTable[next.moves[i].startingPiece][to] * abs(clampedBonus) / MAX_HISTORY;
+            }
+            g.undoMove();
             break;
         }
+        g.undoMove();
     }
 
     //If we found no legal move we check if there might have been a checkmate

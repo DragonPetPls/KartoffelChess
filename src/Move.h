@@ -14,6 +14,11 @@ struct Move{
     bitboard toSquare;
     piece startingPiece;
     piece endingPiece; //ending piece is the same as starting piece unless promotion
+
+    // Overload the == operator
+    bool operator==(const Move& other) const {
+        return fromSquare == other.fromSquare && toSquare == other.toSquare && startingPiece == other.startingPiece && endingPiece == other.endingPiece;
+    }
 };
 
 /*

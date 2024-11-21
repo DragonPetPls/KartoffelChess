@@ -1030,3 +1030,10 @@ bool Game::isKingInCheck(color kingColor) const {
     return isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[kingColor] | KING], kingPosition, 1 - kingColor);
 }
 
+
+/*
+ * Returns lots of information about the last move played
+ */
+LastMove Game::getLastMove() const {
+    return gameHistory[gameHistoryCounter];
+}

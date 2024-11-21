@@ -148,13 +148,13 @@ int Evaluation::getPieceValue(int index, piece p, color c) {
 /*
  * Returns a vector of ints in the order that moves should be searched further
  */
-std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int prevBestIndex) {
+std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]) {
     std::vector<Order> order;
     order.resize(moves.moveCount);
 
     for(int i = 0; i < moves.moveCount; i++) {
         order[i].index = i;
-        order[i].value = i == prevBestIndex ? 1000000 : getMoveValue(moves.moves[i], g);
+        order[i].value = i == prevBestIndex ? 1000000 : getMoveValue(moves.moves[i], g, killerMoves, historyTable);
     }
 
     std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
@@ -172,13 +172,38 @@ std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int pr
 /*
  * returns a value that if represents how high on the priority list searching this move should be
  */
-int Evaluation::getMoveValue(const Move& move, const Game &g) {
+int Evaluation::getMoveValue(const Move& move, const Game &g, Moves &killerMoves, int historyTable[6][64]) {
     int value = 0;
 
     piece capturedPiece = g.getPiece(move.toSquare);
     capturedPiece &= ~BLACK_PIECE; //Removing color
+    //Captures and promotions first
+    bool captureOrPromotion = false;
     if(capturedPiece < 6) {
-        value += PIECE_VALUES[capturedPiece];
+        value += 100000 + PIECE_VALUES[capturedPiece] - PIECE_VALUES[move.startingPiece];
+        captureOrPromotion = true;
     }
+    if(move.startingPiece != move.endingPiece) {
+        value += 100000 + PIECE_VALUES[move.endingPiece] - PIECE_VALUES[move.startingPiece];
+        captureOrPromotion = true;
+    }
+
+    //Now we check for killer moves
+    bool killer = false;
+    for(int i = 0; i < killerMoves.moveCount; i++) {
+        if(killerMoves.moves[i] == move) {
+            value += 1;
+            killer = true;
+        }
+    }
+    value += 80000 * killer * !captureOrPromotion;
+
+    if(value != 0) {
+        return value;
+    }
+
+    int index = Game::getIndex(move.toSquare);
+    value += historyTable[move.startingPiece][index];
+
     return value;
 }
