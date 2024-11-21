@@ -27,4 +27,6 @@ add_executable(src main.cpp
         Communication.cpp
         Engine.cpp
         Engine.h
+        Search.h
+        Search.cpp
 )

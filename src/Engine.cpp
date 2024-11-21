@@ -4,20 +4,42 @@
 
 #include "Engine.h"
 
-Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
-    Move bestMove;
+#include <chrono>
+#include <thread>
 
-    Moves next = g.getAllPseudoLegalMoves();
-    for (int i = 0; i < next.moveCount; i++) {
-        g.doMove(next.moves[i]);
-        if(!g.isPositionLegal()) {
-            g.undoMove();
-            continue;
-        }
-        return next.moves[i];
+#include "Search.h"
+
+/*
+ * Returns the move the engine determinds to be the best
+ */
+Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
+    int searchTime;
+    if (timePerMove == 0) {
+        //match time
+        searchTime = std::max(timeLeft / 25, tineIncrement + timeLeft / 40);
+    } else {
+        //Move time
+        searchTime = timePerMove;
     }
 
-    return bestMove;
+    std::cout << "searching for " << searchTime << "ms" << std::endl;
+
+    //Starting and stopping the search thread
+    std::atomic<bool> stop(false);
+    Search search;
+    std::thread searchThread(&Search::search, &search, std::ref(g), std::ref(stop));
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(searchTime));
+    std::cout << "stopped" << std::endl;
+    stop = true;
+
+    if (searchThread.joinable()) {
+        searchThread.join(); // Ensures the thread completes execution
+    }
+
+    //Picking the best move via whats inside the transposition table
+    auto next = g.getAllPseudoLegalMoves();
+    return next.moves[search.getNodeFromTable(g)->bestMoveIndex];
 }
 
 void Engine::stopSearch() {
