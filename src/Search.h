@@ -28,7 +28,7 @@ class Search {
 private:
     std::unordered_map<GameKey, Node> transpositionTable;
     const std::atomic<bool>* stop = nullptr;
-    int historyTable[6][64];
+    int historyTable[6][64] = {};
 
 public:
 

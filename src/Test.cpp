@@ -460,12 +460,16 @@ void Test::searchTest() {
         "8/1p4b1/2p2kp1/3pp3/P5K1/2PP4/5PP1/1B6 b - - 0 40",
         "8/1p6/2p2kp1/3pp3/P1P2bK1/3P4/5PP1/1B6 w - - 1 42",
         "8/1p6/2p2kp1/3pp3/P1P2bK1/3P4/5PP1/1B6 w - - 1 42"};
-    int depth = 6;
+    int depth = 5;
     Game g;
     Search s;
+    auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 24; i++) {
         g.loadFen(fen[i]);
         s.searchToDepth(g, depth);
     }
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
     std::cout << Evaluation::evaluationCount << " evaluations performed" << std::endl;
+    std::cout << elapsed.count() << " seconds" << std::endl;
 }

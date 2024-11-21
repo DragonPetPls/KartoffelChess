@@ -150,14 +150,19 @@ int Evaluation::getPieceValue(int index, piece p, color c) {
  */
 std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]) {
     std::vector<Order> order;
-    order.resize(moves.moveCount);
+    order.reserve(moves.moveCount);
 
     for(int i = 0; i < moves.moveCount; i++) {
-        order[i].index = i;
-        order[i].value = i == prevBestIndex ? 1000000 : getMoveValue(moves.moves[i], g, killerMoves, historyTable);
+        int value = 0;
+        if(i == prevBestIndex) {
+            value = 1000000;
+        } else {
+            value = getMoveValue(moves.moves[i], g, killerMoves, historyTable);
+        }
+        order.push_back(Order{i, value});
     }
 
-    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
+    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) { //This line is highlighted
         return a.value > b.value;
     });
 
@@ -204,6 +209,5 @@ int Evaluation::getMoveValue(const Move& move, const Game &g, Moves &killerMoves
 
     int index = Game::getIndex(move.toSquare);
     value += historyTable[move.startingPiece][index];
-
     return value;
 }

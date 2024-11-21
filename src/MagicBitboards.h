@@ -5,6 +5,7 @@
 #ifndef MAGICBITBOARDS_H
 #define MAGICBITBOARDS_H
 
+#include <memory>
 #include <vector>
 #include "constants.h"
 #include "Move.h"
@@ -14,7 +15,7 @@
  */
 struct Entry {
     bitboard reachable;
-    Moves *moves;
+    std::unique_ptr<Moves> moves;
     bool isSet;
 };
 
