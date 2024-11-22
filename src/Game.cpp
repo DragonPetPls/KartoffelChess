@@ -384,6 +384,61 @@ Moves Game::getAllPseudoLegalMoves() const {
     return moves;
 }
 
+/*
+ * Returns all captures that could be played from the given position
+ */
+Moves Game::getAllPseudoLegalCaptures() const {
+    Moves moves;
+
+    //Generating hitmaps
+    bitboard ownHitmap = 0;
+    bitboard enemyHitmap = 0;
+    for (int i = 0; i < 6; i++) {
+        ownHitmap |= pieceBoards[i | COLOR_TO_PIECE[currentPlayer]];
+        enemyHitmap |= pieceBoards[i | COLOR_TO_PIECE[1 - currentPlayer]];
+    }
+    bitboard hitmap = ownHitmap | enemyHitmap;
+
+    bitboard squareMask = 1;
+    for (int i = 0; i < 64; i++) {
+        fastForwardIndex(i, squareMask, ownHitmap);
+        if(i > 63) {
+            break;
+        }
+
+        //Getting the piece without its color
+        piece p = getPiece(squareMask);
+        p ^= COLOR_TO_PIECE[currentPlayer];
+
+        switch (p) {
+            case PAWN:
+                appendPawnCapturesAndPromotions(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
+            break;
+            case KNIGHT:
+                appendKnightCaptures(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
+            break;
+            case BISHOP:
+                appendBishopCaptures(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
+            break;
+            case ROOK:
+                appendRookCaptures(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
+            break;
+            case QUEEN:
+                appendQueenCaptures(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
+            break;
+            case KING:
+                appendKingCaptures(squareMask, i, ownHitmap, enemyHitmap, hitmap, moves);
+            break;
+            default:
+                break;
+        }
+
+        squareMask <<= 1;
+    }
+
+    return moves;
+}
+
 
 /*
  * Returns all pseudolegal pawn moves from the given square, used by the getAllPseudoLegalMoves function
@@ -565,6 +620,121 @@ void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap
         m.endingPiece = KING;
         moves.moves[moves.moveCount++] = m;
     }
+}
+
+/*
+ * Appends only captures and promotions, used for quiescence search
+ */
+void Game::appendPawnCapturesAndPromotions(bitboard square, int index, const bitboard &ownHitmap,
+    const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const {
+    int verticalDirection = 1 * (currentPlayer == WHITE) - 1 * (currentPlayer == BLACK);
+
+    //Advancing 1 square
+    bitboard targetSquare = square >> 8;
+    targetSquare = targetSquare << (8 * (verticalDirection + 1));
+
+    if (targetSquare & ~hitmap) {
+        Move m{};
+        m.fromSquare = square;
+        m.toSquare = targetSquare;
+        m.startingPiece = PAWN;
+        //Checking for promotion
+        if (targetSquare & BACK_ROWS) {
+            //Promotion
+            m.endingPiece = QUEEN;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = ROOK;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = BISHOP;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = KNIGHT;
+            moves.moves[moves.moveCount++] = m;
+        }
+    }
+
+    //Capture to the left
+    targetSquare = 1;
+    targetSquare = targetSquare << (index + verticalDirection * 8 - 1);
+    if (((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (
+                                              currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
+        && (index % 8 != 0)) {
+        Move m{};
+        m.fromSquare = square;
+        m.toSquare = targetSquare;
+        m.startingPiece = PAWN;
+        if (targetSquare & BACK_ROWS) {
+            //Promotion
+            m.endingPiece = QUEEN;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = ROOK;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = BISHOP;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = KNIGHT;
+            moves.moves[moves.moveCount++] = m;
+        } else {
+            m.endingPiece = PAWN;
+            moves.moves[moves.moveCount++] = m;
+        }
+    }
+
+    //Capture to the right
+    targetSquare = 1;
+    targetSquare = targetSquare << (index + verticalDirection * 8 + 1);
+    if (((targetSquare & enemyHitmap) || ((currentPlayer == WHITE && ((targetSquare >> 40) & enPassant)) || (
+                                              currentPlayer == BLACK && ((targetSquare >> 16) & enPassant))))
+        && (index % 8 != 7)) {
+        Move m{};
+        m.fromSquare = square;
+        m.toSquare = targetSquare;
+        m.startingPiece = PAWN;
+        if (targetSquare & BACK_ROWS) {
+            //Promotion
+            m.endingPiece = QUEEN;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = ROOK;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = BISHOP;
+            moves.moves[moves.moveCount++] = m;
+            m.endingPiece = KNIGHT;
+            moves.moves[moves.moveCount++] = m;
+        } else {
+            m.endingPiece = PAWN;
+            moves.moves[moves.moveCount++] = m;
+        }
+    }
+}
+
+void Game::appendKnightCaptures(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+    const bitboard &hitmap, Moves &moves) const {
+    MagicBitboards::appendKnightCaptures(index, moves, ownHitmap, enemyHitmap);
+}
+
+void Game::appendBishopCaptures(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+    const bitboard &hitmap, Moves &moves) const {
+    MagicBitboards::appendBishopCaptures(hitmap, index, moves, ownHitmap, enemyHitmap);
+}
+
+void Game::appendRookCaptures(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+    const bitboard &hitmap, Moves &moves) const {
+    MagicBitboards::appendRookCaptures(hitmap, index, moves, ownHitmap, enemyHitmap);
+}
+
+void Game::appendQueenCaptures(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+    const bitboard &hitmap, Moves &moves) const {
+    int oldMoveCount = moves.moveCount;
+    appendBishopCaptures(square, index, ownHitmap, enemyHitmap, hitmap, moves);
+
+    appendRookCaptures(square, index, ownHitmap, enemyHitmap, hitmap, moves);
+    for (int i = oldMoveCount; i < moves.moveCount; i++) {
+        moves.moves[i].startingPiece = QUEEN;
+        moves.moves[i].endingPiece = QUEEN;
+    }
+}
+
+void Game::appendKingCaptures(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap,
+    const bitboard &hitmap, Moves &moves) const {
+    MagicBitboards::appendKingCaptures(index, moves, ownHitmap, enemyHitmap);
 }
 
 /*
@@ -775,6 +945,15 @@ std::string Game::moveToString(Move move) {
                     str.push_back(y + 1 + '0');
                 }
             }
+        }
+    }
+    if(move.startingPiece != move.endingPiece) {
+        switch (move.endingPiece) {
+            case QUEEN: str.push_back('q'); break;
+            case ROOK: str.push_back('r'); break;
+            case BISHOP: str.push_back('b'); break;
+            case KNIGHT: str.push_back('n'); break;
+            default: std::cout << std::endl;
         }
     }
     return str;

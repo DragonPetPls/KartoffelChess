@@ -90,6 +90,13 @@ private:
     void appendQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
     void appendKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
 
+    void appendPawnCapturesAndPromotions(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const;
+    void appendKnightCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendBishopCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendRookCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendQueenCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendKingCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+
 public:
     //Functions
     Game();
@@ -99,6 +106,7 @@ public:
     void undoMove();
     void doMoveAsString(std::string moveStr);
     Moves getAllPseudoLegalMoves() const;
+    Moves getAllPseudoLegalCaptures() const;
     bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
     bool isPositionLegal() const;
     void loadFen(const std::string& fen);

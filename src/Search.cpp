@@ -11,7 +11,7 @@
  */
 void Search::search(Game &g, const std::atomic<bool> &stop) {
 
-    //transpositionTable.clear();
+    transpositionTable.clear();
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 64; j++) {
             historyTable[i][j] = 0;
@@ -26,7 +26,7 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
         depth++;
         Moves killer;
         int eval = negamax(g, -INF, INF, depth, depth, killer);
-        std::cout << "info depth " << depth << " score " << eval << std::endl;
+        std::cout << "info depth " << depth << " score cp " << eval << std::endl;
     }
 }
 
@@ -82,7 +82,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     }
 
     if(depth <= 0) {
-        int eval = Evaluation::evaluate(g);
+        int eval = quiescence(g, alpha, beta, depth, maxDepth);
         Node n{eval, INF, EXACT, 0};
         if(transpositionTable.find(g.key()) != transpositionTable.end()) {
             transpositionTable[g.key()] = n;
@@ -121,7 +121,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
             }
         }
         if(alpha >= beta) {
-            killerMoves.moves[++killerMoves.moveCount] = next.moves[i];
+            killerMoves.moves[killerMoves.moveCount++] = next.moves[i];
             if(g.getLastMove().capturedPiece != NO_PIECE) {
                 int clampedBonus = std::min(depth, MAX_HISTORY);
                 int to = Game::getIndex(next.moves[i].toSquare);
@@ -159,6 +159,36 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     }
 
     return bestScore;
+}
+
+/*
+ * Perfroms a quiescence search to limit the horizon effect
+ */
+int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
+    //g.printGame();
+    int standPat = Evaluation::evaluate(g);
+    if(standPat >= beta) {
+        return beta;
+    }
+    if(alpha < standPat) {
+        alpha = standPat;
+    }
+
+    auto next = g.getAllPseudoLegalCaptures();
+    auto order = Evaluation::rankCaptures(g, next);
+    for(int index = 0; index < next.moveCount; index++) {
+        int i = order[index];
+        g.doMove(next.moves[i]);
+        if(!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+        int score = -quiescence(g, -beta, -alpha, depth, maxDepth);
+        g.undoMove();
+        if(score >= beta) return beta;
+        alpha = std::max(alpha, score);
+    }
+    return alpha;
 }
 
 /*
