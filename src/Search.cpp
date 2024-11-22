@@ -12,6 +12,7 @@
 void Search::search(Game &g, const std::atomic<bool> &stop) {
 
     transpositionTable.clear();
+
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 64; j++) {
             historyTable[i][j] = 0;
@@ -83,7 +84,15 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
 
     if(depth <= 0) {
         int eval = quiescence(g, alpha, beta, depth, maxDepth);
-        Node n{eval, INF, EXACT, 0};
+        char flag;
+        if(eval <= alpha) {
+            flag = UPPERBOUND;
+        } else if (eval > beta) {
+            flag = LOWERBOUND;
+        } else {
+            flag = EXACT;
+        }
+        Node n{eval, INF, flag, 0};
         if(transpositionTable.find(g.key()) != transpositionTable.end()) {
             transpositionTable[g.key()] = n;
         } else {
