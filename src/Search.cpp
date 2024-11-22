@@ -165,7 +165,6 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
  * Perfroms a quiescence search to limit the horizon effect
  */
 int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
-    //g.printGame();
     int standPat = Evaluation::evaluate(g);
     if(standPat >= beta) {
         return beta;
@@ -175,15 +174,15 @@ int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
     }
 
     auto next = g.getAllPseudoLegalCaptures();
-    auto order = Evaluation::rankCaptures(g, next);
-    for(int index = 0; index < next.moveCount; index++) {
+    auto order = Evaluation::rankCaptures(g, next, alpha - standPat);
+    for(int index = 0; index < order.size(); index++) {
         int i = order[index];
         g.doMove(next.moves[i]);
         if(!g.isPositionLegal()) {
             g.undoMove();
             continue;
         }
-        int score = -quiescence(g, -beta, -alpha, depth, maxDepth);
+        int score = -quiescence(g, -beta, -alpha, depth - 1, maxDepth);
         g.undoMove();
         if(score >= beta) return beta;
         alpha = std::max(alpha, score);

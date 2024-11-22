@@ -7,6 +7,7 @@
 #include "Game.h"
 
 constexpr int MAX_HISTORY = 75000;
+constexpr int SAFETY_DELTA_MARGIN = 200;
 
 class Evaluation {
 private:
@@ -30,7 +31,7 @@ private:
 public:
     static int evaluate(const Game &g);
     static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]);
-    static std::vector<int> rankCaptures(const Game &g, const Moves &moves);
+    static std::vector<int> rankCaptures(const Game &g, const Moves &moves, int delta);
     static uint64_t evaluationCount;
 };
 

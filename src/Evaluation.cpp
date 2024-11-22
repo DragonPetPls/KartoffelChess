@@ -176,8 +176,9 @@ std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int pr
 
 /*
  * Ranks captures (and promotions)
+ * Excludes all move that dont have a chance to improve the position by delta
  */
-std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves) {
+std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves, int delta) {
     std::vector<Order> order;
     order.reserve(moves.moveCount);
 
@@ -190,10 +191,16 @@ std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves) {
         if(capturedPiece < 6) {
             value += 100000 + PIECE_VALUES[capturedPiece] - PIECE_VALUES[moves.moves[i].startingPiece];
             captureOrPromotion = true;
+            if(delta > PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
+                continue;
+            }
         }
         if(moves.moves[i].startingPiece != moves.moves[i].endingPiece) {
             value += 100000 + PIECE_VALUES[moves.moves[i].endingPiece] - PIECE_VALUES[moves.moves[i].startingPiece];
             captureOrPromotion = true;
+            if(delta > PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
+                continue;
+            }
         }
         order.push_back(Order{i, value});
     }
