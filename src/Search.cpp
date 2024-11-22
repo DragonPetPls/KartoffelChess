@@ -27,7 +27,9 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
         depth++;
         Moves killer;
         int eval = negamax(g, -INF, INF, depth, depth, killer);
-        std::cout << "info depth " << depth << " score cp " << eval << std::endl;
+        if(!stop) {
+            std::cout << "info depth " << depth << " score cp " << eval << std::endl;
+        }
     }
 }
 
@@ -70,7 +72,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         Node &n = transpositionTable[g.key()];
         if(n.depth >= depth) {
             if(n.flag == EXACT) {
-                return n.value;
+               return n.value;
             }
             if(n.flag == LOWERBOUND) {
                 alpha = std::max(alpha, n.value);
@@ -85,9 +87,9 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     if(depth <= 0) {
         int eval = quiescence(g, alpha, beta, depth, maxDepth);
         char flag;
-        if(eval <= alpha) {
+        if(eval <= originalAlpha) {
             flag = UPPERBOUND;
-        } else if (eval > beta) {
+        } else if (eval >= beta) {
             flag = LOWERBOUND;
         } else {
             flag = EXACT;
@@ -110,7 +112,6 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     Moves newKillerMoves;
 
     for(int index = 0; index < next.moveCount; index++) {
-
         int &i = order[index];
 
         g.doMove(next.moves[i]);
@@ -120,7 +121,17 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         }
         legalMoveExists = true;
 
-        int score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
+
+        //principle variation search
+        int score;
+        if(i != 0) {
+            score = -negamax(g, -alpha - 1, -alpha, depth - 1, maxDepth, newKillerMoves);
+            if(score > alpha && score < beta) {
+                score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
+            }
+        } else {
+            score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
+        }
 
         if(score > bestScore) {
             bestIndex = i;
@@ -153,7 +164,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         char flag;
         if(bestScore <= originalAlpha) {
             flag = UPPERBOUND;
-        } else if (bestScore > beta) {
+        } else if (bestScore >= beta) {
             flag = LOWERBOUND;
         } else {
             flag = EXACT;
