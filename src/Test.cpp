@@ -460,7 +460,7 @@ void Test::searchTest() {
         "8/1p4b1/2p2kp1/3pp3/P5K1/2PP4/5PP1/1B6 b - - 0 40",
         "8/1p6/2p2kp1/3pp3/P1P2bK1/3P4/5PP1/1B6 w - - 1 42",
         "8/1p6/2p2kp1/3pp3/P1P2bK1/3P4/5PP1/1B6 w - - 1 42"};
-    int depth = 5;
+    int depth = 6;
     Game g;
     Search s;
     auto start = std::chrono::high_resolution_clock::now();
@@ -472,4 +472,40 @@ void Test::searchTest() {
     std::chrono::duration<double> elapsed = end - start;
     std::cout << Evaluation::evaluationCount << " evaluations performed" << std::endl;
     std::cout << elapsed.count() << " seconds" << std::endl;
+}
+
+void Test::captureTest() {
+    int depth = 0;
+    std::string input;
+    std::string fen;
+    while (true) {
+        Game g;
+        getline(std::cin, input);
+        if (input == "go" || input == "GO") {
+            if (fen == "") {
+                g.loadStartingPosition();
+            } else {
+                g.loadFen(fen);
+            }
+            g.printGame();
+            auto next = g.getAllPseudoLegalCaptures();
+            for(int i = 0; i < next.moveCount; i++) {
+                std::cout << Game::moveToString(next.moves[i]) << " ";
+            }
+            std::cout << std::endl;
+            continue;
+        }
+        if (input == "print") {
+            g.printGame();
+        }
+        if (input.size() > 3) {
+            fen = input;
+            std::cout << "fen: " << fen << std::endl;
+        } else {
+            if (input.size() == 1) {
+                depth = input[0] - '0';
+                std::cout << "depth: " << depth << std::endl;
+            }
+        }
+    }
 }

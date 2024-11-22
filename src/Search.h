@@ -30,11 +30,14 @@ private:
     const std::atomic<bool>* stop = nullptr;
     int historyTable[6][64] = {};
 
+    int quiescence(Game &g, int alpha, int beta, int depth, int maxDepth);
 public:
 
     void search(Game &g, const std::atomic<bool> &stop);
     void searchToDepth(Game &g, int toDepth);
     int negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves& killerMoves);
+
+    void printPrincipleVariation(Game &g);
 
     const Node* getNodeFromTable(Game &g) const {
         if(transpositionTable.find(g.key()) == transpositionTable.end()) {

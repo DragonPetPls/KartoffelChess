@@ -654,6 +654,40 @@ bitboard MagicBitboards::getKingReachableSquares(int index) {
 }
 
 /*
+ * Appends all possible captures with a bishop
+ */
+void MagicBitboards::appendBishopCaptures(bitboard hitmap, int index, Moves &moves, bitboard collisions,
+    bitboard captures) {
+    bitboard blockers = hitmap & bishopTable[index].blockerOverlay;
+    uint64_t key = (blockers * bishopTable[index].magicNumber) >> bishopTable[index].indexShift;
+    moves.appendMovesWithCollision(*bishopTable[index].entries[key].moves, captures, 4);
+}
+
+/*
+ * Appends all possible captures with a rook
+ */
+void MagicBitboards::appendRookCaptures(bitboard hitmap, int index, Moves &moves, bitboard collisions,
+    bitboard captures) {
+    bitboard blockers = hitmap & rookTable[index].blockerOverlay;
+    uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
+    moves.appendMovesWithCollision(*rookTable[index].entries[key].moves, captures, 4);
+}
+
+/*
+ * Appends all possible captures with a knight
+ */
+void MagicBitboards::appendKnightCaptures(int index, Moves &moves, bitboard collisions, bitboard captures) {
+    moves.appendMovesWithoutCollision(*knightTable[index].moves, ~captures);
+}
+
+/*
+ * Appends all possible captures with a king
+ */
+void MagicBitboards::appendKingCaptures(int index, Moves &moves, bitboard collisions, bitboard captures) {
+    moves.appendMovesWithoutCollision(*kingTable[index].moves, ~captures);
+}
+
+/*
  * Returns a ptr to an entry from the lookup table, usefull for fast looksups without copying
  */
 const Entry *MagicBitboards::getBishopEntry(bitboard hitmap, int index) {

@@ -76,6 +76,18 @@ public:
     }
 
     /*
+    * adds the moves to the back of this object if they do collide with the collisions bitboard
+   */
+    void appendMovesWithCollision(Moves &m, bitboard collisions, int checkLastN) {
+        for(int i = std::max(0, m.moveCount - checkLastN); i < m.moveCount; i++) {
+            if((m.moves[i].toSquare & collisions)){
+                this->moves[this->moveCount++] = m.moves[i];
+            }
+        }
+    }
+
+
+    /*
      * Copies values of other Moves object
      */
     void copy(Moves &m) {

@@ -175,6 +175,49 @@ std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int pr
 }
 
 /*
+ * Ranks captures (and promotions)
+ * Excludes all move that dont have a chance to improve the position by delta
+ */
+std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves, int delta) {
+    std::vector<Order> order;
+    order.reserve(moves.moveCount);
+
+    for(int i = 0; i < moves.moveCount; i++) {
+        int value = 0;
+        piece capturedPiece = g.getPiece(moves.moves[i].toSquare);
+        capturedPiece &= ~BLACK_PIECE; //Removing color
+        //Captures and promotions first
+        bool captureOrPromotion = false;
+        if(capturedPiece < 6) {
+            value += 100000 + PIECE_VALUES[capturedPiece] - PIECE_VALUES[moves.moves[i].startingPiece];
+            captureOrPromotion = true;
+            if(delta > PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
+                continue;
+            }
+        }
+        if(moves.moves[i].startingPiece != moves.moves[i].endingPiece) {
+            value += 100000 + PIECE_VALUES[moves.moves[i].endingPiece] - PIECE_VALUES[moves.moves[i].startingPiece];
+            captureOrPromotion = true;
+            if(delta > PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
+                continue;
+            }
+        }
+        order.push_back(Order{i, value});
+    }
+
+    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) { //This line is highlighted
+        return a.value > b.value;
+    });
+
+    std::vector<int> result;
+    result.resize(order.size());
+    for(int i = 0; i < order.size(); i++) {
+        result[i] = order[i].index;
+    }
+    return result;
+}
+
+/*
  * returns a value that if represents how high on the priority list searching this move should be
  */
 int Evaluation::getMoveValue(const Move& move, const Game &g, Moves &killerMoves, int historyTable[6][64]) {

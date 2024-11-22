@@ -64,6 +64,11 @@ public:
     static void appendKingMoves(int index, Moves &moves, bitboard collisions);
     static bitboard getKingReachableSquares(int index);
 
+    static void appendBishopCaptures(bitboard hitmap, int index, Moves &moves, bitboard collisions, bitboard captures);
+    static void appendRookCaptures(bitboard hitmap, int index, Moves &moves, bitboard collisions, bitboard captures);
+    static void appendKnightCaptures(int index, Moves &moves, bitboard collisions, bitboard captures);
+    static void appendKingCaptures(int index, Moves &moves, bitboard collisions, bitboard captures);
+
     static const Entry *getBishopEntry(bitboard hitmap, int index);
 
     static const Entry *getRookEntry(bitboard hitmap, int index);

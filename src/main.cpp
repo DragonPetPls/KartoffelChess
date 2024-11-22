@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "Test.h"
 
-#define TEST
+//#define TEST
 
 int main() {
 
@@ -25,6 +25,7 @@ int main() {
     //Test::zobristPerft();
     //Test::zobristTest();
     //Test::transpositionPerft();
+    //Test::captureTest();
 #endif
     return 0;
 }
