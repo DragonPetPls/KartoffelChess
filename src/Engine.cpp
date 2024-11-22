@@ -26,7 +26,6 @@ Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
 
     //Starting and stopping the search thread
     std::atomic<bool> stop(false);
-    Search search;
     std::thread searchThread(&Search::search, &search, std::ref(g), std::ref(stop));
 
     std::this_thread::sleep_for(std::chrono::milliseconds(searchTime));
@@ -42,6 +41,11 @@ Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
     return next.moves[search.getNodeFromTable(g)->bestMoveIndex];
 }
 
+//TODO
 void Engine::stopSearch() {
     std::cout << "stopped" << std::endl;
+}
+
+void Engine::printPrincipalVariation(Game &g) {
+    search.printPrincipleVariation(g);
 }

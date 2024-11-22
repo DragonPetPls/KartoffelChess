@@ -36,6 +36,8 @@ public:
     void searchToDepth(Game &g, int toDepth);
     int negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves& killerMoves);
 
+    void printPrincipleVariation(Game &g);
+
     const Node* getNodeFromTable(Game &g) const {
         if(transpositionTable.find(g.key()) == transpositionTable.end()) {
             return nullptr;

@@ -6,12 +6,15 @@
 #define ENGINE_H
 
 #include "Game.h"
+#include "Search.h"
 
 class Engine {
-
+private:
+    Search search;
 public:
     Move getMove(Game g, int timeLeft, int tineIncrement, int timePerMove);
     void stopSearch();
+    void printPrincipalVariation(Game &g);
 };
 
 

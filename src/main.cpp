@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "Test.h"
 
-#define TEST
+//#define TEST
 
 int main() {
 
@@ -15,7 +15,7 @@ int main() {
 #endif
 
 #ifdef TEST
-    Test::searchTest();
+    //Test::searchTest();
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();

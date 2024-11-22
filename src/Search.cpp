@@ -11,7 +11,7 @@
  */
 void Search::search(Game &g, const std::atomic<bool> &stop) {
 
-    transpositionTable.clear();
+    //transpositionTable.clear();
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 64; j++) {
             historyTable[i][j] = 0;
@@ -159,4 +159,27 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     }
 
     return bestScore;
+}
+
+/*
+ * Print the continuation the engine currently thinks is best
+ */
+void Search::printPrincipleVariation(Game &g) {
+    std::cout << "Principle Variation: ";
+    int counter = 0;
+    while(true) {
+        if(transpositionTable.find(g.key()) == transpositionTable.end()) {
+            break;
+        }
+
+        counter++;
+        Node &n = transpositionTable[g.key()];
+        auto next = g.getAllPseudoLegalMoves();
+        std::cout << Game::moveToString(next.moves[n.bestMoveIndex]) << " ";
+        g.doMove(next.moves[n.bestMoveIndex]);
+    }
+    for(int i = 0; i < counter; i++) {
+        g.undoMove();
+    }
+    std::cout << std::endl;
 }
