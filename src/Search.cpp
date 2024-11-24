@@ -103,6 +103,15 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         return eval;
     }
 
+    //Null move prunning
+    if(depth < maxDepth * 0.8 && !g.isKingInCheck(g.currentPlayer)) {
+        g.doNullMove();
+        Moves nmKillers;
+        int nm = -negamax(g, -beta, -beta + 1, depth - 4, maxDepth, nmKillers);
+        g.undoMove();
+        if(nm >= beta) return nm;
+    }/* */
+
     //actual search
     int bestScore = -INF;
     int bestIndex = 0;
@@ -124,7 +133,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
 
         //principle variation search
         int score;
-        if(i != 0) {
+        if(i != 0){
             score = -negamax(g, -alpha - 1, -alpha, depth - 1, maxDepth, newKillerMoves);
             if(score > alpha && score < beta) {
                 score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);

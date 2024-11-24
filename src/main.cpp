@@ -15,7 +15,7 @@ int main() {
 #endif
 
 #ifdef TEST
-    //Test::searchTest();
+    Test::searchTest();
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();
