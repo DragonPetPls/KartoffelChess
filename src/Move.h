@@ -21,6 +21,8 @@ struct Move{
     }
 };
 
+constexpr Move nullMove{0, 0, 0, 0};
+
 /*
  * Used to represent multiple moves stored together
  */

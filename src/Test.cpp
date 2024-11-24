@@ -319,8 +319,8 @@ int Test::perftZobrist(Game &g, int depth, bool printInfo) {
 }
 
 void Test::zobristTest() {
+
     Game g;
-    g.loadStartingPosition();
     g.loadStartingPosition();
     g.doMoveAsString("e2e4");
     g.doMoveAsString("d7d5");

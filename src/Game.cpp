@@ -236,6 +236,25 @@ void Game::doMove(const Move &move) {
 }
 
 /*
+ * Performs a null move or passing move, which isnt legal but useful for prunning
+ */
+void Game::doNullMove() {
+    status = UNKNOWN;
+    gameHistoryCounter++;
+    gameHistory[gameHistoryCounter].enPassant = this->enPassant;
+    gameHistory[gameHistoryCounter].castleRights = this->castleRights;
+    gameHistory[gameHistoryCounter].eval = this->evaluation;
+    gameHistory[gameHistoryCounter].move = nullMove;
+    pastHashes[gameHistoryCounter] = hashValue;
+
+    enPassant = 0;
+
+    //Changing who to move
+    currentPlayer = BLACK * (currentPlayer == WHITE);
+    hashValue ^= zobristKeys[ZOBRIST_COLOR_INDEX];
+}
+
+/*
  * Takes in an input such as "e2e4" and executes it
  */
 void Game::doMoveAsString(std::string moveStr) {

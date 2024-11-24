@@ -103,6 +103,7 @@ public:
     void loadStartingPosition();
     void printGame() const;
     void doMove(const Move &move);
+    void doNullMove();
     void undoMove();
     void doMoveAsString(std::string moveStr);
     Moves getAllPseudoLegalMoves() const;
