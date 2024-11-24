@@ -104,7 +104,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     }
 
     //Null move prunning
-    if(depth < maxDepth && !g.isKingInCheck(g.currentPlayer)) {
+    if(depth < maxDepth * NULL_MOVE_FACTOR && !g.isKingInCheck(g.currentPlayer)) {
         g.doNullMove();
         Moves nmKillers;
         int nm = -negamax(g, -beta, -beta + 1, depth - NULL_MOVE_DEPTH_REDUCTION, maxDepth, nmKillers);
