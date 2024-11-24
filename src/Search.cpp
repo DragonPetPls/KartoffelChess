@@ -134,7 +134,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         //principle variation search
         int score;
         if(i != 0){
-            score = -negamax(g, -alpha - 1, -alpha, depth - 1, maxDepth, newKillerMoves);
+            score = -negamax(g, -alpha - 1, -alpha, depth - 1 - LATE_MOVE_DEPTH_REDUCTION * (i > LATE_MOVES), maxDepth, newKillerMoves);
             if(score > alpha && score < beta) {
                 score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
             }

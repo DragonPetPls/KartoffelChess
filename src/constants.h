@@ -53,6 +53,8 @@ enum Results {
     UNKNOWN
 };
 
+constexpr int INF = 1000000;
+
 constexpr int NUMBER_OF_ZOBRIST_KEYS = 900;
 
 constexpr int REPETITIONS_TILL_DRAW = 2;
