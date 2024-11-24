@@ -16,6 +16,9 @@ constexpr int EXACT = 0;
 constexpr int UPPERBOUND = 1;
 constexpr int LOWERBOUND = 2;
 
+constexpr int NULL_MOVE_DEPTH_REDUCTION = 5;
+constexpr double NULL_MOVE_FACTOR = 0.8;
+
 struct Node {
     int value;
     int bestMoveIndex;
