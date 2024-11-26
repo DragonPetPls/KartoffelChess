@@ -74,6 +74,16 @@ const int Evaluation::KING_TABLE[64] = {
     20, 30, 10, 0, 0, 10, 30, 20
 };
 
+const int Evaluation::KING_ENDGAME_TABLE[64] = {
+    -50,-40,-30,-20,-20,-30,-40,-50,
+    -30,-20,-10,  0,  0,-10,-20,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 30, 40, 40, 30,-10,-30,
+    -30,-10, 20, 30, 30, 20,-10,-30,
+    -30,-30,  0,  0,  0,  0,-30,-30,
+    -50,-30,-30,-30,-30,-30,-30,-50};
+
 const int Evaluation::PIECE_VALUES[6] = {100, 320, 330, 500, 900, 0};
 
 
@@ -85,6 +95,7 @@ const int Evaluation::PIECE_VALUES[6] = {100, 320, 330, 500, 900, 0};
 int Evaluation::evaluate(const Game &g) {
     evaluationCount++;
     int eval = 0;
+    int material = 0;
 
     bitboard hitmap = 0;
     for(int i = 0; i < 6; i++) {
@@ -93,18 +104,28 @@ int Evaluation::evaluate(const Game &g) {
     }
 
     bitboard square = 1;
+    int ownKingIndex = 0;
+    int enemyKingIndex = 0;
     for(int i = 0; i < 64; i++) {
         Game::fastForwardIndex(i, square, hitmap);
         if(i > 63) {
             break;
         }
         piece p = g.getPiece(square);
+
+        ownKingIndex += i * (p == (COLOR_TO_PIECE[g.currentPlayer] | KING));
+        enemyKingIndex += i * (p == (COLOR_TO_PIECE[1 - g.currentPlayer] | KING));
+
         color c = p & BLACK_PIECE ? BLACK : WHITE;
         p = p & ~BLACK_PIECE; //Removing the color of the piece
         int value = getPieceValue(i, p, c);
         eval += g.currentPlayer == c ? value : -value;
+        material += PIECE_VALUES[p] * (p != PAWN);
         square <<= 1;
     }
+
+    eval += getKingValue(ownKingIndex, g.currentPlayer, material < 1000);
+    eval -= getKingValue(enemyKingIndex, 1 - g.currentPlayer, material < 1000);
 
     return eval;
 }
@@ -138,10 +159,23 @@ int Evaluation::getPieceValue(int index, piece p, color c) {
             value += QUEEN_TABLE[index];
             break;
         case KING:
-            value += KING_TABLE[index];
+            value = 0;
             break;
         default: break;
     }
+
+    return value;
+}
+
+/*
+ * Returns the value of the king with consideration about if the position is an endgame
+ */
+int Evaluation::getKingValue(int index, color c, bool endgame) {
+    int value = 0;
+    int x = index % 8;
+    int y = index / 8;
+    index = c == WHITE ? x + 56 - 8 * y : x + 8 * y;
+    value = endgame ? KING_ENDGAME_TABLE[index] : KING_TABLE[index];
     return value;
 }
 

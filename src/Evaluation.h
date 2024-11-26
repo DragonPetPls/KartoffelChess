@@ -23,10 +23,12 @@ private:
     static const int ROOK_TABLE[64];
     static const int QUEEN_TABLE[64];
     static const int KING_TABLE[64];
+    static const int KING_ENDGAME_TABLE[64];
 
     static const int PIECE_VALUES[6];
 
     static int getPieceValue(int index, piece p, color c);
+    static int getKingValue(int index, color c, bool endgame);
     static int getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]);
 public:
     static int evaluate(const Game &g);

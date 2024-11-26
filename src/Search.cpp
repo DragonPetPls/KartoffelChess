@@ -228,6 +228,9 @@ void Search::printPrincipleVariation(Game &g) {
     std::cout << "Principle Variation: ";
     int counter = 0;
     while(true) {
+        if(g.getStatus() != ON_GOING) {
+            break;
+        }
         if(transpositionTable.find(g.key()) == transpositionTable.end()) {
             break;
         }
@@ -238,6 +241,7 @@ void Search::printPrincipleVariation(Game &g) {
         std::cout << Game::moveToString(next.moves[n.bestMoveIndex]) << " ";
         g.doMove(next.moves[n.bestMoveIndex]);
     }
+    g.printGame();
     for(int i = 0; i < counter; i++) {
         g.undoMove();
     }
