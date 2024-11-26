@@ -8,97 +8,157 @@
 
 uint64_t Evaluation::evaluationCount = 0;
 
-const int Evaluation::PAWN_TABLE[64] = {
+const int Evaluation::MIDGAME_PAWN_TABLE[64] = {
     0, 0, 0, 0, 0, 0, 0, 0,
-    50, 50, 50, 50, 50, 50, 50, 50,
-    10, 10, 20, 30, 30, 20, 10, 10,
-    5, 5, 10, 25, 25, 10, 5, 5,
-    0, 0, 0, 20, 20, 0, 0, 0,
-    5, -5, -10, 0, 0, -10, -5, 5,
-    5, 10, 10, -20, -20, 10, 10, 5,
+    98, 134, 61, 95, 68, 126, 34, -11,
+    -6, 7, 26, 31, 65, 56, 25, -20,
+    -14, 13, 6, 21, 23, 12, 17, -23,
+    -27, -2, -5, 12, 17, 6, 10, -25,
+    -26, -4, -4, -10, 3, 3, 33, -12,
+    -35, -1, -20, -23, -15, 24, 38, -22,
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-const int Evaluation::KNIGHT_TABLE[64] = {
-    -50, -40, -30, -30, -30, -30, -40, -50,
-    -40, -20, 0, 0, 0, 0, -20, -40,
-    -30, 0, 10, 15, 15, 10, 0, -30,
-    -30, 5, 15, 20, 20, 15, 5, -30,
-    -30, 0, 15, 20, 20, 15, 0, -30,
-    -30, 5, 10, 15, 15, 10, 5, -30,
-    -40, -20, 0, 5, 5, 0, -20, -40,
-    -50, -40, -30, -30, -30, -30, -40, -50
-};
-
-const int Evaluation::BISHOP_TABLE[64] = {
-    -20, -10, -10, -10, -10, -10, -10, -20,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -10, 0, 5, 10, 10, 5, 0, -10,
-    -10, 5, 5, 10, 10, 5, 5, -10,
-    -10, 0, 10, 10, 10, 10, 0, -10,
-    -10, 10, 10, 10, 10, 10, 10, -10,
-    -10, 5, 0, 0, 0, 0, 5, -10,
-    -20, -10, -10, -10, -10, -10, -10, -20
-};
-
-const int Evaluation::ROOK_TABLE[64]= {
+const int Evaluation::ENDGAME_PAWN_TABLE[64] = {
     0, 0, 0, 0, 0, 0, 0, 0,
-    5, 10, 10, 10, 10, 10, 10, 5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    0, 0, 0, 5, 5, 0, 0, 0
+    178, 173, 158, 134, 147, 132, 165, 187,
+    94, 100, 85, 67, 56, 53, 82, 84,
+    32, 24, 13, 5, -2, 4, 17, 17,
+    13, 9, -3, -7, -7, -8, 3, -1,
+    4, 7, -6, 1, 0, -5, -1, -8,
+    13, 8, 8, 10, 13, 0, 2, -7,
+    0, 0, 0, 0, 0, 0, 0, 0
 };
 
-const int Evaluation::QUEEN_TABLE[64] = {
-    -20, -10, -10, -5, -5, -10, -10, -20,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -10, 0, 5, 5, 5, 5, 0, -10,
-    -5, 0, 5, 5, 5, 5, 0, -5,
-    0, 0, 5, 5, 5, 5, 0, -5,
-    -10, 5, 5, 5, 5, 5, 0, -10,
-    -10, 0, 5, 0, 0, 0, 0, -10,
-    -20, -10, -10, -5, -5, -10, -10, -20
+const int Evaluation::MIDGAME_KNIGHT_TABLE[64] = {
+    -167, -89, -34, -49,  61, -97, -15, -107,
+     -73, -41,  72,  36,  23,  62,   7,  -17,
+     -47,  60,  37,  65,  84, 129,  73,   44,
+      -9,  17,  19,  53,  37,  69,  18,   22,
+     -13,   4,  16,  13,  28,  19,  21,   -8,
+     -23,  -9,  12,  10,  19,  17,  25,  -16,
+     -29, -53, -12,  -3,  -1,  18, -14,  -19,
+    -105, -21, -58, -33, -17, -28, -19,  -23
 };
 
-const int Evaluation::KING_TABLE[64] = {
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -20, -30, -30, -40, -40, -30, -30, -20,
-    -10, -20, -20, -20, -20, -20, -20, -10,
-    20, 20, 0, 0, 0, 0, 20, 20,
-    20, 30, 10, 0, 0, 10, 30, 20
+const int Evaluation::ENDGAME_KNIGHT_TABLE[64] = {
+    -58, -38, -13, -28, -31, -27, -63, -99,
+    -25,  -8, -25,  -2,  -9, -25, -24, -52,
+    -24, -20,  10,   9,  -1,  -9, -19, -41,
+    -17,   3,  22,  22,  22,  11,   8, -18,
+    -18,  -6,  16,  25,  16,  17,   4, -18,
+    -23,  -3,  -1,  15,  10,  -3, -20, -22,
+    -42, -20, -10,  -5,  -2, -20, -23, -44,
+    -29, -51, -23, -15, -22, -18, -50, -64
 };
 
-const int Evaluation::KING_ENDGAME_TABLE[64] = {
-    -50,-40,-30,-20,-20,-30,-40,-50,
-    -30,-20,-10,  0,  0,-10,-20,-30,
-    -30,-10, 20, 30, 30, 20,-10,-30,
-    -30,-10, 30, 40, 40, 30,-10,-30,
-    -30,-10, 30, 40, 40, 30,-10,-30,
-    -30,-10, 20, 30, 30, 20,-10,-30,
-    -30,-30,  0,  0,  0,  0,-30,-30,
-    -50,-30,-30,-30,-30,-30,-30,-50};
+const int Evaluation::MIDGAME_BISHOP_TABLE[64] = {
+    -29,   4, -82, -37, -25, -42,   7,  -8,
+   -26,  16, -18, -13,  30,  59,  18, -47,
+   -16,  37,  43,  40,  35,  50,  37,  -2,
+    -4,   5,  19,  50,  37,  37,   7,  -2,
+    -6,  13,  13,  26,  34,  12,  10,   4,
+     0,  15,  15,  15,  14,  27,  18,  10,
+     4,  15,  16,   0,   7,  21,  33,   1,
+   -33,  -3, -14, -21, -13, -12, -39, -21
+};
 
-const int Evaluation::PIECE_VALUES[6] = {100, 320, 330, 500, 900, 0};
+const int Evaluation::ENDGAME_BISHOP_TABLE[64] = {
+    -14, -21, -11,  -8, -7,  -9, -17, -24,
+    -8,  -4,   7, -12, -3, -13,  -4, -14,
+     2,  -8,   0,  -1, -2,   6,   0,   4,
+    -3,   9,  12,   9, 14,  10,   3,   2,
+    -6,   3,  13,  19,  7,  10,  -3,  -9,
+   -12,  -3,   8,  10, 13,   3,  -7, -15,
+   -14, -18,  -7,  -1,  4,  -9, -15, -27,
+   -23,  -9, -23,  -5, -9, -16,  -5, -17
+};
 
+const int Evaluation::MIDGAME_ROOK_TABLE[64] = {
+    32,  42,  32,  51, 63,  9,  31,  43,
+   27,  32,  58,  62, 80, 67,  26,  44,
+   -5,  19,  26,  36, 17, 45,  61,  16,
+  -24, -11,   7,  26, 24, 35,  -8, -20,
+  -36, -26, -12,  -1,  9, -7,   6, -23,
+  -45, -25, -16, -17,  3,  0,  -5, -33,
+  -44, -16, -20,  -9, -1, 11,  -6, -71,
+  -19, -13,   1,  17, 16,  7, -37, -26
+};
 
+const int Evaluation::ENDGAME_ROOK_TABLE[64] = {
+    13, 10, 18, 15, 12,  12,   8,   5,
+   11, 13, 13, 11, -3,   3,   8,   3,
+    7,  7,  7,  5,  4,  -3,  -5,  -3,
+    4,  3, 13,  1,  2,   1,  -1,   2,
+    3,  5,  8,  4, -5,  -6,  -8, -11,
+   -4,  0, -5, -1, -7, -12,  -8, -16,
+   -6, -6,  0,  2, -9,  -9, -11,  -3,
+   -9,  2,  3, -1, -5, -13,   4, -20
+};
 
+const int Evaluation::MIDGAME_QUEEN_TABLE[64] = {
+    -28,   0,  29,  12,  59,  44,  43,  45,
+    -24, -39,  -5,   1, -16,  57,  28,  54,
+    -13, -17,   7,   8,  29,  56,  47,  57,
+    -27, -27, -16, -16,  -1,  17,  -2,   1,
+     -9, -26,  -9, -10,  -2,  -4,   3,  -3,
+    -14,   2, -11,  -2,  -5,   2,  14,   5,
+    -35,  -8,  11,   2,   8,  15,  -3,   1,
+     -1, -18,  -9,  10, -15, -25, -31, -50
+};
+
+const int Evaluation::ENDGAME_QUEEN_TABLE[64] = {
+    -9,  22,  22,  27,  27,  19,  10,  20,
+   -17,  20,  32,  41,  58,  25,  30,   0,
+   -20,   6,   9,  49,  47,  35,  19,   9,
+     3,  22,  24,  45,  57,  40,  57,  36,
+   -18,  28,  19,  47,  31,  34,  39,  23,
+   -16, -27,  15,   6,   9,  17,  10,   5,
+   -22, -23, -30, -16, -16, -23, -36, -32,
+   -33, -28, -22, -43,  -5, -32, -20, -41
+};
+
+const int Evaluation::MIDGAME_KING_TABLE[64] = {
+    -65,  23,  16, -15, -56, -34,   2,  13,
+   29,  -1, -20,  -7,  -8,  -4, -38, -29,
+   -9,  24,   2, -16, -20,   6,  22, -22,
+  -17, -20, -12, -27, -30, -25, -14, -36,
+  -49,  -1, -27, -39, -46, -44, -33, -51,
+  -14, -14, -22, -46, -44, -30, -15, -27,
+    1,   7,  -8, -64, -43, -16,   9,   8,
+  -15,  36,  12, -54,   8, -28,  24,  14
+};
+
+const int Evaluation::ENDGAME_KING_TABLE[64] = {
+    -74, -35, -18, -18, -11,  15,   4, -17,
+   -12,  17,  14,  17,  17,  38,  23,  11,
+    10,  17,  23,  15,  20,  45,  44,  13,
+    -8,  22,  24,  27,  26,  33,  26,   3,
+   -18,  -4,  21,  24,  27,  23,   9, -11,
+   -19,  -3,  11,  21,  23,  16,   7,  -9,
+   -27, -11,   4,  13,  14,   4,  -5, -17,
+   -53, -34, -21, -11, -28, -14, -24, -43
+};
+
+const int Evaluation::MIDGAME_PIECE_VALUES[6] {
+    82, 337, 365, 477, 1025,  0
+};
+
+const int Evaluation::ENDGAME_PIECE_VALUES[6] {
+    94, 281, 297, 512,  936,  0
+};
 
 /*
  * Performs the static evaluation at the end of the search
  */
 int Evaluation::evaluate(const Game &g) {
     evaluationCount++;
-    int eval = 0;
+    int midgameEval = 0;
+    int endgameEval = 0;
     int material = 0;
 
     bitboard hitmap = 0;
-    for(int i = 0; i < 6; i++) {
+    for (int i = 0; i < 6; i++) {
         hitmap |= g.pieceBoards[i | WHITE_PIECE];
         hitmap |= g.pieceBoards[i | BLACK_PIECE];
     }
@@ -106,9 +166,9 @@ int Evaluation::evaluate(const Game &g) {
     bitboard square = 1;
     int ownKingIndex = 0;
     int enemyKingIndex = 0;
-    for(int i = 0; i < 64; i++) {
+    for (int i = 0; i < 64; i++) {
         Game::fastForwardIndex(i, square, hitmap);
-        if(i > 63) {
+        if (i > 63) {
             break;
         }
         piece p = g.getPiece(square);
@@ -118,14 +178,19 @@ int Evaluation::evaluate(const Game &g) {
 
         color c = p & BLACK_PIECE ? BLACK : WHITE;
         p = p & ~BLACK_PIECE; //Removing the color of the piece
-        int value = getPieceValue(i, p, c);
-        eval += g.currentPlayer == c ? value : -value;
-        material += PIECE_VALUES[p] * (p != PAWN);
+        int value = getMidgamePieceValue(i, p, c);
+        midgameEval += g.currentPlayer == c ? value : -value;
+        value = getEndgamePieceValue(i, p, c);
+        endgameEval += g.currentPlayer == c ? value : -value;
+
+        material += MIDGAME_PIECE_VALUES[p] * (p != PAWN);
         square <<= 1;
     }
 
-    eval += getKingValue(ownKingIndex, g.currentPlayer, material < 1000);
-    eval -= getKingValue(enemyKingIndex, 1 - g.currentPlayer, material < 1000);
+    int phase = material;
+    phase = std::max(4000, phase);
+
+    int eval = (midgameEval * phase + endgameEval * (4000 - phase))/4000;
 
     return eval;
 }
@@ -133,9 +198,9 @@ int Evaluation::evaluate(const Game &g) {
 /*
  * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
  */
-int Evaluation::getPieceValue(int index, piece p, color c) {
+int Evaluation::getMidgamePieceValue(int index, piece p, color c) {
     int value = 0;
-    value += PIECE_VALUES[p];
+    value += MIDGAME_PIECE_VALUES[p];
 
     int x = index % 8;
     int y = index / 8;
@@ -144,22 +209,22 @@ int Evaluation::getPieceValue(int index, piece p, color c) {
 
     switch (p) {
         case PAWN:
-            value += PAWN_TABLE[index];
+            value += MIDGAME_PAWN_TABLE[index];
             break;
         case KNIGHT:
-            value += KNIGHT_TABLE[index];
+            value += MIDGAME_KNIGHT_TABLE[index];
             break;
         case BISHOP:
-            value += BISHOP_TABLE[index];
+            value += MIDGAME_BISHOP_TABLE[index];
             break;
         case ROOK:
-            value += ROOK_TABLE[index];
+            value += MIDGAME_ROOK_TABLE[index];
             break;
         case QUEEN:
-            value += QUEEN_TABLE[index];
+            value += MIDGAME_QUEEN_TABLE[index];
             break;
         case KING:
-            value = 0;
+            value = MIDGAME_KING_TABLE[index];
             break;
         default: break;
     }
@@ -167,28 +232,56 @@ int Evaluation::getPieceValue(int index, piece p, color c) {
     return value;
 }
 
+
 /*
- * Returns the value of the king with consideration about if the position is an endgame
+ * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
  */
-int Evaluation::getKingValue(int index, color c, bool endgame) {
+int Evaluation::getEndgamePieceValue(int index, piece p, color c) {
     int value = 0;
+    value += ENDGAME_PIECE_VALUES[p];
+
     int x = index % 8;
     int y = index / 8;
+
     index = c == WHITE ? x + 56 - 8 * y : x + 8 * y;
-    value = endgame ? KING_ENDGAME_TABLE[index] : KING_TABLE[index];
+
+    switch (p) {
+        case PAWN:
+            value += ENDGAME_PAWN_TABLE[index];
+        break;
+        case KNIGHT:
+            value += ENDGAME_KNIGHT_TABLE[index];
+        break;
+        case BISHOP:
+            value += ENDGAME_BISHOP_TABLE[index];
+        break;
+        case ROOK:
+            value += ENDGAME_ROOK_TABLE[index];
+        break;
+        case QUEEN:
+            value += ENDGAME_QUEEN_TABLE[index];
+        break;
+        case KING:
+            value = ENDGAME_KING_TABLE[index];
+        break;
+        default: break;
+    }
+
     return value;
 }
+
 
 /*
  * Returns a vector of ints in the order that moves should be searched further
  */
-std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]) {
+std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves,
+                                       int historyTable[6][64]) {
     std::vector<Order> order;
     order.reserve(moves.moveCount);
 
-    for(int i = 0; i < moves.moveCount; i++) {
+    for (int i = 0; i < moves.moveCount; i++) {
         int value = 0;
-        if(i == prevBestIndex) {
+        if (i == prevBestIndex) {
             value = 1000000;
         } else {
             value = getMoveValue(moves.moves[i], g, killerMoves, historyTable);
@@ -196,13 +289,14 @@ std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int pr
         order.push_back(Order{i, value});
     }
 
-    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) { //This line is highlighted
+    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
+        //This line is highlighted
         return a.value > b.value;
     });
 
     std::vector<int> result;
     result.resize(order.size());
-    for(int i = 0; i < order.size(); i++) {
+    for (int i = 0; i < order.size(); i++) {
         result[i] = order[i].index;
     }
     return result;
@@ -216,36 +310,37 @@ std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves, int
     std::vector<Order> order;
     order.reserve(moves.moveCount);
 
-    for(int i = 0; i < moves.moveCount; i++) {
+    for (int i = 0; i < moves.moveCount; i++) {
         int value = 0;
         piece capturedPiece = g.getPiece(moves.moves[i].toSquare);
         capturedPiece &= ~BLACK_PIECE; //Removing color
         //Captures and promotions first
         bool captureOrPromotion = false;
-        if(capturedPiece < 6) {
-            value += 100000 + PIECE_VALUES[capturedPiece] - PIECE_VALUES[moves.moves[i].startingPiece];
+        if (capturedPiece < 6) {
+            value += 100000 + MIDGAME_PIECE_VALUES[capturedPiece] - MIDGAME_PIECE_VALUES[moves.moves[i].startingPiece];
             captureOrPromotion = true;
-            if(delta > PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
+            if (delta > MIDGAME_PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
                 continue;
             }
         }
-        if(moves.moves[i].startingPiece != moves.moves[i].endingPiece) {
-            value += 100000 + PIECE_VALUES[moves.moves[i].endingPiece] - PIECE_VALUES[moves.moves[i].startingPiece];
+        if (moves.moves[i].startingPiece != moves.moves[i].endingPiece) {
+            value += 100000 + MIDGAME_PIECE_VALUES[moves.moves[i].endingPiece] - MIDGAME_PIECE_VALUES[moves.moves[i].startingPiece];
             captureOrPromotion = true;
-            if(delta > PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
+            if (delta > MIDGAME_PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
                 continue;
             }
         }
         order.push_back(Order{i, value});
     }
 
-    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) { //This line is highlighted
+    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
+        //This line is highlighted
         return a.value > b.value;
     });
 
     std::vector<int> result;
     result.resize(order.size());
-    for(int i = 0; i < order.size(); i++) {
+    for (int i = 0; i < order.size(); i++) {
         result[i] = order[i].index;
     }
     return result;
@@ -254,33 +349,33 @@ std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves, int
 /*
  * returns a value that if represents how high on the priority list searching this move should be
  */
-int Evaluation::getMoveValue(const Move& move, const Game &g, Moves &killerMoves, int historyTable[6][64]) {
+int Evaluation::getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]) {
     int value = 0;
 
     piece capturedPiece = g.getPiece(move.toSquare);
     capturedPiece &= ~BLACK_PIECE; //Removing color
     //Captures and promotions first
     bool captureOrPromotion = false;
-    if(capturedPiece < 6) {
-        value += 100000 + PIECE_VALUES[capturedPiece] - PIECE_VALUES[move.startingPiece];
+    if (capturedPiece < 6) {
+        value += 100000 + MIDGAME_PIECE_VALUES[capturedPiece] - MIDGAME_PIECE_VALUES[move.startingPiece];
         captureOrPromotion = true;
     }
-    if(move.startingPiece != move.endingPiece) {
-        value += 100000 + PIECE_VALUES[move.endingPiece] - PIECE_VALUES[move.startingPiece];
+    if (move.startingPiece != move.endingPiece) {
+        value += 100000 + MIDGAME_PIECE_VALUES[move.endingPiece] - MIDGAME_PIECE_VALUES[move.startingPiece];
         captureOrPromotion = true;
     }
 
     //Now we check for killer moves
     bool killer = false;
-    for(int i = 0; i < killerMoves.moveCount; i++) {
-        if(killerMoves.moves[i] == move) {
+    for (int i = 0; i < killerMoves.moveCount; i++) {
+        if (killerMoves.moves[i] == move) {
             value += 1;
             killer = true;
         }
     }
     value += 80000 * killer * !captureOrPromotion;
 
-    if(value != 0) {
+    if (value != 0) {
         return value;
     }
 
