@@ -47,7 +47,7 @@ namespace std {
  */
 struct LastMove{
     Move move;
-    int eval;
+    int movesWithoutProgress;
     uint8_t enPassant;
     uint8_t castleRights;
     piece capturedPiece;
@@ -69,7 +69,6 @@ private:
 
 public:
     //Attributes
-    int evaluation; //This is an evaluation updated after every move
     bitboard pieceBoards[14];
     color currentPlayer;
     uint8_t enPassant; // stores the row in which an en passant is playable in a way a bitboard does

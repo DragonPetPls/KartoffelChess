@@ -64,6 +64,9 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     if(depth != maxDepth && g.checkForRepetition()) {
         return 0;
     }
+    if(depth != maxDepth) {
+       // std::cout << "test" << std::endl;
+    }
 
     //Checking the position in the transposition table
     int originalAlpha = alpha;
@@ -81,7 +84,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
             }
             if(alpha >= beta) return n.value;
         }
-        prevBestIndex = transpositionTable[g.key()].bestMoveIndex;
+        prevBestIndex = n.bestMoveIndex;
     }
 
     if(depth <= 0) {
@@ -130,12 +133,11 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         }
         legalMoveExists = true;
 
-
         //principle variation search
         int score;
         if(i != 0){
-            score = -negamax(g, -alpha - 1, -alpha, depth - 1 - LATE_MOVE_DEPTH_REDUCTION * (i > LATE_MOVES), maxDepth, newKillerMoves);
-            if(score > alpha && score < beta) {
+            score = -negamax(g, -alpha - 1, -alpha, depth - 1, maxDepth, newKillerMoves);
+            if(score > alpha) {
                 score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
             }
         } else {

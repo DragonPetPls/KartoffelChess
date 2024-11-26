@@ -36,6 +36,7 @@ void Game::loadStartingPosition() {
     currentPlayer = WHITE;
 
     gameHistoryCounter = -1;
+    movesWithoutProgess = 0;
     setHashValue();
 }
 
@@ -148,7 +149,7 @@ void Game::doMove(const Move &move) {
     gameHistoryCounter++;
     gameHistory[gameHistoryCounter].enPassant = this->enPassant;
     gameHistory[gameHistoryCounter].castleRights = this->castleRights;
-    gameHistory[gameHistoryCounter].eval = this->evaluation;
+    gameHistory[gameHistoryCounter].movesWithoutProgress = this->movesWithoutProgess;
     gameHistory[gameHistoryCounter].move = move;
     pastHashes[gameHistoryCounter] = hashValue;
 
@@ -243,11 +244,13 @@ void Game::doNullMove() {
     gameHistoryCounter++;
     gameHistory[gameHistoryCounter].enPassant = this->enPassant;
     gameHistory[gameHistoryCounter].castleRights = this->castleRights;
-    gameHistory[gameHistoryCounter].eval = this->evaluation;
+    gameHistory[gameHistoryCounter].movesWithoutProgress = this->movesWithoutProgess;
     gameHistory[gameHistoryCounter].move = nullMove;
     pastHashes[gameHistoryCounter] = hashValue;
 
     enPassant = 0;
+
+    movesWithoutProgess++;
 
     //Changing who to move
     currentPlayer = BLACK * (currentPlayer == WHITE);
@@ -289,7 +292,7 @@ void Game::doMoveAsString(std::string moveStr) {
 void Game::undoMove() {
     status = UNKNOWN;
     //Restoring saved data
-    this->evaluation = gameHistory[gameHistoryCounter].eval;
+    this->movesWithoutProgess = gameHistory[gameHistoryCounter].movesWithoutProgress;
     this->castleRights = gameHistory[gameHistoryCounter].castleRights;
     this->enPassant = gameHistory[gameHistoryCounter].enPassant;
     piece &capturedPiece = gameHistory[gameHistoryCounter].capturedPiece;
@@ -322,7 +325,6 @@ void Game::undoMove() {
             * ((move.toSquare & LONG_CASTLE_KING) && (move.fromSquare & LONG_CASTLE_KING));
 
     gameHistoryCounter--;
-    movesWithoutProgess = (movesWithoutProgess - 1) * (movesWithoutProgess > 0);
 }
 
 /*
@@ -906,6 +908,7 @@ void Game::loadFen(const std::string &fen) {
             pointer--;
         }
 
+        movesWithoutProgess = 0;
         counter++;
     }
 

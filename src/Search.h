@@ -18,8 +18,6 @@ constexpr int LOWERBOUND = 2;
 //Parameters
 constexpr int NULL_MOVE_DEPTH_REDUCTION = 5; //How much we reduce depth when checking a null move
 constexpr double NULL_MOVE_FACTOR = 0.8; //What percentage of depths perform late move reduction
-constexpr int LATE_MOVES = 3; //After what move we consider late
-constexpr int LATE_MOVE_DEPTH_REDUCTION = 1; //How much we reduce depth for a late move
 
 struct Node {
     int value;
