@@ -13,6 +13,7 @@ private:
     Search search;
 public:
     Move getMove(Game g, int timeLeft, int tineIncrement, int timePerMove);
+    Move getMove(Game g, int depth);
     void stopSearch();
     void printPrincipalVariation(Game &g);
 };

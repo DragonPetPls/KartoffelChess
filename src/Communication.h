@@ -7,6 +7,7 @@
 
 #define MOVETIME 0
 #define MATCHTIME 1
+#define USE_DEPTH 2
 
 #include <mutex>
 #include "Engine.h"

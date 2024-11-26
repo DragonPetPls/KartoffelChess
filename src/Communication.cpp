@@ -31,7 +31,7 @@ void Communication::startCommunication() {
 
 void Communication::uci() {
     output.lock();
-    std::cout << "id name notCheckers" << std::endl;
+    std::cout << "id name KartoffelBot" << std::endl;
     std::cout << "id author Fabian" << std::endl;
     std::cout << "v2" << std::endl;
     std::cout <<  "uciok" << std::endl;
@@ -53,6 +53,7 @@ void Communication::go(const std::string& command) {
     int increment = 0;
     int timeLeft = 0;
     int timeMode = MOVETIME;
+    int depth = 0;
 
     bool isTimeSet = false;
 
@@ -80,7 +81,6 @@ void Communication::go(const std::string& command) {
             std::stringstream ss(arguments[i + 1]);
             ss >> moveTime;
             timeMode = MOVETIME;
-            break;
         }
         if(arguments[i] == timeStr){
             std::stringstream ss(arguments[i + 1]);
@@ -92,6 +92,10 @@ void Communication::go(const std::string& command) {
             ss >> increment;
             timeMode = MATCHTIME;
         }
+        if(arguments[i] == "depth") {
+            std::istringstream(arguments[i + 1]) >> depth;
+            timeMode = USE_DEPTH;
+        }
     }
 
     if(timeMode == MATCHTIME){
@@ -99,7 +103,13 @@ void Communication::go(const std::string& command) {
     }
 
     gameMtx.lock();
-    Move m = e.getMove(g, timeLeft, increment, moveTime);
+    Move m;
+    if(timeMode != USE_DEPTH) {
+        m = e.getMove(g, timeLeft, increment, moveTime);
+    } else {
+        m = e.getMove(g, depth);
+    }
+
     gameMtx.unlock();
     output.lock();
 
