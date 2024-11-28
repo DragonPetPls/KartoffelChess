@@ -14,7 +14,7 @@
 
 void Communication::startCommunication() {
     g.loadStartingPosition();
-    std::thread(&Communication::worker, this).detach();
+    std::thread worker(&Communication::worker, this);
 
     //Adds all inputs at the end of the command queue
     std::string lastInput;
@@ -24,6 +24,10 @@ void Communication::startCommunication() {
         commandQueue.push(lastInput);
         queueMtx.unlock();
         cv.notify_one();
+    }
+
+    if(worker.joinable()) {
+        worker.join();
     }
 }
 

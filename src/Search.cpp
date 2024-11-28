@@ -43,7 +43,7 @@ void Search::searchToDepth(Game &g, int toDepth) {
 
     int depth = 0;
 
-    //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with consol outputs
+    //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with console outputs
     while (depth < toDepth) {
         depth++;
         Moves m;

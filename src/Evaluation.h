@@ -8,6 +8,9 @@
 
 constexpr int MAX_HISTORY = 75000;
 constexpr int SAFETY_DELTA_MARGIN = 200;
+constexpr int ENDGAME_MATERIAL = 4000;
+constexpr int SAFETY_DIVISOR = 1500;
+constexpr int MOBILITY = 1;
 
 class Evaluation {
 private:
@@ -33,10 +36,13 @@ private:
     static const int MIDGAME_PIECE_VALUES[6];
     static const int ENDGAME_PIECE_VALUES[6];
 
-    static int getMidgamePieceValue(int index, piece p, color c);
-    static int getEndgamePieceValue(int index, piece p, color c);
+    static int getMidgamePieceValue(bitboard hitmap, int index, piece p, color c);
+    static int getEndgamePieceValue(bitboard hitmap, int index, piece p, color c);
     static int getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]);
 public:
+
+    static int TEST_CONSTANT;
+
     static int evaluate(const Game &g);
     static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]);
     static std::vector<int> rankCaptures(const Game &g, const Moves &moves, int delta);

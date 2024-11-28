@@ -6,6 +6,8 @@
 
 #include <algorithm>
 
+int Evaluation::TEST_CONSTANT = 0;
+
 uint64_t Evaluation::evaluationCount = 0;
 
 const int Evaluation::MIDGAME_PAWN_TABLE[64] = {
@@ -164,8 +166,14 @@ int Evaluation::evaluate(const Game &g) {
     }
 
     bitboard square = 1;
-    int ownKingIndex = 0;
-    int enemyKingIndex = 0;
+    int ownKingIndex = Game::getIndex(g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | KING]);
+    int enemyKingIndex = Game::getIndex(g.pieceBoards[COLOR_TO_PIECE[1 - g.currentPlayer] | KING]);
+
+    bitboard ownKingSpace = MagicBitboards::getKingReachableSquares(ownKingIndex) | g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | KING];
+    bitboard enemyKingSpace = MagicBitboards::getKingReachableSquares(enemyKingIndex) | g.pieceBoards[COLOR_TO_PIECE[1 - g.currentPlayer] | KING];
+    int safety = 0;
+    int mobility = 0;
+
     for (int i = 0; i < 64; i++) {
         Game::fastForwardIndex(i, square, hitmap);
         if (i > 63) {
@@ -173,24 +181,65 @@ int Evaluation::evaluate(const Game &g) {
         }
         piece p = g.getPiece(square);
 
-        ownKingIndex += i * (p == (COLOR_TO_PIECE[g.currentPlayer] | KING));
-        enemyKingIndex += i * (p == (COLOR_TO_PIECE[1 - g.currentPlayer] | KING));
-
+        //Piece square tables
         color c = p & BLACK_PIECE ? BLACK : WHITE;
         p = p & ~BLACK_PIECE; //Removing the color of the piece
-        int value = getMidgamePieceValue(i, p, c);
+
+        int value = getMidgamePieceValue(hitmap, i, p, c);
         midgameEval += g.currentPlayer == c ? value : -value;
-        value = getEndgamePieceValue(i, p, c);
+        value = getEndgamePieceValue(hitmap, i, p, c);
         endgameEval += g.currentPlayer == c ? value : -value;
 
         material += MIDGAME_PIECE_VALUES[p] * (p != PAWN);
+
+        //King safety
+        if(c != g.currentPlayer) {
+            switch(p) {
+                case KNIGHT:
+                    safety -= 3 * ((MagicBitboards::getKnightReachableSquares(i) & ownKingSpace) != 0);
+                break;
+                case BISHOP:
+                    safety -= 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & ownKingSpace) != 0);
+                break;
+                case ROOK:
+                    safety -= 5 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & ownKingSpace) != 0);
+                break;
+                case QUEEN:
+                    safety -= 9 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & ownKingSpace) != 0);
+                    safety -= 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & ownKingSpace) != 0);
+                break;
+                default:
+                    break;
+            }
+        } else {
+            switch(p) {
+                case KNIGHT:
+                    safety += 3 * ((MagicBitboards::getKnightReachableSquares(i) & enemyKingSpace) != 0);
+                break;
+                case BISHOP:
+                    safety += 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & enemyKingSpace) != 0);
+                break;
+                case ROOK:
+                    safety += 5 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & enemyKingSpace) != 0);
+                break;
+                case QUEEN:
+                    safety += 9 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & enemyKingSpace) != 0);
+                    safety += 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & enemyKingSpace) != 0);
+                break;
+                default:
+                    break;
+            }
+        }
+
+
         square <<= 1;
     }
 
     int phase = material;
-    phase = std::max(4000, phase);
+    phase = std::min(ENDGAME_MATERIAL, phase);
 
-    int eval = (midgameEval * phase + endgameEval * (4000 - phase))/4000;
+    int eval = (midgameEval * phase + endgameEval * (ENDGAME_MATERIAL - phase))/ENDGAME_MATERIAL;
+    eval += safety * phase / SAFETY_DIVISOR;
 
     return eval;
 }
@@ -198,7 +247,7 @@ int Evaluation::evaluate(const Game &g) {
 /*
  * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
  */
-int Evaluation::getMidgamePieceValue(int index, piece p, color c) {
+int Evaluation::getMidgamePieceValue(bitboard hitmap, int index, piece p, color c) {
     int value = 0;
     value += MIDGAME_PIECE_VALUES[p];
 
@@ -216,12 +265,16 @@ int Evaluation::getMidgamePieceValue(int index, piece p, color c) {
             break;
         case BISHOP:
             value += MIDGAME_BISHOP_TABLE[index];
+            value += MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount;
             break;
         case ROOK:
             value += MIDGAME_ROOK_TABLE[index];
+            value += MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount;
             break;
         case QUEEN:
             value += MIDGAME_QUEEN_TABLE[index];
+            value += MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount;
+            value += MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount;
             break;
         case KING:
             value = MIDGAME_KING_TABLE[index];
@@ -236,7 +289,7 @@ int Evaluation::getMidgamePieceValue(int index, piece p, color c) {
 /*
  * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
  */
-int Evaluation::getEndgamePieceValue(int index, piece p, color c) {
+int Evaluation::getEndgamePieceValue(bitboard hitmap, int index, piece p, color c) {
     int value = 0;
     value += ENDGAME_PIECE_VALUES[p];
 
@@ -254,12 +307,16 @@ int Evaluation::getEndgamePieceValue(int index, piece p, color c) {
         break;
         case BISHOP:
             value += ENDGAME_BISHOP_TABLE[index];
+            value += MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount;
         break;
         case ROOK:
             value += ENDGAME_ROOK_TABLE[index];
+            value += MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount;
         break;
         case QUEEN:
             value += ENDGAME_QUEEN_TABLE[index];
+            value += MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount;
+            value += MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount;
         break;
         case KING:
             value = ENDGAME_KING_TABLE[index];
