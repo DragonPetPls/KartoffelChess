@@ -7,17 +7,37 @@
 #include "Evaluation.h"
 
 /*
- * Performs a search until the stop variable is set to true
+ * Ponders the given position
  */
-void Search::search(Game &g, const std::atomic<bool> &stop) {
+void Search::ponder(Game g, const std::atomic<bool> &stop) {
 
     transpositionTable.clear();
+
+    int depth = 0;
+    this->stop = &stop;
+
+    //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with consol outputs
+    while (!stop && depth < 1000) {
+        depth++;
+        Moves killer;
+        int eval = negamax(g, -INF, INF, depth, depth, killer);
+        if(!stop) {
+            std::cout << "info depth " << depth << " score cp " << eval << std::endl;
+        }
+    }
 
     for(int i = 0; i < 6; i++) {
         for(int j = 0; j < 64; j++) {
             historyTable[i][j] = 0;
         }
     }
+}
+
+
+/*
+ * Performs a search until the stop variable is set to true
+ */
+void Search::search(Game &g, const std::atomic<bool> &stop) {
 
     int depth = 0;
     this->stop = &stop;

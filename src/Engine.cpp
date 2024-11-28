@@ -13,6 +13,9 @@
  * Returns the move the engine determinds to be the best
  */
 Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
+
+    stopSearch();
+
     int searchTime;
     if (timePerMove == 0) {
         //match time
@@ -46,8 +49,9 @@ Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
  */
 Move Engine::getMove(Game g, int depth) {
 
+    stopSearch();
+
     //Starting and stopping the search thread
-    std::atomic<bool> stop(false);
     std::thread searchThread(&Search::searchToDepth, &search, std::ref(g), depth);
 
     std::cout << "stopped" << std::endl;
@@ -61,9 +65,19 @@ Move Engine::getMove(Game g, int depth) {
     return next.moves[search.getNodeFromTable(g)->bestMoveIndex];
 }
 
-//TODO
+void Engine::ponder(Game g) {
+    stop = false;
+    thread = std::make_unique<std::thread>(std::thread(&Search::ponder, &search, g, std::ref(stop)));
+}
+
 void Engine::stopSearch() {
-    std::cout << "stopped" << std::endl;
+    if(this->thread != nullptr) {
+        stop = true;
+        std::cout << "stopping ponder thread";
+        if(thread->joinable()) {
+            thread->join();
+        }
+    }
 }
 
 void Engine::printPrincipalVariation(Game &g) {

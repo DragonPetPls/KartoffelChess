@@ -51,8 +51,6 @@ void Communication::isready() {
 
 
 void Communication::go(const std::string& command) {
-
-
     int moveTime = 5000;
     int increment = 0;
     int timeLeft = 0;
@@ -80,7 +78,7 @@ void Communication::go(const std::string& command) {
         incStr = "binc";
     }
 
-    for(int i = 0; i < arguments.size() - 1; i++){
+    for(int i = 0; i < arguments.size(); i++){
         if(arguments[i] == "movetime"){
             std::stringstream ss(arguments[i + 1]);
             ss >> moveTime;
@@ -100,6 +98,9 @@ void Communication::go(const std::string& command) {
             std::istringstream(arguments[i + 1]) >> depth;
             timeMode = USE_DEPTH;
         }
+        if(arguments[i] == "ponder") {
+            timeMode = PONDER;
+        }
     }
 
     if(timeMode == MATCHTIME){
@@ -108,7 +109,11 @@ void Communication::go(const std::string& command) {
 
     gameMtx.lock();
     Move m;
-    if(timeMode != USE_DEPTH) {
+    if (timeMode == PONDER) {
+        e.ponder(g);
+        gameMtx.unlock();
+        return;
+    } else if(timeMode != USE_DEPTH) {
         m = e.getMove(g, timeLeft, increment, moveTime);
     } else {
         m = e.getMove(g, depth);
@@ -259,6 +264,8 @@ void Communication::worker() {
             e.printPrincipalVariation(g);
         } else  if (subcommand == "print") {
             g.printGame();
+        } else if (subcommand == "stop") {
+            e.stopSearch();
         }
     }
 }

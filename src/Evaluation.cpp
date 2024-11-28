@@ -172,7 +172,6 @@ int Evaluation::evaluate(const Game &g) {
     bitboard ownKingSpace = MagicBitboards::getKingReachableSquares(ownKingIndex) | g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | KING];
     bitboard enemyKingSpace = MagicBitboards::getKingReachableSquares(enemyKingIndex) | g.pieceBoards[COLOR_TO_PIECE[1 - g.currentPlayer] | KING];
     int safety = 0;
-    int mobility = 0;
 
     for (int i = 0; i < 64; i++) {
         Game::fastForwardIndex(i, square, hitmap);
@@ -180,57 +179,18 @@ int Evaluation::evaluate(const Game &g) {
             break;
         }
         piece p = g.getPiece(square);
+        piece piece = p;
 
         //Piece square tables
         color c = p & BLACK_PIECE ? BLACK : WHITE;
         p = p & ~BLACK_PIECE; //Removing the color of the piece
-
         int value = getMidgamePieceValue(hitmap, i, p, c);
         midgameEval += g.currentPlayer == c ? value : -value;
         value = getEndgamePieceValue(hitmap, i, p, c);
         endgameEval += g.currentPlayer == c ? value : -value;
-
         material += MIDGAME_PIECE_VALUES[p] * (p != PAWN);
 
-        //King safety
-        if(c != g.currentPlayer) {
-            switch(p) {
-                case KNIGHT:
-                    safety -= 3 * ((MagicBitboards::getKnightReachableSquares(i) & ownKingSpace) != 0);
-                break;
-                case BISHOP:
-                    safety -= 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & ownKingSpace) != 0);
-                break;
-                case ROOK:
-                    safety -= 5 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & ownKingSpace) != 0);
-                break;
-                case QUEEN:
-                    safety -= 9 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & ownKingSpace) != 0);
-                    safety -= 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & ownKingSpace) != 0);
-                break;
-                default:
-                    break;
-            }
-        } else {
-            switch(p) {
-                case KNIGHT:
-                    safety += 3 * ((MagicBitboards::getKnightReachableSquares(i) & enemyKingSpace) != 0);
-                break;
-                case BISHOP:
-                    safety += 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & enemyKingSpace) != 0);
-                break;
-                case ROOK:
-                    safety += 5 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & enemyKingSpace) != 0);
-                break;
-                case QUEEN:
-                    safety += 9 * ((MagicBitboards::getRookReachableSquares(hitmap, i) & enemyKingSpace) != 0);
-                    safety += 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, i) & enemyKingSpace) != 0);
-                break;
-                default:
-                    break;
-            }
-        }
-
+        safety += getKingSafety(hitmap, i, p, c, ownKingSpace, enemyKingSpace, g);
 
         square <<= 1;
     }
@@ -439,4 +399,50 @@ int Evaluation::getMoveValue(const Move &move, const Game &g, Moves &killerMoves
     int index = Game::getIndex(move.toSquare);
     value += historyTable[move.startingPiece][index];
     return value;
+}
+
+/*
+ * Returns a value for how this piece affects king safety
+ */
+int Evaluation::getKingSafety(bitboard hitmap, int index, piece p, color c, bitboard ownKingSpace, bitboard enemyKingSpace, const Game &g) {
+    int safety = 0;
+    //King safety
+    if(c != g.currentPlayer) {
+        switch(p) {
+            case KNIGHT:
+                safety -= 3 * ((MagicBitboards::getKnightReachableSquares(index) & ownKingSpace) != 0);
+            break;
+            case BISHOP:
+                safety -= 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & ownKingSpace) != 0);
+            break;
+            case ROOK:
+                safety -= 5 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & ownKingSpace) != 0);
+            break;
+            case QUEEN:
+                safety -= 9 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & ownKingSpace) != 0);
+            safety -= 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & ownKingSpace) != 0);
+            break;
+            default:
+                break;
+        }
+    } else {
+        switch(p) {
+            case KNIGHT:
+                safety += 3 * ((MagicBitboards::getKnightReachableSquares(index) & enemyKingSpace) != 0);
+            break;
+            case BISHOP:
+                safety += 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & enemyKingSpace) != 0);
+            break;
+            case ROOK:
+                safety += 5 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & enemyKingSpace) != 0);
+            break;
+            case QUEEN:
+                safety += 9 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & enemyKingSpace) != 0);
+                safety += 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & enemyKingSpace) != 0);
+            break;
+            default:
+                break;
+        }
+    }
+    return safety;
 }

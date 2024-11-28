@@ -39,6 +39,7 @@ private:
     static int getMidgamePieceValue(bitboard hitmap, int index, piece p, color c);
     static int getEndgamePieceValue(bitboard hitmap, int index, piece p, color c);
     static int getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]);
+    static int getKingSafety(bitboard hitmap, int index, piece p, color c, bitboard ownKingSpace, bitboard enemyKingSpace, const Game &g);
 public:
 
     static int TEST_CONSTANT;

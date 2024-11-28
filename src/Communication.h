@@ -8,6 +8,7 @@
 #define MOVETIME 0
 #define MATCHTIME 1
 #define USE_DEPTH 2
+#define PONDER 3
 
 #include <mutex>
 #include "Engine.h"
