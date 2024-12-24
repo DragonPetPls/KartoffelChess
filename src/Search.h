@@ -42,6 +42,10 @@ public:
 
     void printPrincipleVariation(Game &g);
 
+    void clearTranspositionTable() {
+        transpositionTable.clear();
+    }
+
     const Node* getNodeFromTable(Game &g) const {
         if(transpositionTable.find(g.key()) == transpositionTable.end()) {
             return nullptr;
