@@ -4,14 +4,18 @@
 #include "Game.h"
 #include "Test.h"
 
-#define TEST
+//#define TEST
 
 int main() {
 
+#ifndef TEST
+    std::cout << "Kartoffeln" << std::endl;
     Communication c;
     c.startCommunication();
+#endif
 
 #ifdef TEST
+    Test::searchTest();
     //Test::testDoMove();
     //Test::testMoveGen();
     //Test::testFen();
@@ -21,6 +25,7 @@ int main() {
     //Test::zobristPerft();
     //Test::zobristTest();
     //Test::transpositionPerft();
+    //Test::captureTest();
 #endif
     return 0;
 }

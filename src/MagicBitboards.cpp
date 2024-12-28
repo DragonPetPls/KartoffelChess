@@ -212,9 +212,8 @@ void MagicBitboards::initBishopTable() {
             if(bishopTable[i].entries[key].isSet == false) {
                 bishopTable[i].entries[key].isSet = true;
                 bishopTable[i].entries[key].reachable = reachable;
-                auto *m = new Moves();
-                m->copy(moves);
-                bishopTable[i].entries[key].moves = m;
+                bishopTable[i].entries[key].moves = std::make_unique<Moves>();
+                bishopTable[i].entries[key].moves->copy(moves);
             } else if (bishopTable[i].entries[key].reachable != reachable) {
                 std::cout << "Error in MagicBitboards::initBishopTable()" << std::endl;
             }
@@ -505,9 +504,8 @@ void MagicBitboards::initRookTable() {
             if(rookTable[i].entries[key].isSet == false) {
                 rookTable[i].entries[key].isSet = true;
                 rookTable[i].entries[key].reachable = reachable;
-                auto *m = new Moves();
-                m->copy(moves);
-                rookTable[i].entries[key].moves = m;
+                rookTable[i].entries[key].moves = std::make_unique<Moves>();
+                rookTable[i].entries[key].moves->copy(moves);
             } else if (rookTable[i].entries[key].reachable != reachable) {
                 std::cout << "Error in MagicBitboards::initRookTable() at " << i << std::endl;
             }
@@ -586,9 +584,8 @@ void MagicBitboards::initKnightTable() {
         for(int i = 0; i < moves.moveCount; i++) {
             reachable |= moves.moves[i].toSquare;
         }
-        auto *m = new Moves();
-        m->copy(moves);
-        knightTable[i].moves = m;
+        knightTable[i].moves = std::make_unique<Moves>();
+        knightTable[i].moves->copy(moves);
         knightTable[i].reachable = reachable;
         knightTable[i].isSet = true;
     }
@@ -614,7 +611,7 @@ bitboard MagicBitboards::getKnightReachableSquares(int index) {
  */
 void MagicBitboards::initKingTable() {
     for(int j = 0; j < 64; j++) {
-        kingTable[j].moves = new Moves();kingTable[j].moves = new Moves();
+        kingTable[j].moves = std::make_unique<Moves>();
         bitboard square = ((bitboard) 1) << j;
         bitboard reachable = 0;
         int x = j % 8;
@@ -654,6 +651,40 @@ void MagicBitboards::appendKingMoves(int index, Moves &moves, bitboard collision
  */
 bitboard MagicBitboards::getKingReachableSquares(int index) {
     return kingTable[index].reachable;
+}
+
+/*
+ * Appends all possible captures with a bishop
+ */
+void MagicBitboards::appendBishopCaptures(bitboard hitmap, int index, Moves &moves, bitboard collisions,
+    bitboard captures) {
+    bitboard blockers = hitmap & bishopTable[index].blockerOverlay;
+    uint64_t key = (blockers * bishopTable[index].magicNumber) >> bishopTable[index].indexShift;
+    moves.appendMovesWithCollision(*bishopTable[index].entries[key].moves, captures, 4);
+}
+
+/*
+ * Appends all possible captures with a rook
+ */
+void MagicBitboards::appendRookCaptures(bitboard hitmap, int index, Moves &moves, bitboard collisions,
+    bitboard captures) {
+    bitboard blockers = hitmap & rookTable[index].blockerOverlay;
+    uint64_t key = (blockers * rookTable[index].magicNumber) >> rookTable[index].indexShift;
+    moves.appendMovesWithCollision(*rookTable[index].entries[key].moves, captures, 4);
+}
+
+/*
+ * Appends all possible captures with a knight
+ */
+void MagicBitboards::appendKnightCaptures(int index, Moves &moves, bitboard collisions, bitboard captures) {
+    moves.appendMovesWithoutCollision(*knightTable[index].moves, ~captures);
+}
+
+/*
+ * Appends all possible captures with a king
+ */
+void MagicBitboards::appendKingCaptures(int index, Moves &moves, bitboard collisions, bitboard captures) {
+    moves.appendMovesWithoutCollision(*kingTable[index].moves, ~captures);
 }
 
 /*

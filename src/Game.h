@@ -47,7 +47,7 @@ namespace std {
  */
 struct LastMove{
     Move move;
-    int eval;
+    int movesWithoutProgress;
     uint8_t enPassant;
     uint8_t castleRights;
     piece capturedPiece;
@@ -69,7 +69,6 @@ private:
 
 public:
     //Attributes
-    int evaluation; //This is an evaluation updated after every move
     bitboard pieceBoards[14];
     color currentPlayer;
     uint8_t enPassant; // stores the row in which an en passant is playable in a way a bitboard does
@@ -83,8 +82,6 @@ private:
     //Functions
     static int getZobristIndex(piece piece, color pieceColor, int index);
 
-    static void fastForwardIndex(int &index, bitboard& square, bitboard& board);
-
     void appendPawnMoves(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const;
     void appendKnightMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
     void appendBishopMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
@@ -92,15 +89,24 @@ private:
     void appendQueenMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
     void appendKingMoves(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
 
+    void appendPawnCapturesAndPromotions(bitboard square, int index, const bitboard &ownHitmap, const bitboard &enemyHitmap, const bitboard &hitmap, Moves &moves) const;
+    void appendKnightCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendBishopCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendRookCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendQueenCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+    void appendKingCaptures(bitboard square, int index, const bitboard& ownHitmap, const bitboard& enemyHitmap, const bitboard& hitmap, Moves &moves) const;
+
 public:
     //Functions
     Game();
     void loadStartingPosition();
     void printGame() const;
     void doMove(const Move &move);
+    void doNullMove();
     void undoMove();
     void doMoveAsString(std::string moveStr);
     Moves getAllPseudoLegalMoves() const;
+    Moves getAllPseudoLegalCaptures() const;
     bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
     bool isPositionLegal() const;
     void loadFen(const std::string& fen);
@@ -111,6 +117,8 @@ public:
     bool checkForRepetition();
     bool isKingInCheck(color kingColor) const;
     static int getIndex(const bitboard& board);
+    static void fastForwardIndex(int &index, bitboard& square, bitboard& board);
+    LastMove getLastMove() const;
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;

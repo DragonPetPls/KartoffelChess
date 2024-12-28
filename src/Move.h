@@ -14,7 +14,14 @@ struct Move{
     bitboard toSquare;
     piece startingPiece;
     piece endingPiece; //ending piece is the same as starting piece unless promotion
+
+    // Overload the == operator
+    bool operator==(const Move& other) const {
+        return fromSquare == other.fromSquare && toSquare == other.toSquare && startingPiece == other.startingPiece && endingPiece == other.endingPiece;
+    }
 };
+
+constexpr Move nullMove{0, 0, 0, 0};
 
 /*
  * Used to represent multiple moves stored together
@@ -69,6 +76,18 @@ public:
             }
         }
     }
+
+    /*
+    * adds the moves to the back of this object if they do collide with the collisions bitboard
+   */
+    void appendMovesWithCollision(Moves &m, bitboard collisions, int checkLastN) {
+        for(int i = std::max(0, m.moveCount - checkLastN); i < m.moveCount; i++) {
+            if((m.moves[i].toSquare & collisions)){
+                this->moves[this->moveCount++] = m.moves[i];
+            }
+        }
+    }
+
 
     /*
      * Copies values of other Moves object

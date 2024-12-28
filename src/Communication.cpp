@@ -8,11 +8,13 @@
 #include <thread>
 #include <sstream>
 #include "Communication.h"
+
+#include "Evaluation.h"
 #include "Game.h"
 
 void Communication::startCommunication() {
     g.loadStartingPosition();
-    std::thread(&Communication::worker, this).detach();
+    std::thread worker(&Communication::worker, this);
 
     //Adds all inputs at the end of the command queue
     std::string lastInput;
@@ -23,13 +25,17 @@ void Communication::startCommunication() {
         queueMtx.unlock();
         cv.notify_one();
     }
+
+    if(worker.joinable()) {
+        worker.join();
+    }
 }
 
 
 
 void Communication::uci() {
     output.lock();
-    std::cout << "id name notCheckers" << std::endl;
+    std::cout << "id name KartoffelBot" << std::endl;
     std::cout << "id author Fabian" << std::endl;
     std::cout << "v2" << std::endl;
     std::cout <<  "uciok" << std::endl;
@@ -45,12 +51,11 @@ void Communication::isready() {
 
 
 void Communication::go(const std::string& command) {
-
-
     int moveTime = 5000;
     int increment = 0;
     int timeLeft = 0;
     int timeMode = MOVETIME;
+    int depth = 0;
 
     bool isTimeSet = false;
 
@@ -73,12 +78,11 @@ void Communication::go(const std::string& command) {
         incStr = "binc";
     }
 
-    for(int i = 0; i < arguments.size() - 1; i++){
+    for(int i = 0; i < arguments.size(); i++){
         if(arguments[i] == "movetime"){
             std::stringstream ss(arguments[i + 1]);
             ss >> moveTime;
             timeMode = MOVETIME;
-            break;
         }
         if(arguments[i] == timeStr){
             std::stringstream ss(arguments[i + 1]);
@@ -90,6 +94,13 @@ void Communication::go(const std::string& command) {
             ss >> increment;
             timeMode = MATCHTIME;
         }
+        if(arguments[i] == "depth") {
+            std::istringstream(arguments[i + 1]) >> depth;
+            timeMode = USE_DEPTH;
+        }
+        if(arguments[i] == "ponder") {
+            timeMode = PONDER;
+        }
     }
 
     if(timeMode == MATCHTIME){
@@ -97,7 +108,17 @@ void Communication::go(const std::string& command) {
     }
 
     gameMtx.lock();
-    Move m = e.getMove(g, timeLeft, increment, moveTime);
+    Move m;
+    if (timeMode == PONDER) {
+        e.ponder(g);
+        gameMtx.unlock();
+        return;
+    } else if(timeMode != USE_DEPTH) {
+        m = e.getMove(g, timeLeft, increment, moveTime);
+    } else {
+        m = e.getMove(g, depth);
+    }
+
     gameMtx.unlock();
     output.lock();
 
@@ -108,16 +129,17 @@ void Communication::go(const std::string& command) {
     int toX = toIndex % 8;
     int toY = toIndex / 8;
     std::cout << "bestmove " << numberToLetter(fromX) << (fromY + 1)
-    << numberToLetter(toX) << toY + 1 << std::endl;
+    << numberToLetter(toX) << toY + 1;
     if(m.startingPiece != m.endingPiece) {
-        switch (m.startingPiece) {
-            case QUEEN: std::cout << "q" << std::endl; break;
-            case ROOK: std::cout << "r" << std::endl; break;
-            case BISHOP: std::cout << "b" << std::endl; break;
-            case KNIGHT: std::cout << "n" << std::endl; break;
+        switch (m.endingPiece) {
+            case QUEEN: std::cout << "q"; break;
+            case ROOK: std::cout << "r"; break;
+            case BISHOP: std::cout << "b"; break;
+            case KNIGHT: std::cout << "n"; break;
             default: std::cout << std::endl;
         }
     }
+    std::cout << std::endl;
     output.unlock();
 }
 
@@ -143,7 +165,7 @@ char Communication::numberToLetter(short x) {
 }
 
 void Communication::position(std::string command) {
-
+    e.clearTranspositionTable();
     std::istringstream stream(command);
     std::string argument;
     std::vector<std::string> arguments;
@@ -237,7 +259,13 @@ void Communication::worker() {
         } else if (subcommand == "go"){
             std::thread(&Communication::go, this, command).detach();
         } else if (subcommand == "eval"){
-         //   std::cout << "Eval: " << Evaluator::evalPosition(g, MINUS_INF) << std::endl;
+            std::cout << "Eval: " << Evaluation::evaluate(g) << std::endl;
+        } else if (subcommand == "principal") {
+            e.printPrincipalVariation(g);
+        } else  if (subcommand == "print") {
+            g.printGame();
+        } else if (subcommand == "stop") {
+            e.stopSearch();
         }
     }
 }
