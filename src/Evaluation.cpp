@@ -5,6 +5,7 @@
 #include "Evaluation.h"
 
 #include <algorithm>
+#include <cmath>
 
 int Evaluation::TEST_CONSTANT = 0;
 

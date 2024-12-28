@@ -165,7 +165,7 @@ char Communication::numberToLetter(short x) {
 }
 
 void Communication::position(std::string command) {
-
+    e.clearTranspositionTable();
     std::istringstream stream(command);
     std::string argument;
     std::vector<std::string> arguments;

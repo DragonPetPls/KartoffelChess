@@ -42,7 +42,6 @@ Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
     //Picking the best move via whats inside the transposition table
     auto next = g.getAllPseudoLegalMoves();
     Move bestMove = next.moves[search.getNodeFromTable(g)->bestMoveIndex];
-    search.clearTranspositionTable();
     return bestMove;
 }
 
@@ -65,7 +64,6 @@ Move Engine::getMove(Game g, int depth) {
     //Picking the best move via whats inside the transposition table
     auto next = g.getAllPseudoLegalMoves();
     Move bestMove = next.moves[search.getNodeFromTable(g)->bestMoveIndex];
-    search.clearTranspositionTable();
     return bestMove;
 }
 

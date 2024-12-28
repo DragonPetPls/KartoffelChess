@@ -21,6 +21,9 @@ public:
     void ponder(Game g);
     void stopSearch();
     void printPrincipalVariation(Game &g);
+    void clearTranspositionTable() {
+        search.clearTranspositionTable();
+    }
 };
 
 
