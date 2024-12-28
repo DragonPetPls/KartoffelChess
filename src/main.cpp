@@ -3,15 +3,19 @@
 #include "Communication.h"
 #include "Game.h"
 #include "Test.h"
+#include "Trainer.h"
 
 //#define TEST
+#define TRAINER
 
 int main() {
 
 #ifndef TEST
+#ifndef TRAINER
     std::cout << "Kartoffeln" << std::endl;
     Communication c;
     c.startCommunication();
+#endif
 #endif
 
 #ifdef TEST
@@ -26,6 +30,10 @@ int main() {
     //Test::zobristTest();
     //Test::transpositionPerft();
     //Test::captureTest();
+#endif
+
+#ifdef TRAINER
+    Trainer::train();
 #endif
     return 0;
 }
