@@ -84,15 +84,16 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     if(depth != maxDepth && g.checkForRepetition()) {
         return 0;
     }
-    if(depth != maxDepth) {
-       // std::cout << "test" << std::endl;
-    }
 
     //Checking the position in the transposition table
     int originalAlpha = alpha;
     int prevBestIndex = INF;
+    Node *ttNode = nullptr;
+    bool isPVNode = (beta - alpha) > 1;
+
     if(transpositionTable.find(g.key()) != transpositionTable.end()) {
         Node &n = transpositionTable[g.key()];
+        ttNode = &n;
         if(n.depth >= depth) {
             if(n.flag == EXACT) {
                return n.value;
@@ -117,10 +118,13 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         } else {
             flag = EXACT;
         }
-        Node n{eval, INF, flag, 0};
-        if(transpositionTable.find(g.key()) != transpositionTable.end()) {
-            transpositionTable[g.key()] = n;
+        if(ttNode != nullptr) {
+            ttNode->depth = 0;
+            ttNode->flag = flag;
+            ttNode->value = eval;
+            ttNode->bestMoveIndex = INF;
         } else {
+            Node n{eval, INF, flag, 0};
             transpositionTable.insert(std::make_pair(g.key(), n));
         }
         return eval;
@@ -142,6 +146,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     Moves next = g.getAllPseudoLegalMoves();
     auto order = Evaluation::rankMoves(g, next, prevBestIndex, killerMoves, historyTable);
     Moves newKillerMoves;
+    bool isCheck = g.isKingInCheck(g.currentPlayer);
 
     for(int index = 0; index < next.moveCount; index++) {
         int &i = order[index];
@@ -155,8 +160,13 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
 
         //principle variation search
         int score;
-        if(i != 0){
-            score = -negamax(g, -alpha - 1, -alpha, depth - 1, maxDepth, newKillerMoves);
+        if(index != 0){
+            int reduction = 1;
+            reduction += 1 * (index > (1 + 2 * (maxDepth != depth)) && depth >= 3); //Late moves
+            reduction -= 1 * isCheck; //Checks may be risky to reduce
+            reduction = std::max(reduction, 1);
+
+            score = -negamax(g, -alpha - 1, -alpha, depth - reduction, maxDepth, newKillerMoves);
             if(score > alpha) {
                 score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
             }
@@ -200,11 +210,14 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         } else {
             flag = EXACT;
         }
-        Node n{bestScore, bestIndex, flag, depth};
 
-        if(transpositionTable.find(g.key()) != transpositionTable.end()) {
-            transpositionTable[g.key()] = n;
+        if(ttNode != nullptr) {
+            ttNode->depth = depth;
+            ttNode->flag = flag;
+            ttNode->value = bestScore;
+            ttNode->bestMoveIndex = bestIndex;
         } else {
+            Node n{bestScore, bestIndex, flag, depth};
             transpositionTable.insert(std::make_pair(g.key(), n));
         }
     }
@@ -213,7 +226,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
 }
 
 /*
- * Perfroms a quiescence search to limit the horizon effect
+ * Performs a quiescence search to limit the horizon effect
  */
 int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
     int standPat = Evaluation::evaluate(g);
@@ -261,9 +274,10 @@ void Search::printPrincipleVariation(Game &g) {
         std::cout << Game::moveToString(next.moves[n.bestMoveIndex]) << " ";
         g.doMove(next.moves[n.bestMoveIndex]);
     }
+    std::cout << std::endl;
     g.printGame();
     for(int i = 0; i < counter; i++) {
         g.undoMove();
     }
-    std::cout << std::endl;
+
 }
