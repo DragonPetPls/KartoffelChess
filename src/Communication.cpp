@@ -9,8 +9,8 @@
 #include <sstream>
 #include "Communication.h"
 
-#include "Evaluation.h"
-#include "Game.h"
+#include "Engine/Evaluation.h"
+#include "Game/Game.h"
 
 void Communication::startCommunication() {
     g.loadStartingPosition();

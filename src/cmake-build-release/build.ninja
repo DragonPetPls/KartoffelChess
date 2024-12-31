@@ -55,23 +55,23 @@ build CMakeFiles/src.dir/main.cpp.o: CXX_COMPILER__src_unscanned_Release /home/f
   OBJECT_DIR = CMakeFiles/src.dir
   OBJECT_FILE_DIR = CMakeFiles/src.dir
 
-build CMakeFiles/src.dir/Game.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game.cpp || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Game.cpp.o.d
+build CMakeFiles/src.dir/Game/Game.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game/Game.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Game/Game.cpp.o.d
   FLAGS = -O3 -O3 -DNDEBUG -std=gnu++14 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/Game
 
-build CMakeFiles/src.dir/Test.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Test.cpp || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Test.cpp.o.d
+build CMakeFiles/src.dir/Game/MagicBitboards.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Game/MagicBitboards.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Game/MagicBitboards.cpp.o.d
   FLAGS = -O3 -O3 -DNDEBUG -std=gnu++14 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/Game
 
-build CMakeFiles/src.dir/MagicBitboards.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/MagicBitboards.cpp || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/MagicBitboards.cpp.o.d
+build CMakeFiles/src.dir/Tests/Test.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Tests/Test.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Tests/Test.cpp.o.d
   FLAGS = -O3 -O3 -DNDEBUG -std=gnu++14 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/Tests
 
 build CMakeFiles/src.dir/Communication.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Communication.cpp || cmake_object_order_depends_target_src
   DEP_FILE = CMakeFiles/src.dir/Communication.cpp.o.d
@@ -79,23 +79,23 @@ build CMakeFiles/src.dir/Communication.cpp.o: CXX_COMPILER__src_unscanned_Releas
   OBJECT_DIR = CMakeFiles/src.dir
   OBJECT_FILE_DIR = CMakeFiles/src.dir
 
-build CMakeFiles/src.dir/Engine.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Engine.cpp || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Engine.cpp.o.d
+build CMakeFiles/src.dir/Engine/Engine.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Engine/Engine.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Engine/Engine.cpp.o.d
   FLAGS = -O3 -O3 -DNDEBUG -std=gnu++14 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/Engine
 
-build CMakeFiles/src.dir/Search.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Search.cpp || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Search.cpp.o.d
+build CMakeFiles/src.dir/Engine/Search.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Engine/Search.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Engine/Search.cpp.o.d
   FLAGS = -O3 -O3 -DNDEBUG -std=gnu++14 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/Engine
 
-build CMakeFiles/src.dir/Evaluation.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Evaluation.cpp || cmake_object_order_depends_target_src
-  DEP_FILE = CMakeFiles/src.dir/Evaluation.cpp.o.d
+build CMakeFiles/src.dir/Engine/Evaluation.cpp.o: CXX_COMPILER__src_unscanned_Release /home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/Engine/Evaluation.cpp || cmake_object_order_depends_target_src
+  DEP_FILE = CMakeFiles/src.dir/Engine/Evaluation.cpp.o.d
   FLAGS = -O3 -O3 -DNDEBUG -std=gnu++14 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles/src.dir
-  OBJECT_FILE_DIR = CMakeFiles/src.dir
+  OBJECT_FILE_DIR = CMakeFiles/src.dir/Engine
 
 
 # =============================================================================
@@ -105,7 +105,7 @@ build CMakeFiles/src.dir/Evaluation.cpp.o: CXX_COMPILER__src_unscanned_Release /
 #############################################
 # Link the executable src
 
-build src: CXX_EXECUTABLE_LINKER__src_Release CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game.cpp.o CMakeFiles/src.dir/Test.cpp.o CMakeFiles/src.dir/MagicBitboards.cpp.o CMakeFiles/src.dir/Communication.cpp.o CMakeFiles/src.dir/Engine.cpp.o CMakeFiles/src.dir/Search.cpp.o CMakeFiles/src.dir/Evaluation.cpp.o
+build src: CXX_EXECUTABLE_LINKER__src_Release CMakeFiles/src.dir/main.cpp.o CMakeFiles/src.dir/Game/Game.cpp.o CMakeFiles/src.dir/Game/MagicBitboards.cpp.o CMakeFiles/src.dir/Tests/Test.cpp.o CMakeFiles/src.dir/Communication.cpp.o CMakeFiles/src.dir/Engine/Engine.cpp.o CMakeFiles/src.dir/Engine/Search.cpp.o CMakeFiles/src.dir/Engine/Evaluation.cpp.o
   FLAGS = -O3 -O3 -DNDEBUG
   OBJECT_DIR = CMakeFiles/src.dir
   POST_BUILD = :

@@ -1188,54 +1188,6 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "TRUE"
-		},
-		{
-			"name" : "gperftools_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for gperftools."
-				}
-			],
-			"type" : "PATH",
-			"value" : "gperftools_DIR-NOTFOUND"
-		},
-		{
-			"name" : "src_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/cmake-build-debug"
-		},
-		{
-			"name" : "src_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "src_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src"
 		}
 	],
 	"kind" : "cache",

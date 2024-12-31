@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "Communication.h"
-#include "Game.h"
-#include "Test.h"
+#include "Game/Game.h"
+#include "Tests/Test.h"
 
 //#define TEST
 

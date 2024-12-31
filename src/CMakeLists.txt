@@ -13,22 +13,21 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 add_executable(src main.cpp
-        Game.h
-        constants.h
-        Game.cpp
-        Test.h
-        Test.cpp
-        MagicBitboards.h
-        MagicBitboards.cpp
-        magicConstants.h
-        Move.h
-        Test.h
+        Game/Game.h
+        Game/constants.h
+        Game/Game.cpp
+        Game/MagicBitboards.h
+        Game/MagicBitboards.cpp
+        Game/magicConstants.h
+        Game/Move.h
+        Tests/Test.h
+        Tests/Test.cpp
         Communication.h
         Communication.cpp
-        Engine.cpp
-        Engine.h
-        Search.h
-        Search.cpp
-        Evaluation.h
-        Evaluation.cpp
+        Engine/Engine.cpp
+        Engine/Engine.h
+        Engine/Search.h
+        Engine/Search.cpp
+        Engine/Evaluation.h
+        Engine/Evaluation.cpp
 )

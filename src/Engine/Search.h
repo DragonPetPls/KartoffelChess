@@ -7,7 +7,7 @@
 #include <atomic>
 #include <unordered_map>
 
-#include "Game.h"
+#include "../Game/Game.h"
 
 constexpr int WIN = 100000;
 

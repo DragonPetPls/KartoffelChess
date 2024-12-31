@@ -9,9 +9,9 @@
 
 #include <bits/chrono.h>
 
-#include "Evaluation.h"
-#include "Game.h"
-#include "Search.h"
+#include "../Engine/Evaluation.h"
+#include "../Game/Game.h"
+#include "../Engine/Search.h"
 
 int Test::checkmates;
 std::unordered_map<GameKey, testNode> Test::transpositionTable;

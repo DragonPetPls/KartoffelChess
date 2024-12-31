@@ -4,7 +4,7 @@
 
 #ifndef EVALUATION_H
 #define EVALUATION_H
-#include "Game.h"
+#include "../Game/Game.h"
 
 constexpr int MAX_HISTORY = 75000;
 constexpr int SAFETY_DELTA_MARGIN = 200;

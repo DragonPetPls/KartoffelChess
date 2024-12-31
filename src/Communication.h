@@ -11,10 +11,10 @@
 #define PONDER 3
 
 #include <mutex>
-#include "Engine.h"
+#include "Engine/Engine.h"
 #include <queue>
 #include <condition_variable>
-#include "Game.h"
+#include "Game/Game.h"
 
 class Communication {
 private:

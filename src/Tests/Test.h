@@ -6,7 +6,7 @@
 #define SRC_TEST_H
 #include <unordered_map>
 
-#include "Game.h"
+#include "../Game/Game.h"
 
 struct testNode {
     uint64_t nodes;
