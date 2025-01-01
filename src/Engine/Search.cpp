@@ -20,7 +20,7 @@ void Search::ponder(Game g, const std::atomic<bool> &stop) {
     while (!stop && depth < 1000) {
         depth++;
         Moves killer;
-        int eval = negamax(g, -INF, INF, depth, depth, killer);
+        int eval = negamax(g, -INF, INF, depth, depth, killer, true);
         if(!stop) {
             std::cout << "info depth " << depth << " score cp " << eval << std::endl;
         }
@@ -46,7 +46,7 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
     while (!stop && depth < 1000) {
         depth++;
         Moves killer;
-        int eval = negamax(g, -INF, INF, depth, depth, killer);
+        int eval = negamax(g, -INF, INF, depth, depth, killer, true);
         if(!stop) {
             std::cout << "info depth " << depth << " score cp " << eval << std::endl;
         }
@@ -67,7 +67,7 @@ void Search::searchToDepth(Game &g, int toDepth) {
     while (depth < toDepth) {
         depth++;
         Moves m;
-        int eval = negamax(g, -INF, INF, depth, depth, m);
+        int eval = negamax(g, -INF, INF, depth, depth, m, true);
         std::cout << depth << ": " << eval << std::endl;
     }
 }
@@ -75,7 +75,7 @@ void Search::searchToDepth(Game &g, int toDepth) {
 /*
  * Performs a recursive negamax search, depth is how much deeper should be searched, maxDepth is how far it should look at max
  */
-int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves &killerMoves) {
+int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves &killerMoves, bool isPVNode) {
     if(*stop) {
         return 0;
     }
@@ -89,7 +89,6 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     int originalAlpha = alpha;
     int prevBestIndex = INF;
     Node *ttNode = nullptr;
-    bool isPVNode = (beta - alpha) > 1;
 
     if(transpositionTable.find(g.key()) != transpositionTable.end()) {
         Node &n = transpositionTable[g.key()];
@@ -134,7 +133,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     if(depth < maxDepth * NULL_MOVE_FACTOR && !g.isKingInCheck(g.currentPlayer)) {
         g.doNullMove();
         Moves nmKillers;
-        int nm = -negamax(g, -beta, -beta + 1, depth - NULL_MOVE_DEPTH_REDUCTION, maxDepth, nmKillers);
+        int nm = -negamax(g, -beta, -beta + 1, depth - NULL_MOVE_DEPTH_REDUCTION, maxDepth, nmKillers, false);
         g.undoMove();
         if(nm >= beta) return nm;
     }/* */
@@ -162,16 +161,16 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         int score;
         if(index != 0){
             int reduction = 1;
-            reduction += 1 * (index > (1 + 2 * (maxDepth != depth)) && depth >= 3); //Late moves
+            reduction += 1 * (index >= (1 + 2 * isPVNode) && depth >= 3); //Late moves
             reduction -= 1 * isCheck; //Checks may be risky to reduce
             reduction = std::max(reduction, 1);
 
-            score = -negamax(g, -alpha - 1, -alpha, depth - reduction, maxDepth, newKillerMoves);
+            score = -negamax(g, -alpha - 1, -alpha, depth - reduction, maxDepth, newKillerMoves, false);
             if(score > alpha) {
-                score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
+                score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves, isPVNode);
             }
         } else {
-            score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves);
+            score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves, isPVNode);
         }
 
         if(score > bestScore) {
