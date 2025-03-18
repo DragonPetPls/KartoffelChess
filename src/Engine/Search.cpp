@@ -11,7 +11,7 @@
  */
 void Search::ponder(Game g, const std::atomic<bool> &stop) {
 
-    transpositionTable.clear();
+    table.clear();
 
     int depth = 0;
     this->stop = &stop;
@@ -59,7 +59,7 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
 void Search::searchToDepth(Game &g, int toDepth) {
     std::atomic<bool> stop(false);
     this->stop = &stop;
-    transpositionTable.clear();
+    table.clear();
 
     int depth = 0;
 
@@ -88,23 +88,23 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     //Checking the position in the transposition table
     int originalAlpha = alpha;
     int prevBestIndex = INF;
-    Node *ttNode = nullptr;
 
-    if(transpositionTable.find(g.key()) != transpositionTable.end()) {
-        Node &n = transpositionTable[g.key()];
-        ttNode = &n;
-        if(n.depth >= depth) {
-            if(n.flag == EXACT) {
-               return n.value;
+    bool ttExists;
+    Node ttNode = table.lookup(g, ttExists);
+
+    if(ttExists) {
+        if(ttNode.depth >= depth) {
+            if(ttNode.flag == EXACT) {
+               return ttNode.value;
             }
-            if(n.flag == LOWERBOUND) {
-                alpha = std::max(alpha, n.value);
-            } else if (n.flag == UPPERBOUND) {
-                beta = std::min(beta, n.value);
+            if(ttNode.flag == LOWERBOUND) {
+                alpha = std::max(alpha, ttNode.value);
+            } else if (ttNode.flag == UPPERBOUND) {
+                beta = std::min(beta, ttNode.value);
             }
-            if(alpha >= beta) return n.value;
+            if(alpha >= beta) return ttNode.value;
         }
-        prevBestIndex = n.bestMoveIndex;
+        prevBestIndex = ttNode.bestMoveIndex;
     }
 
     if(depth <= 0) {
@@ -117,15 +117,8 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         } else {
             flag = EXACT;
         }
-        if(ttNode != nullptr) {
-            ttNode->depth = 0;
-            ttNode->flag = flag;
-            ttNode->value = eval;
-            ttNode->bestMoveIndex = INF;
-        } else {
-            Node n{eval, INF, flag, 0};
-            transpositionTable.insert(std::make_pair(g.key(), n));
-        }
+        table.write(g, eval, INF, flag, 0);
+
         return eval;
     }
 
@@ -160,6 +153,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         //principle variation search
         int score;
         if(index != 0){
+            //TODO Add multithreading here
             int reduction = 1;
             reduction += 1 * (index >= (1 + 2 * isPVNode) && depth >= 3); //Late moves
             reduction -= 1 * isCheck; //Checks may be risky to reduce
@@ -200,7 +194,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     }
 
     //We store stuff in the lookup table only if the time is not up
-    if(*stop == false) {
+    if(!(*stop)) {
         char flag;
         if(bestScore <= originalAlpha) {
             flag = UPPERBOUND;
@@ -210,15 +204,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
             flag = EXACT;
         }
 
-        if(ttNode != nullptr) {
-            ttNode->depth = depth;
-            ttNode->flag = flag;
-            ttNode->value = bestScore;
-            ttNode->bestMoveIndex = bestIndex;
-        } else {
-            Node n{bestScore, bestIndex, flag, depth};
-            transpositionTable.insert(std::make_pair(g.key(), n));
-        }
+        table.write(g, bestScore, bestIndex, flag, depth);
     }
 
     return bestScore;
@@ -263,12 +249,13 @@ void Search::printPrincipleVariation(Game &g) {
         if(g.getStatus() != ON_GOING) {
             break;
         }
-        if(transpositionTable.find(g.key()) == transpositionTable.end()) {
+        bool exists;
+        Node n = table.lookup(g, exists);
+        if(!exists) {
             break;
         }
 
         counter++;
-        Node &n = transpositionTable[g.key()];
         auto next = g.getAllPseudoLegalMoves();
         std::cout << Game::moveToString(next.moves[n.bestMoveIndex]) << " ";
         g.doMove(next.moves[n.bestMoveIndex]);

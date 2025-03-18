@@ -7,6 +7,7 @@
 #include <atomic>
 #include <unordered_map>
 
+#include "TranspositionTable.h"
 #include "../Game/Game.h"
 
 constexpr int WIN = 100000;
@@ -19,17 +20,10 @@ constexpr int LOWERBOUND = 2;
 constexpr int NULL_MOVE_DEPTH_REDUCTION = 5; //How much we reduce depth when checking a null move
 constexpr double NULL_MOVE_FACTOR = 0.8; //What percentage of depths perform late move reduction
 
-struct Node {
-    int value;
-    int bestMoveIndex;
-    char flag;
-    int depth;
-};
-
 class Search {
 
 private:
-    std::unordered_map<GameKey, Node> transpositionTable;
+    TranspositionTable table;
     const std::atomic<bool>* stop = nullptr;
     int historyTable[6][64] = {};
 
@@ -43,15 +37,12 @@ public:
     void printPrincipleVariation(Game &g);
 
     void clearTranspositionTable() {
-        transpositionTable.clear();
+        table.clear();
     }
 
-    const Node* getNodeFromTable(Game &g) const {
-        if(transpositionTable.find(g.key()) == transpositionTable.end()) {
-            return nullptr;
-        } else {
-            return &transpositionTable.at(g.key());
-        }
+    Node getNodeFromTable(Game &g) {
+        bool exists;
+        return table.lookup(g, exists);
     }
 };
 

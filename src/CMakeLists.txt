@@ -30,4 +30,6 @@ add_executable(src main.cpp
         Engine/Search.cpp
         Engine/Evaluation.h
         Engine/Evaluation.cpp
+        Engine/TranspositionTable.h
+        Engine/TranspositionTable.cpp
 )
