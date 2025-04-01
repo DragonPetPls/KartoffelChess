@@ -1,8 +1,0 @@
-# ninja log v6
-0	209	1731792282843364898	CMakeFiles/src.dir/main.cpp.o	bc1deacfa57a25bc
-1	752	1731792282843364898	CMakeFiles/src.dir/Test.cpp.o	9a4a87b8e3ea6921
-0	824	1731792282843364898	CMakeFiles/src.dir/Game.cpp.o	a5db24c50a74c5bb
-1	1176	1731792282843364898	CMakeFiles/src.dir/MagicBitboards.cpp.o	c7519b44f421a12e
-1176	1221	1731792284019301285	src	ca11a0fea275f230
-0	194	1731792497434043410	CMakeFiles/src.dir/main.cpp.o	bc1deacfa57a25bc
-194	241	1731792497630036724	src	ca11a0fea275f230
