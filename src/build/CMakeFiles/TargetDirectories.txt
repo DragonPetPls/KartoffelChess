@@ -1,3 +1,0 @@
-/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/build/CMakeFiles/src.dir
-/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/build/CMakeFiles/edit_cache.dir
-/home/fabian/CLionProjects/KartoffelChess/KartoffelChess/src/build/CMakeFiles/rebuild_cache.dir
