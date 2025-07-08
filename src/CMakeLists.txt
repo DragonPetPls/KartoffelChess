@@ -24,12 +24,19 @@ add_executable(src main.cpp
         Tests/Test.cpp
         Communication.h
         Communication.cpp
-        Engine/Engine.cpp
-        Engine/Engine.h
-        Engine/Search.h
-        Engine/Search.cpp
-        Engine/Evaluation.h
-        Engine/Evaluation.cpp
-        Engine/TranspositionTable.h
-        Engine/TranspositionTable.cpp
+        Search/Engine.cpp
+        Search/Engine.h
+        Search/Search.h
+        Search/Search.cpp
+        Search/TranspositionTable.h
+        Search/TranspositionTable.cpp
+        Evaluation/Evaluation.h
+        Evaluation/Evaluation.cpp
+        Search/MoveOrderer.cpp
+        Search/MoveOrderer.h
+        Evaluation/StaticEvaluation.h
+        KITest/KiTrainer.cpp
+        KITest/KiTrainer.h
+        Evaluation/NeuralNet.cpp
+        Evaluation/NeuralNet.h
 )

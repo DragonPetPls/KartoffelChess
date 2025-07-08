@@ -9,9 +9,11 @@
 
 #include "../Game/Game.h"
 #include "Search.h"
+#include "../Evaluation/StaticEvaluation.h"
 
 class Engine {
 private:
+    StaticEvaluation *evaluator;
     std::atomic<bool> stop;
     std::unique_ptr<std::thread> thread;
     Search search;
@@ -23,6 +25,10 @@ public:
     void printPrincipalVariation(Game &g);
     void clearTranspositionTable() {
         search.clearTranspositionTable();
+    }
+
+    Engine(StaticEvaluation *evaluator) : search(*evaluator) {
+        stop = false;
     }
 };
 

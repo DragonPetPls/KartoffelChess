@@ -9,7 +9,7 @@
 #include <sstream>
 #include "Communication.h"
 
-#include "Engine/Evaluation.h"
+#include "Evaluation/Evaluation.h"
 #include "Game/Game.h"
 
 void Communication::startCommunication() {
@@ -258,8 +258,6 @@ void Communication::worker() {
             position(command);
         } else if (subcommand == "go"){
             std::thread(&Communication::go, this, command).detach();
-        } else if (subcommand == "eval"){
-            std::cout << "Eval: " << Evaluation::evaluate(g) << std::endl;
         } else if (subcommand == "principal") {
             e.printPrincipalVariation(g);
         } else  if (subcommand == "print") {

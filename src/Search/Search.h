@@ -8,7 +8,9 @@
 #include <unordered_map>
 
 #include "TranspositionTable.h"
+#include "../Evaluation/StaticEvaluation.h"
 #include "../Game/Game.h"
+#include "../Search/MoveOrderer.h"
 
 constexpr int WIN = 100000;
 
@@ -26,6 +28,7 @@ private:
     TranspositionTable table;
     const std::atomic<bool>* stop = nullptr;
     int historyTable[6][64] = {};
+    StaticEvaluation *evaluator;
 
     int quiescence(Game &g, int alpha, int beta, int depth, int maxDepth);
 public:
@@ -43,6 +46,10 @@ public:
     Node getNodeFromTable(Game &g) {
         bool exists;
         return table.lookup(g, exists);
+    }
+
+    Search(StaticEvaluation &evaluator) {
+        this->evaluator = &evaluator;
     }
 };
 

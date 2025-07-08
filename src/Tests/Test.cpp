@@ -9,9 +9,9 @@
 
 #include <bits/chrono.h>
 
-#include "../Engine/Evaluation.h"
+#include "../Evaluation/Evaluation.h"
 #include "../Game/Game.h"
-#include "../Engine/Search.h"
+#include "../Search/Search.h"
 
 int Test::checkmates;
 std::unordered_map<GameKey, testNode> Test::transpositionTable;
@@ -462,7 +462,8 @@ void Test::searchTest() {
         "8/1p6/2p2kp1/3pp3/P1P2bK1/3P4/5PP1/1B6 w - - 1 42"};
     int depth = 10;
     Game g;
-    Search s;
+    Evaluation evaluator;
+    Search s(evaluator);
     auto start = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 24; i++) {
         g.loadFen(fen[i]);
@@ -470,7 +471,6 @@ void Test::searchTest() {
     }
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    std::cout << Evaluation::evaluationCount << " evaluations performed" << std::endl;
     std::cout << elapsed.count() << " seconds" << std::endl;
 }
 

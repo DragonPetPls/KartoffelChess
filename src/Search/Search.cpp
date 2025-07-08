@@ -4,7 +4,8 @@
 
 #include "Search.h"
 
-#include "Evaluation.h"
+#include "MoveOrderer.h"
+#include "../Evaluation/Evaluation.h"
 
 /*
  * Ponders the given position
@@ -136,7 +137,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     int bestIndex = 0;
     bool legalMoveExists = false;
     Moves next = g.getAllPseudoLegalMoves();
-    auto order = Evaluation::rankMoves(g, next, prevBestIndex, killerMoves, historyTable);
+    auto order = MoveOrderer::rankMoves(g, next, prevBestIndex, killerMoves, historyTable);
     Moves newKillerMoves;
     bool isCheck = g.isKingInCheck(g.currentPlayer);
 
@@ -214,7 +215,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
  * Performs a quiescence search to limit the horizon effect
  */
 int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
-    int standPat = Evaluation::evaluate(g);
+    int standPat = evaluator->evaluate(g);
     if(standPat >= beta) {
         return beta;
     }
@@ -223,7 +224,7 @@ int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
     }
 
     auto next = g.getAllPseudoLegalCaptures();
-    auto order = Evaluation::rankCaptures(g, next, alpha - standPat);
+    auto order = MoveOrderer::rankCaptures(g, next, alpha - standPat);
     for(int index = 0; index < order.size(); index++) {
         int i = order[index];
         g.doMove(next.moves[i]);

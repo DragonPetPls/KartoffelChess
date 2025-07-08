@@ -11,18 +11,21 @@
 #define PONDER 3
 
 #include <mutex>
-#include "Engine/Engine.h"
+#include "Search/Engine.h"
 #include <queue>
 #include <condition_variable>
+
+#include "Evaluation/Evaluation.h"
 #include "Game/Game.h"
 
 class Communication {
 private:
     std::queue<std::string> commandQueue;
     std::mutex queueMtx;
-
     std::mutex toDo;
     std::mutex output;
+
+    Evaluation evaluator;
 
     std::condition_variable cv;
     Game g;
@@ -41,6 +44,9 @@ private:
     void position(std::string command);
 public:
     void startCommunication();
+
+    Communication() : e(&evaluator) {
+    }
 };
 
 

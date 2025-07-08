@@ -4,22 +4,16 @@
 
 #ifndef EVALUATION_H
 #define EVALUATION_H
+#include "StaticEvaluation.h"
 #include "../Game/Game.h"
 
 constexpr int MAX_HISTORY = 75000;
-constexpr int SAFETY_DELTA_MARGIN = 200;
 constexpr int ENDGAME_MATERIAL = 4000;
 constexpr int SAFETY_DIVISOR = 1500;
 constexpr int MOBILITY = 1;
 
-class Evaluation {
+class Evaluation : public StaticEvaluation {
 private:
-
-    struct Order {
-        int index;
-        int value;
-    };
-
     static const int MIDGAME_PAWN_TABLE[64];
     static const int ENDGAME_PAWN_TABLE[64];
     static const int MIDGAME_KNIGHT_TABLE[64];
@@ -38,16 +32,9 @@ private:
 
     static int getMidgamePieceValue(bitboard hitmap, int index, piece p, color c);
     static int getEndgamePieceValue(bitboard hitmap, int index, piece p, color c);
-    static int getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]);
     static int getKingSafety(bitboard hitmap, int index, piece p, color c, bitboard ownKingSpace, bitboard enemyKingSpace, const Game &g);
 public:
-
-    static int TEST_CONSTANT;
-
-    static int evaluate(const Game &g);
-    static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]);
-    static std::vector<int> rankCaptures(const Game &g, const Moves &moves, int delta);
-    static uint64_t evaluationCount;
+    int evaluate(const Game &g) override;
 };
 
 
