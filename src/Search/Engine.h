@@ -18,7 +18,7 @@ private:
     std::unique_ptr<std::thread> thread;
     Search search;
 public:
-    Move getMove(Game g, int timeLeft, int tineIncrement, int timePerMove);
+    Move getMove(Game g, int timeLeft, int timeIncrement, int timePerMove);
     Move getMove(Game g, int depth);
     void ponder(Game g);
     void stopSearch();

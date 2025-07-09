@@ -10,12 +10,15 @@
 #define USE_DEPTH 2
 #define PONDER 3
 
+#define USE_NEURAL_NET
+
 #include <mutex>
 #include "Search/Engine.h"
 #include <queue>
 #include <condition_variable>
 
 #include "Evaluation/Evaluation.h"
+#include "Evaluation/NeuralNet.h"
 #include "Game/Game.h"
 
 class Communication {
@@ -26,6 +29,7 @@ private:
     std::mutex output;
 
     Evaluation evaluator;
+    NeuralNet neuralNet;
 
     std::condition_variable cv;
     Game g;
@@ -45,8 +49,20 @@ private:
 public:
     void startCommunication();
 
+#ifndef USE_NEURAL_NET
     Communication() : e(&evaluator) {
     }
+#else
+    Communication() : e(&neuralNet) {
+        bool load = neuralNet.loadFromFile("Weights.dat");
+        if (load) {
+            std::cout << "Loaded weights from file" << std::endl;
+        } else {
+            std::cout << "Failed to load weights from file" << std::endl;
+        }
+    }
+#endif
+
 };
 
 

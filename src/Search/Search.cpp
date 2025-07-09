@@ -69,7 +69,7 @@ void Search::searchToDepth(Game &g, int toDepth) {
         depth++;
         Moves m;
         int eval = negamax(g, -INF, INF, depth, depth, m, true);
-        std::cout << depth << ": " << eval << std::endl;
+        //std::cout << depth << ": " << eval << std::endl;
     }
 }
 

@@ -5,8 +5,8 @@
 #include "KITest/KiTrainer.h"
 #include "Tests/Test.h"
 
-//#define TEST
-#define KI_TRAINING
+#define TEST
+//#define KI_TRAINING
 
 int main() {
 #ifndef TEST
