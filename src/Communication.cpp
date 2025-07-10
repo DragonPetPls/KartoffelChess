@@ -259,7 +259,7 @@ void Communication::worker() {
         } else if (subcommand == "go"){
             std::thread(&Communication::go, this, command).detach();
         } else if (subcommand == "eval"){
-            std::cout << "Eval: " << Evaluation::evaluate(g) << std::endl;
+            std::cout << "Eval: " << Evaluation::evaluate(g, -INF) << std::endl;
         } else if (subcommand == "principal") {
             e.printPrincipalVariation(g);
         } else  if (subcommand == "print") {

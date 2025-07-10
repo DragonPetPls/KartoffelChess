@@ -151,10 +151,20 @@ const int Evaluation::ENDGAME_PIECE_VALUES[6] {
     94, 281, 297, 512,  936,  0
 };
 
+const int Evaluation::FAST_PIECE_VALUES[6] {
+   88, 309, 331, 495, 981, 0
+};
+
 /*
  * Performs the static evaluation at the end of the search
  */
-int Evaluation::evaluate(const Game &g) {
+int Evaluation::evaluate(const Game &g, int alpha) {
+
+    int fastEval = fastEvaluation(g);
+    if (fastEval < (alpha - SAFETY_EVAL_MARGIN)) {
+        return fastEval;
+    }
+
     evaluationCount++;
     int midgameEval = 0;
     int endgameEval = 0;
@@ -446,4 +456,24 @@ int Evaluation::getKingSafety(bitboard hitmap, int index, piece p, color c, bitb
         }
     }
     return safety;
+}
+
+/*
+ * A fast evaluation to check if a position is worth evaluating
+ */
+int Evaluation::fastEvaluation(const Game &g) {
+    int score = 0;
+
+    for (int i = PAWN; i < KING; i++) {
+        int count = __builtin_popcountll(g.pieceBoards[i | WHITE_PIECE]);
+        score += FAST_PIECE_VALUES[i] * count;
+    }
+
+    for (int i = PAWN; i < KING; i++) {
+        int count = __builtin_popcountll(g.pieceBoards[i | BLACK_PIECE]);
+        score += -FAST_PIECE_VALUES[i] * count;
+    }
+
+    score = g.currentPlayer == WHITE ? score : -score;
+    return score;
 }

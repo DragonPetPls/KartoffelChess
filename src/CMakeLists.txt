@@ -3,6 +3,8 @@ project(KartoffelChess)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static -static-libgcc -static-libstdc++")
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     # Apply maximum optimizations for release builds
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
