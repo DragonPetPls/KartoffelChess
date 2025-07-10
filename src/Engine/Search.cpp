@@ -214,7 +214,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
  * Performs a quiescence search to limit the horizon effect
  */
 int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
-    int standPat = Evaluation::evaluate(g);
+    int standPat = Evaluation::evaluate(g, alpha);
     if(standPat >= beta) {
         return beta;
     }
