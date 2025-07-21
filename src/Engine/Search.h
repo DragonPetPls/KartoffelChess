@@ -7,6 +7,8 @@
 #include <atomic>
 #include <unordered_map>
 
+//#define SEND_INFO
+
 #include "TranspositionTable.h"
 #include "../Game/Game.h"
 

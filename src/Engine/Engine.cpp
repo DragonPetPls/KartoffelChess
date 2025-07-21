@@ -24,15 +24,19 @@ Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
         //Move time
         searchTime = timePerMove;
     }
-
+    #ifdef SEND_INFO
     std::cout << "searching for " << searchTime << "ms" << std::endl;
+    #endif
 
     //Starting and stopping the search thread
     std::atomic<bool> stop(false);
     std::thread searchThread(&Search::search, &search, std::ref(g), std::ref(stop));
 
     std::this_thread::sleep_for(std::chrono::milliseconds(searchTime));
+#ifdef SEND_INFO
     std::cout << "stopped" << std::endl;
+#endif
+
     stop = true;
 
     if (searchThread.joinable()) {

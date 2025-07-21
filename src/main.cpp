@@ -3,15 +3,19 @@
 #include "Communication.h"
 #include "Game/Game.h"
 #include "Tests/Test.h"
+#include "Tuner/Tuner.h"
 
 //#define TEST
+#define TUNE
 
 int main() {
 
+#ifndef TUNE
 #ifndef TEST
     std::cout << "Kartoffeln" << std::endl;
     Communication c;
     c.startCommunication();
+#endif
 #endif
 
 #ifdef TEST
@@ -27,5 +31,10 @@ int main() {
     //Test::transpositionPerft();
     //Test::captureTest();
 #endif
+
+#ifdef TUNE
+    Tuner::tuneParameter();
+#endif
+
     return 0;
 }
