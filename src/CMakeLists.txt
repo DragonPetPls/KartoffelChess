@@ -34,4 +34,8 @@ add_executable(src main.cpp
         Engine/Evaluation.cpp
         Engine/TranspositionTable.h
         Engine/TranspositionTable.cpp
+        Tuner/Tuner.cpp
+        Tuner/Tuner.h
+        Tuner/parameters.h
+        Tuner/parameters.cpp
 )

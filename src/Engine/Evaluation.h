@@ -5,12 +5,13 @@
 #ifndef EVALUATION_H
 #define EVALUATION_H
 #include "../Game/Game.h"
+#include "../Tuner/parameters.h"
 
 constexpr int MAX_HISTORY = 75000;
 constexpr int SAFETY_DELTA_MARGIN = 200;
-constexpr int ENDGAME_MATERIAL = 4000;
-constexpr int SAFETY_DIVISOR = 1500;
-constexpr int MOBILITY = 1;
+constexpr int ENDGAME_MATERIAL = 6766; //6459 - 7044
+constexpr int SAFETY_DIVISOR = 4574; //4430 - 4718
+constexpr int MOBILITY = 117; //117 - 117
 constexpr int SAFETY_EVAL_MARGIN = 200;
 
 class Evaluation {

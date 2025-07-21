@@ -48,7 +48,9 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
         Moves killer;
         int eval = negamax(g, -INF, INF, depth, depth, killer, true);
         if(!stop) {
+        #ifdef SEND_INFO
             std::cout << "info depth " << depth << " score cp " << eval << std::endl;
+        #endif
         }
     }
 }
