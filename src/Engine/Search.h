@@ -29,8 +29,8 @@ private:
     const std::atomic<bool>* stop = nullptr;
     int historyTable[6][64] = {};
 
-    int quiescence(Game &g, int alpha, int beta, int depth, int maxDepth);
 public:
+    int quiescence(Game &g, int alpha, int beta, int depth, int maxDepth);
     void ponder(Game g, const std::atomic<bool> &stop);
     void search(Game &g, const std::atomic<bool> &stop);
     void searchToDepth(Game &g, int toDepth);

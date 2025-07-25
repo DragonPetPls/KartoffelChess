@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <cmath>
 
+#include "../Tuner/parameters.h"
+
 int Evaluation::TEST_CONSTANT = 0;
 
 uint64_t Evaluation::evaluationCount = 0;
@@ -144,7 +146,7 @@ const int Evaluation::ENDGAME_KING_TABLE[64] = {
 };
 
 const int Evaluation::MIDGAME_PIECE_VALUES[6] {
-    82, 337, 365, 477, 1025,  0
+    20, 337, 365, 477, 1025,  0
 };
 
 const int Evaluation::ENDGAME_PIECE_VALUES[6] {
@@ -160,7 +162,6 @@ const int Evaluation::FAST_PIECE_VALUES[6] {
  */
 int Evaluation::evaluate(const Game &g, int alpha) {
 
-    int SAFETY_EVAL_MARGIN = Parameters::parameter;
     int fastEval = fastEvalation(g);
     if (fastEval < (alpha - SAFETY_EVAL_MARGIN)) {
         return fastEval;
@@ -207,6 +208,7 @@ int Evaluation::evaluate(const Game &g, int alpha) {
         square <<= 1;
     }
 
+    //int ENDGAME_MATERIAL  = Parameters::parameter;
     int phase = material;
     phase = std::min(ENDGAME_MATERIAL, phase);
     int eval = (midgameEval * phase + endgameEval * (ENDGAME_MATERIAL - phase))/ENDGAME_MATERIAL;
@@ -219,8 +221,14 @@ int Evaluation::evaluate(const Game &g, int alpha) {
  * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
  */
 int Evaluation::getMidgamePieceValue(bitboard hitmap, int index, piece p, color c) {
+    //int MIDGAME_MOBILITY = Parameters::parameter;
     int value = 0;
     value += MIDGAME_PIECE_VALUES[p];
+    /*
+    if (p == PAWN) {
+        value -= MIDGAME_PIECE_VALUES[p];
+        value += Parameters::parameter;
+    } */
 
     int x = index % 8;
     int y = index / 8;
@@ -235,16 +243,16 @@ int Evaluation::getMidgamePieceValue(bitboard hitmap, int index, piece p, color 
             break;
         case BISHOP:
             value += MIDGAME_BISHOP_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
+            value += (MIDGAME_MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
             break;
         case ROOK:
             value += MIDGAME_ROOK_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
+            value += (MIDGAME_MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
             break;
         case QUEEN:
             value += MIDGAME_QUEEN_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
+            value += (MIDGAME_MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
+            value += (MIDGAME_MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
             break;
         case KING:
             value = MIDGAME_KING_TABLE[index];
@@ -260,6 +268,7 @@ int Evaluation::getMidgamePieceValue(bitboard hitmap, int index, piece p, color 
  * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
  */
 int Evaluation::getEndgamePieceValue(bitboard hitmap, int index, piece p, color c) {
+    //int ENDGAME_MOBILITY = Parameters::parameter;
     int value = 0;
     value += ENDGAME_PIECE_VALUES[p];
 
@@ -276,16 +285,16 @@ int Evaluation::getEndgamePieceValue(bitboard hitmap, int index, piece p, color 
         break;
         case BISHOP:
             value += ENDGAME_BISHOP_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
+            value += (ENDGAME_MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
         break;
         case ROOK:
             value += ENDGAME_ROOK_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
+            value += (ENDGAME_MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
         break;
         case QUEEN:
             value += ENDGAME_QUEEN_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
+            value += (ENDGAME_MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
+            value += (ENDGAME_MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
         break;
         case KING:
             value = ENDGAME_KING_TABLE[index];

@@ -33,7 +33,9 @@ int main() {
 #endif
 
 #ifdef TUNE
-    Tuner::tuneParameter();
+    //Tuner::tuneParameter();
+    //Tuner::generateData();
+    Tuner::readData();
 #endif
 
     return 0;
