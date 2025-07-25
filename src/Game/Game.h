@@ -119,6 +119,7 @@ public:
     static int getIndex(const bitboard& board);
     static void fastForwardIndex(int &index, bitboard& square, bitboard& board);
     LastMove getLastMove() const;
+    char getQuasiStatus();
 
     //Getter and Setter functions
     [[nodiscard]] int getGameHistoryCounter() const;

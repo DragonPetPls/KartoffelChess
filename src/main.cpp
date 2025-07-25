@@ -6,7 +6,7 @@
 #include "Tuner/Tuner.h"
 
 //#define TEST
-#define TUNE
+//#define TUNE
 
 int main() {
 
@@ -33,9 +33,9 @@ int main() {
 #endif
 
 #ifdef TUNE
-    //Tuner::tuneParameter();
+    Tuner::tuneParameter();
     //Tuner::generateData();
-    Tuner::readData();
+    //Tuner::readData();
 #endif
 
     return 0;

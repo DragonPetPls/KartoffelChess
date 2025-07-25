@@ -1238,3 +1238,46 @@ bool Game::isKingInCheck(color kingColor) const {
 LastMove Game::getLastMove() const {
     return gameHistory[gameHistoryCounter];
 }
+
+/*
+ * Returns the status, takes into account wins/draws/looses by insuffiecent material
+ */
+char Game::getQuasiStatus() {
+    char status = getStatus();
+    if (status != ON_GOING) {
+        return status;
+    }
+
+    piece opponentPiece = COLOR_TO_PIECE[1-currentPlayer];
+    bool outOfPieces = true;
+    for (int i = PAWN; i <= QUEEN; i++) {
+        if (pieceBoards[i | opponentPiece] != 0) {
+            outOfPieces = false;
+        }
+    }
+
+    if (outOfPieces == false) {
+        return ON_GOING;
+    }
+
+    piece ownPiece = COLOR_TO_PIECE[currentPlayer];
+    if (pieceBoards[ownPiece | QUEEN] != 0 || pieceBoards[ownPiece | ROOK] != 0) {
+        if (currentPlayer == WHITE) {
+            return WHITE_WON;
+        } else {
+            return BLACK_WON;
+        }
+    } else {
+        outOfPieces = true;
+        for (int i = PAWN; i <= QUEEN; i++) {
+            if (pieceBoards[i | ownPiece] != 0) {
+                outOfPieces = false;
+            }
+        }
+        if (outOfPieces) {
+            return DRAW;
+        }
+    }
+
+    return ON_GOING;
+}

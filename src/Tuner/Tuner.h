@@ -14,7 +14,7 @@ private:
     static constexpr int REQUIRED_LEAD = 50;
 
     static constexpr int TIME_PER_MOVE = 50;
-    static constexpr int SCORE_DIVIDER = 164;
+    static constexpr int SCORE_DIVIDER = 125;
 
     static void playGame(int para1, int para2, int &score1, int &score2);
     static bool isPara1BetterThanPara2(int para1, int para2);

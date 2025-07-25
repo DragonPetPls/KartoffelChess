@@ -8,7 +8,7 @@
 
 constexpr int MAX_HISTORY = 75000;
 constexpr int SAFETY_DELTA_MARGIN = 200;
-constexpr int ENDGAME_MATERIAL = 4000;
+constexpr int ENDGAME_MATERIAL = 7811;
 constexpr int SAFETY_DIVISOR = 1500;
 constexpr int ENDGAME_MOBILITY = 100;
 constexpr int MIDGAME_MOBILITY = 100;

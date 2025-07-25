@@ -192,7 +192,6 @@ int Evaluation::evaluate(const Game &g, int alpha) {
             break;
         }
         piece p = g.getPiece(square);
-        piece piece = p;
 
         //Piece square tables
         color c = p & BLACK_PIECE ? BLACK : WHITE;

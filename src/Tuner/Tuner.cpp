@@ -208,8 +208,14 @@ double Tuner::readData() {
 
             for (int i = 1; i < words.size(); i++) {
                 g.doMoveAsString(words[i]);
+                if (g.getQuasiStatus() != ON_GOING) {
+                    break;
+                }
                 positionCounter++;
                 int eval = s.quiescence(g, -INF, INF, 0,0);
+                if (abs(eval) > 300) {
+                    break;
+                }
                     //Evaluation::evaluate(g, -INF);
                 if (g.currentPlayer == BLACK) {
                    eval *= -1;
