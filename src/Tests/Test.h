@@ -17,7 +17,7 @@ struct testNode {
  * A collection of tests
  */
 class Test {
-private:
+public:
     static int checkmates;
     static std::unordered_map<GameKey, testNode> transpositionTable;
 
@@ -25,7 +25,7 @@ private:
     static int perftStatus(Game &g, int depth, bool printInfo = false);
     static int perftZobrist(Game &g, int depth, bool printInfo = false);
     static uint64_t perftTransposition(Game &g, int depth, bool printInfo = false);
-public:
+
     static void testPrintGame();
     static void testDoMove();
     static void testMoveGen();
@@ -38,6 +38,7 @@ public:
     static void transpositionPerft();
     static void searchTest();
     static void captureTest();
+    static void evaluationTest();
 };
 
 

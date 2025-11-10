@@ -101,3 +101,7 @@ void Tuner::tuneParameter() {
         }
     }
 }
+
+int main() {
+    Tuner::tuneParameter();
+}

@@ -160,7 +160,6 @@ const int Evaluation::FAST_PIECE_VALUES[6] {
  */
 int Evaluation::evaluate(const Game &g, int alpha) {
 
-    int SAFETY_EVAL_MARGIN = Parameters::parameter;
     int fastEval = fastEvalation(g);
     if (fastEval < (alpha - SAFETY_EVAL_MARGIN)) {
         return fastEval;

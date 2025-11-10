@@ -28,6 +28,7 @@ constexpr Move nullMove{0, 0, 0, 0};
  */
 class Moves {
 public:
+    static constexpr uint8_t NONE = 255;
     Move moves[218];
     int moveCount = 0;
 
@@ -107,6 +108,39 @@ public:
         for (int i = 0; i < m.moveCount; i++) {
             moves[i] = m.moves[i]; // Copy each element
         }
+    }
+
+    /*
+     * Same as moveCount(), not the actual size of the internal array
+     */
+    int size() const {
+        return moveCount;
+    }
+
+    /*
+     * begin of array, useful for for loops
+     */
+    Move* begin() {
+        return moves;
+    }
+
+    /*
+     * end of array with actual values
+     */
+    Move* end() {
+        return moves + moveCount;
+    }
+
+    /*
+     * Overloading the [] operator to access moves
+    */
+    Move& operator[](size_t index) {
+        return moves[index];
+    }
+
+    // Overload for const objects
+    const Move& operator[](size_t index) const {
+        return moves[index];
     }
 };
 

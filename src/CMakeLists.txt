@@ -14,7 +14,33 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
 endif()
 
-add_executable(src main.cpp
+find_package(GTest CONFIG REQUIRED)
+
+add_executable(KartoffelChess main.cpp
+        Game/Game.h
+        Game/constants.h
+        Game/Game.cpp
+        Game/MagicBitboards.h
+        Game/MagicBitboards.cpp
+        Game/magicConstants.h
+        Game/Move.h
+        Engine/Engine.cpp
+        Engine/Engine.h
+        Engine/Search.h
+        Engine/Search.cpp
+        Engine/Evaluation.h
+        Engine/Evaluation.cpp
+        Engine/TranspositionTable.h
+        Engine/TranspositionTable.cpp
+        Tuner/parameters.h
+        Tuner/parameters.cpp
+        Communication/Communication.cpp
+        Communication/Communication.h
+        Communication/Writer.cpp
+        Communication/Writer.h
+)
+
+add_executable(Tests
         Game/Game.h
         Game/constants.h
         Game/Game.cpp
@@ -24,8 +50,6 @@ add_executable(src main.cpp
         Game/Move.h
         Tests/Test.h
         Tests/Test.cpp
-        Communication.h
-        Communication.cpp
         Engine/Engine.cpp
         Engine/Engine.h
         Engine/Search.h
@@ -34,8 +58,38 @@ add_executable(src main.cpp
         Engine/Evaluation.cpp
         Engine/TranspositionTable.h
         Engine/TranspositionTable.cpp
-        Tuner/Tuner.cpp
-        Tuner/Tuner.h
+        Tests/GameTest.cpp
+        Tests/SearchTest.cpp
+        Communication/Writer.cpp
+        Communication/Writer.h
+)
+
+add_executable(Tuner
+        Game/Game.h
+        Game/constants.h
+        Game/Game.cpp
+        Game/MagicBitboards.h
+        Game/MagicBitboards.cpp
+        Game/magicConstants.h
+        Game/Move.h
+        Engine/Engine.cpp
+        Engine/Engine.h
+        Engine/Search.h
+        Engine/Search.cpp
+        Engine/Evaluation.h
+        Engine/Evaluation.cpp
+        Engine/TranspositionTable.h
+        Engine/TranspositionTable.cpp
         Tuner/parameters.h
         Tuner/parameters.cpp
+        Tuner/Tuner.h
+        Tuner/Tuner.cpp
+        Communication/Writer.cpp
+        Communication/Writer.h
+)
+
+# linking tests with Game which will be tested
+target_link_libraries(Tests
+        PRIVATE
+        GTest::gtest_main
 )
