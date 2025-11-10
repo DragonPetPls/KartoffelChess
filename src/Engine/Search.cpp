@@ -3,7 +3,7 @@
 //
 
 #include "Search.h"
-
+#include "../Communication/Writer.h"
 #include "Evaluation.h"
 
 /*
@@ -22,7 +22,7 @@ void Search::ponder(Game g, const std::atomic<bool> &stop) {
         Moves killer;
         int eval = negamax(g, -INF, INF, depth, depth, killer, true);
         if(!stop) {
-            std::cout << "info depth " << depth << " score cp " << eval << std::endl;
+            Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
         }
     }
 
@@ -48,9 +48,7 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
         Moves killer;
         int eval = negamax(g, -INF, INF, depth, depth, killer, true);
         if(!stop) {
-        #ifdef SEND_INFO
-            std::cout << "info depth " << depth << " score cp " << eval << std::endl;
-        #endif
+            Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
         }
     }
 }
@@ -70,7 +68,7 @@ void Search::searchToDepth(Game &g, int toDepth) {
         depth++;
         Moves m;
         int eval = negamax(g, -INF, INF, depth, depth, m, true);
-        std::cout << depth << ": " << eval << std::endl;
+        Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
     }
 }
 
@@ -119,7 +117,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         } else {
             flag = EXACT;
         }
-        table.write(g, eval, INF, flag, 0);
+        table.write(g, eval, Moves::NONE, flag, 0);
 
         return eval;
     }
@@ -145,7 +143,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     for(int index = 0; index < next.moveCount; index++) {
         int &i = order[index];
 
-        g.doMove(next.moves[i]);
+        g.doMove(next[i]);
         if(!g.isPositionLegal()) {
             g.undoMove();
             continue;
@@ -155,7 +153,6 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         //principle variation search
         int score;
         if(index != 0){
-            //TODO Add multithreading here
             int reduction = 1;
             reduction += 1 * (index >= (1 + 2 * isPVNode) && depth >= 3); //Late moves
             reduction -= 1 * isCheck; //Checks may be risky to reduce
@@ -177,11 +174,11 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
             }
         }
         if(alpha >= beta) {
-            killerMoves.moves[killerMoves.moveCount++] = next.moves[i];
+            killerMoves[killerMoves.moveCount++] = next[i];
             if(g.getLastMove().capturedPiece != NO_PIECE) {
                 int clampedBonus = std::min(depth, MAX_HISTORY);
-                int to = Game::getIndex(next.moves[i].toSquare);
-                historyTable[next.moves[i].startingPiece][to] += clampedBonus - historyTable[next.moves[i].startingPiece][to] * abs(clampedBonus) / MAX_HISTORY;
+                int to = Game::getIndex(next[i].toSquare);
+                historyTable[next[i].startingPiece][to] += clampedBonus - historyTable[next[i].startingPiece][to] * abs(clampedBonus) / MAX_HISTORY;
             }
             g.undoMove();
             break;
@@ -228,7 +225,7 @@ int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
     auto order = Evaluation::rankCaptures(g, next, alpha - standPat);
     for(int index = 0; index < order.size(); index++) {
         int i = order[index];
-        g.doMove(next.moves[i]);
+        g.doMove(next[i]);
         if(!g.isPositionLegal()) {
             g.undoMove();
             continue;
@@ -245,7 +242,8 @@ int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
  * Print the continuation the engine currently thinks is best
  */
 void Search::printPrincipleVariation(Game &g) {
-    std::cout << "Principle Variation: ";
+    std::string out;
+    out = "Principle Variation: ";
     int counter = 0;
     while(true) {
         if(g.getStatus() != ON_GOING) {
@@ -259,10 +257,10 @@ void Search::printPrincipleVariation(Game &g) {
 
         counter++;
         auto next = g.getAllPseudoLegalMoves();
-        std::cout << Game::moveToString(next.moves[n.bestMoveIndex]) << " ";
-        g.doMove(next.moves[n.bestMoveIndex]);
+        out += Game::moveToString(next[n.bestMoveIndex]) + " ";
+        g.doMove(next[n.bestMoveIndex]);
     }
-    std::cout << std::endl;
+    Writer::print(out, "uci");
     g.printGame();
     for(int i = 0; i < counter; i++) {
         g.undoMove();

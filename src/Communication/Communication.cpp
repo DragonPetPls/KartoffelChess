@@ -9,8 +9,9 @@
 #include <sstream>
 #include "Communication.h"
 
-#include "Engine/Evaluation.h"
-#include "Game/Game.h"
+#include "Writer.h"
+#include "../Engine/Evaluation.h"
+#include "../Game/Game.h"
 
 void Communication::startCommunication() {
     g.loadStartingPosition();
@@ -35,20 +36,18 @@ void Communication::startCommunication() {
 
 void Communication::uci() {
     output.lock();
-    std::cout << "id name KartoffelBot" << std::endl;
-    std::cout << "id author Fabian" << std::endl;
-    std::cout << "v2" << std::endl;
-    std::cout <<  "uciok" << std::endl;
+    Writer::print("id name KartoffelChess", "uci");
+    Writer::print("id author Fabian", "uci");
+    Writer::print("v2", "uci");
+    Writer::print("uciok", "uci");
     output.unlock();
 }
 
 void Communication::isready() {
     output.lock();
-    std::cout << "readyok" << std::endl;
+    Writer::print("readyok", "uci");
     output.unlock();
 }
-
-
 
 void Communication::go(const std::string& command) {
     int moveTime = 5000;
@@ -122,24 +121,17 @@ void Communication::go(const std::string& command) {
     gameMtx.unlock();
     output.lock();
 
-    int fromIndex = Game::getIndex(m.fromSquare);
-    int fromX = fromIndex % 8;
-    int fromY = fromIndex / 8;
-    int toIndex = Game::getIndex(m.toSquare);
-    int toX = toIndex % 8;
-    int toY = toIndex / 8;
-    std::cout << "bestmove " << numberToLetter(fromX) << (fromY + 1)
-    << numberToLetter(toX) << toY + 1;
+    std::string out = "bestmove " + Game::moveToString(m);
     if(m.startingPiece != m.endingPiece) {
         switch (m.endingPiece) {
-            case QUEEN: std::cout << "q"; break;
-            case ROOK: std::cout << "r"; break;
-            case BISHOP: std::cout << "b"; break;
-            case KNIGHT: std::cout << "n"; break;
-            default: std::cout << std::endl;
+            case QUEEN: out += "q"; break;
+            case ROOK: out += "r"; break;
+            case BISHOP: out += "b"; break;
+            case KNIGHT: out += "n"; break;
+            default: break;
         }
     }
-    std::cout << std::endl;
+    Writer::print(out, "uci");
     output.unlock();
 }
 
@@ -202,12 +194,6 @@ void Communication::position(std::string command) {
     if(arguments[moveIndex] == "moves"){
         for(int i = moveIndex + 1; i < arguments.size(); i++){
             g.doMoveAsString(arguments[i]);
-#ifdef DEBUG
-            output.lock();
-            std::cout << m.getFromHorizontal() << m.getFromVertical() << m.getToHorizontal() << m.getToVertical() << m.getPromoteTo() << std::endl;
-            g.printGame();
-            output.unlock();
-#endif
         }
     }
 
@@ -259,7 +245,7 @@ void Communication::worker() {
         } else if (subcommand == "go"){
             std::thread(&Communication::go, this, command).detach();
         } else if (subcommand == "eval"){
-            std::cout << "Eval: " << Evaluation::evaluate(g, -INF) << std::endl;
+            Writer::print("Eval: " + std::to_string(Evaluation::evaluate(g, -INF)), "uci");
         } else if (subcommand == "principal") {
             e.printPrincipalVariation(g);
         } else  if (subcommand == "print") {

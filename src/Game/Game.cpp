@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "Game.h"
-
+#include "../Communication/Writer.h"
 #include <random>
 #include <strings.h>
 
@@ -44,6 +44,7 @@ void Game::loadStartingPosition() {
  * Print the current board and all other relevant data
  */
 void Game::printGame() const {
+    std::string out;
     std::string currentPlayerStr;
     if (currentPlayer == WHITE) {
         currentPlayerStr = "white";
@@ -51,75 +52,75 @@ void Game::printGame() const {
         currentPlayerStr = "black";
     }
 
-    std::cout << "------------------------" << std::endl;
-    std::cout << currentPlayerStr << " to move" << std::endl;
+    out += "------------------------\n";
+    out += currentPlayerStr + " to move\n";
     bitboard iterator = 1;
     iterator = iterator << 56;
     int counter = 0;
     while (iterator > 0) {
         switch (getPiece(iterator)) {
             case WHITE_PAWN:
-                std::cout << " P ";
+                out += " P ";
                 break;
             case WHITE_KNIGHT:
-                std::cout << " N ";
+                out += " N ";
                 break;
             case WHITE_BISHOP:
-                std::cout << " B ";
+                out += " B ";
                 break;
             case WHITE_ROOK:
-                std::cout << " R ";
+                out += " R ";
                 break;
             case WHITE_QUEEN:
-                std::cout << " Q ";
+                out += " Q ";
                 break;
             case WHITE_KING:
-                std::cout << " K ";
+                out += " K ";
                 break;
             case BLACK_PAWN:
-                std::cout << " p ";
+                out += " p ";
                 break;
             case BLACK_KNIGHT:
-                std::cout << " n ";
+                out += " n ";
                 break;
             case BLACK_BISHOP:
-                std::cout << " b ";
+                out += " b ";
                 break;
             case BLACK_ROOK:
-                std::cout << " r ";
+                out += " r ";
                 break;
             case BLACK_QUEEN:
-                std::cout << " q ";
+                out += " q ";
                 break;
             case BLACK_KING:
-                std::cout << " k ";
+                out += " k ";
                 break;
             default:
-                std::cout << " . ";
+                out += " . ";
         }
         counter++;
         if (counter % 8 == 0) {
-            std::cout << "\n";
+            out += "\n";
             iterator = iterator >> 15;
         } else {
             iterator = iterator << 1;
         }
     }
-    std::cout << "En passant " << (int) enPassant << std::endl;
-    std::cout << "Castle Rights: ";
+    out += "En passant " + std::to_string((int) enPassant) + "\n";
+    out += "Castle Rights: ";
     if (castleRights & WHITE_SHORT_CASTLE_RIGHT) {
-        std::cout << "ws ";
+        out += "ws ";
     }
     if (castleRights & WHITE_LONG_CASTLE_RIGHT) {
-        std::cout << "wl ";
+        out += "wl ";
     }
     if (castleRights & BLACK_SHORT_CASTLE_RIGHT) {
-        std::cout << "bs ";
+        out += "bs ";
     }
     if (castleRights & BLACK_LONG_CASTLE_RIGHT) {
-        std::cout << "bl ";
+        out += "bl ";
     }
-    std::cout << std::endl;
+    Writer::print(out, "info");
 }
 
 /*

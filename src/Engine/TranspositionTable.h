@@ -10,9 +10,9 @@
 
 struct Node {
 	int value;
-	int bestMoveIndex;
+	uint8_t bestMoveIndex;
 	char flag;
-	int depth;
+	uint8_t depth;
 };
 
 class TranspositionTable {
@@ -25,7 +25,7 @@ private:
 public:
 	TranspositionTable();
 	Node lookup(const Game& key, bool &exists);
-	bool write(const Game& game, int value, int bestMoveIndex, char flag, int depth);
+	bool write(const Game& game, int value, uint8_t bestMoveIndex, char flag, uint8_t depth);
 	void clear();
 };
 

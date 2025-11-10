@@ -4,8 +4,7 @@
 
 #include "TranspositionTable.h"
 
-TranspositionTable::TranspositionTable() {
-}
+TranspositionTable::TranspositionTable() = default;
 
 /**
  * Checks the table for an entry
@@ -33,7 +32,7 @@ Node TranspositionTable::lookup(const Game& game, bool &exists) {
  * @param depth new depth
  * @return true if writing was successful, false if the table is full
  */
-bool TranspositionTable::write(const Game &game, int value, int bestMoveIndex, char flag, int depth) {
+bool TranspositionTable::write(const Game &game, int value, uint8_t bestMoveIndex, char flag, uint8_t depth) {
 	mtx.lock();
 	if(transpositionTable.size() >= maxTableEntries) {
 		mtx.unlock();
