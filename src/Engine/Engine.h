@@ -24,6 +24,9 @@ public:
     void clearTranspositionTable() {
         search.clearTranspositionTable();
     }
+    uint32_t getNodeCount() {
+        return search.getNodeCount();
+    }
 };
 
 

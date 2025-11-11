@@ -40,6 +40,7 @@ bool TranspositionTable::write(const Game &game, int value, uint8_t bestMoveInde
 	}
 	Node n{value, bestMoveIndex, flag, depth};
 	if(transpositionTable.find(game.key()) == transpositionTable.end()) {
+		nodeCount++;
 		transpositionTable.insert(std::make_pair(game.key(), n));
 	} else {
 		transpositionTable.at(game.key()) = n;
@@ -51,6 +52,7 @@ bool TranspositionTable::write(const Game &game, int value, uint8_t bestMoveInde
 void TranspositionTable::clear() {
 	mtx.lock();
 	transpositionTable.clear();
+	nodeCount = 0;
 	mtx.unlock();
 }
 

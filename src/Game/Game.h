@@ -107,7 +107,7 @@ public:
     void doMoveAsString(std::string moveStr);
     Moves getAllPseudoLegalMoves() const;
     Moves getAllPseudoLegalCaptures() const;
-    bool isSquareUnderAttack(bitboard square, int index, color attackingColor) const;
+    bool isSquareUnderAttack(int index, color attackingColor) const;
     bool isPositionLegal() const;
     void loadFen(const std::string& fen);
     static std::string moveToString(Move move);

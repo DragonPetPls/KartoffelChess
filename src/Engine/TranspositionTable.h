@@ -27,6 +27,7 @@ public:
 	Node lookup(const Game& key, bool &exists);
 	bool write(const Game& game, int value, uint8_t bestMoveIndex, char flag, uint8_t depth);
 	void clear();
+	uint32_t nodeCount = 0;
 };
 
 #endif //TRANSPOSITIONTABLE_H

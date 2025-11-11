@@ -616,8 +616,8 @@ void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap
 
     //Short Castle
     if ((castleRights & shortCastleRights[currentPlayer])
-        && !isSquareUnderAttack(square, index, 1 - currentPlayer) //King not in check
-        && !isSquareUnderAttack(square << 1, index + 1, 1 - currentPlayer)
+        && !isSquareUnderAttack(index, 1 - currentPlayer) //King not in check
+        && !isSquareUnderAttack(index + 1, 1 - currentPlayer)
         && !(hitmap & (square << 1))
         && !(hitmap & (square << 2))) {
         Move m;
@@ -630,8 +630,8 @@ void Game::appendKingMoves(bitboard square, int index, const bitboard &ownHitmap
 
     //Long Castle
     if ((castleRights & longCastleRights[currentPlayer])
-        && !isSquareUnderAttack(square, index, 1 - currentPlayer) //King not in check
-        && !isSquareUnderAttack(square >> 1, index - 1, 1 - currentPlayer)
+        && !isSquareUnderAttack(index, 1 - currentPlayer) //King not in check
+        && !isSquareUnderAttack(index - 1, 1 - currentPlayer)
         && !(hitmap & (square >> 1))
         && !(hitmap & (square >> 2))
         && !(hitmap & (square >> 3))) {
@@ -762,7 +762,7 @@ void Game::appendKingCaptures(bitboard square, int index, const bitboard &ownHit
 /*
  * Checks if the square is under attack, the index of the square and the square itself have to match up
  */
-bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor) const {
+bool Game::isSquareUnderAttack(int index, color attackingColor) const {
     //Generating hitmaps
     bitboard ownHitmap = 0;
     bitboard enemyHitmap = 0;
@@ -825,7 +825,7 @@ bool Game::isSquareUnderAttack(bitboard square, int index, color attackingColor)
  */
 bool Game::isPositionLegal() const {
     int kingPosition = getIndex(pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | KING]);
-    return !isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | KING], kingPosition, currentPlayer);
+    return !isSquareUnderAttack(kingPosition, currentPlayer);
 }
 
 /*
@@ -1015,7 +1015,7 @@ char Game::getStatus() {
 
     //Checking if draw or checkmate
     int index = getIndex(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING]);
-    bool isCheck = isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[currentPlayer] | KING], index, 1 - currentPlayer);
+    bool isCheck = isSquareUnderAttack(index, 1 - currentPlayer);
 
     if (isCheck == true && currentPlayer == WHITE) status = BLACK_WON;
     else if (isCheck == true && currentPlayer == BLACK) status = WHITE_WON;
@@ -1046,7 +1046,7 @@ bool Game::areMovesStillPlayable() {
                                                 COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
     bool bishopThread = dangerousDiagonals & (pieceBoards[COLOR_TO_PIECE[1 - currentPlayer] | BISHOP] | pieceBoards[
                                                   COLOR_TO_PIECE[1 - currentPlayer] | QUEEN]);
-    bool isCheck = isSquareUnderAttack(((bitboard) 1) << kingIndex, kingIndex, 1 - currentPlayer);
+    bool isCheck = isSquareUnderAttack(kingIndex, 1 - currentPlayer);
 
     for (int i = 0; i < 64; i++) {
         int skip = 32 * !((NEXT_INDEX_BOARDS[0] << i) & ownHitmap);
@@ -1229,7 +1229,7 @@ bool Game::checkForRepetition() {
  */
 bool Game::isKingInCheck(color kingColor) const {
     int kingPosition = getIndex(pieceBoards[COLOR_TO_PIECE[kingColor] | KING]);
-    return isSquareUnderAttack(pieceBoards[COLOR_TO_PIECE[kingColor] | KING], kingPosition, 1 - kingColor);
+    return isSquareUnderAttack(kingPosition, 1 - kingColor);
 }
 
 
