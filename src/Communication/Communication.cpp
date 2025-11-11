@@ -122,15 +122,6 @@ void Communication::go(const std::string& command) {
     output.lock();
 
     std::string out = "bestmove " + Game::moveToString(m);
-    if(m.startingPiece != m.endingPiece) {
-        switch (m.endingPiece) {
-            case QUEEN: out += "q"; break;
-            case ROOK: out += "r"; break;
-            case BISHOP: out += "b"; break;
-            case KNIGHT: out += "n"; break;
-            default: break;
-        }
-    }
     Writer::print(out, "uci");
     output.unlock();
 }
@@ -252,6 +243,8 @@ void Communication::worker() {
             g.printGame();
         } else if (subcommand == "stop") {
             e.stopSearch();
+        } else if (subcommand == "nodecount") {
+            Writer::print(std::to_string(e.getNodeCount()), "uci");
         }
     }
 }

@@ -46,6 +46,9 @@ public:
         bool exists;
         return table.lookup(g, exists);
     }
+    uint32_t getNodeCount() const {
+        return table.nodeCount;
+    }
 };
 
 

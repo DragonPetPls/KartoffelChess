@@ -7,11 +7,9 @@
 #include "Tuner/Tuner.h"
 
 int main() {
-
     std::cout << "Kartoffeln" << std::endl;
     Writer::allowDefault();
     Communication c;
     c.startCommunication();
-
     return 0;
 }

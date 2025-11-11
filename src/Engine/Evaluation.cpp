@@ -7,8 +7,6 @@
 #include <algorithm>
 #include <cmath>
 
-int Evaluation::TEST_CONSTANT = 0;
-
 uint64_t Evaluation::evaluationCount = 0;
 
 const int Evaluation::MIDGAME_PAWN_TABLE[64] = {
@@ -190,7 +188,6 @@ int Evaluation::evaluate(const Game &g, int alpha) {
             break;
         }
         piece p = g.getPiece(square);
-        piece piece = p;
 
         //Piece square tables
         color c = p & BLACK_PIECE ? BLACK : WHITE;
@@ -309,13 +306,12 @@ std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int pr
         if (i == prevBestIndex) {
             value = 1000000;
         } else {
-            value = getMoveValue(moves.moves[i], g, killerMoves, historyTable);
+            value = getMoveValue(moves[i], g, killerMoves, historyTable);
         }
         order.push_back(Order{i, value});
     }
 
     std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
-        //This line is highlighted
         return a.value > b.value;
     });
 
@@ -340,17 +336,16 @@ std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves, int
         piece capturedPiece = g.getPiece(moves.moves[i].toSquare);
         capturedPiece &= ~BLACK_PIECE; //Removing color
         //Captures and promotions first
-        bool captureOrPromotion = false;
         if (capturedPiece < 6) {
-            value += 100000 + MIDGAME_PIECE_VALUES[capturedPiece] - MIDGAME_PIECE_VALUES[moves.moves[i].startingPiece];
-            captureOrPromotion = true;
+            value += 100000 + 2 * MIDGAME_PIECE_VALUES[capturedPiece];
+            value += -MIDGAME_PIECE_VALUES[moves[i].startingPiece] * g.isSquareUnderAttack(Game::getIndex(moves[i].toSquare), 1 - g.currentPlayer);
             if (delta > MIDGAME_PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
                 continue;
             }
         }
         if (moves.moves[i].startingPiece != moves.moves[i].endingPiece) {
-            value += 100000 + MIDGAME_PIECE_VALUES[moves.moves[i].endingPiece] - MIDGAME_PIECE_VALUES[moves.moves[i].startingPiece];
-            captureOrPromotion = true;
+            value += 100000 + 2 * MIDGAME_PIECE_VALUES[moves.moves[i].endingPiece];
+            value += -MIDGAME_PIECE_VALUES[moves[i].startingPiece] * g.isSquareUnderAttack(Game::getIndex(moves[i].toSquare), 1 - g.currentPlayer);
             if (delta > MIDGAME_PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
                 continue;
             }
@@ -382,11 +377,13 @@ int Evaluation::getMoveValue(const Move &move, const Game &g, Moves &killerMoves
     //Captures and promotions first
     bool captureOrPromotion = false;
     if (capturedPiece < 6) {
-        value += 100000 + MIDGAME_PIECE_VALUES[capturedPiece] - MIDGAME_PIECE_VALUES[move.startingPiece];
+        value += 100000 + 2 * MIDGAME_PIECE_VALUES[capturedPiece];
+        value += -MIDGAME_PIECE_VALUES[move.startingPiece] * g.isSquareUnderAttack(Game::getIndex(move.toSquare), 1 - g.currentPlayer);
         captureOrPromotion = true;
     }
     if (move.startingPiece != move.endingPiece) {
-        value += 100000 + MIDGAME_PIECE_VALUES[move.endingPiece] - MIDGAME_PIECE_VALUES[move.startingPiece];
+        value += 100000 + 2 * MIDGAME_PIECE_VALUES[move.endingPiece];
+        value += -MIDGAME_PIECE_VALUES[move.startingPiece] * g.isSquareUnderAttack(Game::getIndex(move.toSquare), 1 - g.currentPlayer);
         captureOrPromotion = true;
     }
 

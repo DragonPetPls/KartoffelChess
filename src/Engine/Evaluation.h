@@ -45,9 +45,6 @@ private:
     static int getKingSafety(bitboard hitmap, int index, piece p, color c, bitboard ownKingSpace, bitboard enemyKingSpace, const Game &g);
     static int fastEvalation(const Game &g);
 public:
-
-    static int TEST_CONSTANT;
-
     static int evaluate(const Game &g, int alpha);
     static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]);
     static std::vector<int> rankCaptures(const Game &g, const Moves &moves, int delta);
