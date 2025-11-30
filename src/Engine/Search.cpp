@@ -5,12 +5,12 @@
 #include "Search.h"
 #include "../Communication/Writer.h"
 #include "Evaluation.h"
+#include "MoveRank.h"
 
 /*
  * Ponders the given position
  */
 void Search::ponder(Game g, const std::atomic<bool> &stop) {
-
     table.clear();
 
     int depth = 0;
@@ -38,7 +38,6 @@ void Search::ponder(Game g, const std::atomic<bool> &stop) {
  * Performs a search until the stop variable is set to true
  */
 void Search::search(Game &g, const std::atomic<bool> &stop) {
-
     int depth = 0;
     this->stop = &stop;
 
@@ -59,7 +58,6 @@ void Search::search(Game &g, const std::atomic<bool> &stop) {
 void Search::searchToDepth(Game &g, int toDepth) {
     std::atomic<bool> stop(false);
     this->stop = &stop;
-    table.clear();
 
     int depth = 0;
 
@@ -87,7 +85,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
 
     //Checking the position in the transposition table
     int originalAlpha = alpha;
-    int prevBestIndex = INF;
+    int prevBestIndex = Moves::NONE;
 
     bool ttExists;
     Node ttNode = table.lookup(g, ttExists);
@@ -136,7 +134,8 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
     int bestIndex = 0;
     bool legalMoveExists = false;
     Moves next = g.getAllPseudoLegalMoves();
-    auto order = Evaluation::rankMoves(g, next, prevBestIndex, killerMoves, historyTable);
+    int killerMoveCutoff;
+    auto order = MoveRank::rankMoves(g, next, prevBestIndex, killerMoves, historyTable, killerMoveCutoff);
     Moves newKillerMoves;
     bool isCheck = g.isKingInCheck(g.currentPlayer);
 
@@ -154,10 +153,9 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         int score;
         if(index != 0){
             int reduction = 1;
-            reduction += 1 * (index >= (1 + 2 * isPVNode) && depth >= 3); //Late moves
+            reduction += 1 * (index >= 1 + 2 * isPVNode && depth >= 3); //Late moves
             reduction -= 1 * isCheck; //Checks may be risky to reduce
             reduction = std::max(reduction, 1);
-
             score = -negamax(g, -alpha - 1, -alpha, depth - reduction, maxDepth, newKillerMoves, false);
             if(score > alpha) {
                 score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves, isPVNode);
@@ -202,7 +200,6 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
         } else {
             flag = EXACT;
         }
-
         table.write(g, bestScore, bestIndex, flag, depth);
     }
 
@@ -214,6 +211,7 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
  */
 int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
     int standPat = Evaluation::evaluate(g, alpha);
+
     if(standPat >= beta) {
         return beta;
     }
@@ -222,7 +220,7 @@ int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
     }
 
     auto next = g.getAllPseudoLegalCaptures();
-    auto order = Evaluation::rankCaptures(g, next, alpha - standPat);
+    auto order = MoveRank::rankCaptures(g, next, alpha - standPat);
     for(int index = 0; index < order.size(); index++) {
         int i = order[index];
         g.doMove(next[i]);
@@ -235,6 +233,7 @@ int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
         if(score >= beta) return beta;
         alpha = std::max(alpha, score);
     }
+
     return alpha;
 }
 

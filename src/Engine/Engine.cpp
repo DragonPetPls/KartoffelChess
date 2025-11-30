@@ -14,7 +14,6 @@
  * Returns the move the engine determinds to be the best
  */
 Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
-
     stopSearch();
 
     int searchTime;
@@ -66,7 +65,6 @@ Move Engine::getMove(Game g, int depth) {
 
     //Picking the best move via whats inside the transposition table
     auto next = g.getAllPseudoLegalMoves();
-    Node n = search.getNodeFromTable(g);
     Move bestMove = next.moves[search.getNodeFromTable(g).bestMoveIndex];
     return bestMove;
 }

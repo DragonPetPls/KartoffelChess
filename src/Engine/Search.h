@@ -27,7 +27,7 @@ class Search {
 private:
     TranspositionTable table;
     const std::atomic<bool>* stop = nullptr;
-    int historyTable[6][64] = {};
+    double historyTable[6][64] = {};
 
     int quiescence(Game &g, int alpha, int beta, int depth, int maxDepth);
 public:

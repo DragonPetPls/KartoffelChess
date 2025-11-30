@@ -38,6 +38,8 @@ add_executable(KartoffelChess main.cpp
         Communication/Communication.h
         Communication/Writer.cpp
         Communication/Writer.h
+        Engine/MoveRank.cpp
+        Engine/MoveRank.h
 )
 
 add_executable(Tests
@@ -62,6 +64,8 @@ add_executable(Tests
         Tests/SearchTest.cpp
         Communication/Writer.cpp
         Communication/Writer.h
+        Engine/MoveRank.cpp
+        Engine/MoveRank.h
 )
 
 add_executable(Tuner
@@ -86,6 +90,8 @@ add_executable(Tuner
         Tuner/Tuner.cpp
         Communication/Writer.cpp
         Communication/Writer.h
+        Engine/MoveRank.cpp
+        Engine/MoveRank.h
 )
 
 # linking tests with Game which will be tested

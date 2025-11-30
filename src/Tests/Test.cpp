@@ -521,3 +521,44 @@ void Test::evaluationTest() {
     std::chrono::duration<double> elapsed = end - start;
     std::cout << elapsed.count() * 1.0/Evaluation::evaluationCount << " second per evaluation" << std::endl;
 }
+
+/**
+ * test if evaluation is updated correctly at all times
+ * @param g
+ * @param depth
+ * @return false once a mistake was found, else true
+ */
+bool Test::incrementalEvaluationPerft(Game g, int depth){
+    int mid = g.midgameEval;
+    int end = g.endgameEval;
+    int phase = g.phase;
+    if (g.hashValue % 10 == 0) {
+        Evaluation::setupEvaluation(g);
+    }
+    if (mid != g.midgameEval || end != g.endgameEval || phase != g.phase) {
+        std::cout << "Mistake evaluation" << std::endl;
+        std::cout << Game::moveToString(g.getLastMove().move) << std::endl;
+        g.printGame();
+        return false;
+    }
+    if (depth < 0) {
+        return true;
+    }
+    Moves moves = g.getAllPseudoLegalMoves();
+    for (auto move : moves) {
+        if ("a4b3" == Game::moveToString(move)) {
+            std::cout << " " << std::endl;
+        }
+        g.doMove(move);
+        if (!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+        bool b = incrementalEvaluationPerft(g, depth - 1);
+        g.undoMove();
+        if (b == false) {
+            return false;
+        }
+    }
+    return true;
+}

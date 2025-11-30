@@ -7,6 +7,7 @@
 #include "Tuner/Tuner.h"
 
 int main() {
+    Game game;
     std::cout << "Kartoffeln" << std::endl;
     Writer::allowDefault();
     Communication c;

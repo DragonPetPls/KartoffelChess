@@ -51,6 +51,9 @@ struct LastMove{
     uint8_t enPassant;
     uint8_t castleRights;
     piece capturedPiece;
+    int midgameEval;
+    int endgameEval;
+    int phase; //Counts material points based on the fast_eval table
 };
 
 class Game {
@@ -73,6 +76,10 @@ public:
     color currentPlayer;
     uint8_t enPassant; // stores the row in which an en passant is playable in a way a bitboard does
     uint8_t castleRights; //Stores castle rights in the first for bits
+
+    int midgameEval;    //From whites perspective
+    int endgameEval; //From whites perspective
+    int phase; //From whites perspective
 
     //We store the hash value here and update it after every move
     uint64_t hashValue;

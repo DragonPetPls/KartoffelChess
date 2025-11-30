@@ -153,321 +153,116 @@ const int Evaluation::FAST_PIECE_VALUES[6] {
    88, 309, 331, 495, 981, 0
 };
 
-/*
- * Performs the static evaluation at the end of the search
- */
-int Evaluation::evaluate(const Game &g, int alpha) {
-
-    int fastEval = fastEvalation(g);
-    if (fastEval < (alpha - SAFETY_EVAL_MARGIN)) {
-        return fastEval;
+int Evaluation::getIndex(int i, color c) {
+    int x = i % 8;
+    int y = i / 8;
+    int index;
+    if (c == WHITE) {
+        index = x + (7 - y) * 8;
+    } else {
+        index = x + 8 * y;
     }
+    return index;
+}
 
+/**
+ * Use this function for evaluations during search
+ * @param game
+ * @param delta score that has to be reached before additional features are evaluated
+ * @return evaluation of the given position
+ */
+int Evaluation::evaluate(const Game &game, int delta) {
     evaluationCount++;
+    int eval = (game.midgameEval * game.phase + game.endgameEval * (ENDGAME_MATERIAL - game.phase))/ENDGAME_MATERIAL;
+    return game.currentPlayer == WHITE ? eval : -eval;
+}
+
+/**
+ * Sets up the evaluation parameters that will later be incrementally updated. Use run this before starting the search
+ * @param g
+ */
+void Evaluation::setupEvaluation(Game &g) {
+    const int* midgameEvals[] = {MIDGAME_PAWN_TABLE, MIDGAME_KNIGHT_TABLE, MIDGAME_BISHOP_TABLE, MIDGAME_ROOK_TABLE, MIDGAME_QUEEN_TABLE, MIDGAME_KING_TABLE};
+    const int* endgameEvals[] = {ENDGAME_PAWN_TABLE, ENDGAME_KNIGHT_TABLE, ENDGAME_BISHOP_TABLE, ENDGAME_ROOK_TABLE, ENDGAME_QUEEN_TABLE, ENDGAME_KING_TABLE};
     int midgameEval = 0;
     int endgameEval = 0;
-    int material = 0;
-
-    bitboard hitmap = 0;
-    for (int i = 0; i < 6; i++) {
-        hitmap |= g.pieceBoards[i | WHITE_PIECE];
-        hitmap |= g.pieceBoards[i | BLACK_PIECE];
-    }
-
-    bitboard square = 1;
-    int ownKingIndex = Game::getIndex(g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | KING]);
-    int enemyKingIndex = Game::getIndex(g.pieceBoards[COLOR_TO_PIECE[1 - g.currentPlayer] | KING]);
-
-    bitboard ownKingSpace = MagicBitboards::getKingReachableSquares(ownKingIndex) | g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | KING];
-    bitboard enemyKingSpace = MagicBitboards::getKingReachableSquares(enemyKingIndex) | g.pieceBoards[COLOR_TO_PIECE[1 - g.currentPlayer] | KING];
-    int safety = 0;
-
+    int phase = 0;
     for (int i = 0; i < 64; i++) {
-        Game::fastForwardIndex(i, square, hitmap);
-        if (i > 63) {
-            break;
+        piece piece_with_color = g.getPiece(((bitboard) 1) << i);
+        if (piece_with_color == NO_PIECE) {
+            continue;
         }
-        piece p = g.getPiece(square);
-
-        //Piece square tables
-        color c = p & BLACK_PIECE ? BLACK : WHITE;
-        p = p & ~BLACK_PIECE; //Removing the color of the piece
-        int value = getMidgamePieceValue(hitmap, i, p, c);
-        midgameEval += g.currentPlayer == c ? value : -value;
-        value = getEndgamePieceValue(hitmap, i, p, c);
-        endgameEval += g.currentPlayer == c ? value : -value;
-        material += MIDGAME_PIECE_VALUES[p] * (p != PAWN);
-
-        safety += getKingSafety(hitmap, i, p, c, ownKingSpace, enemyKingSpace, g);
-
-        square <<= 1;
-    }
-
-    int phase = material;
-    phase = std::min(ENDGAME_MATERIAL, phase);
-    int eval = (midgameEval * phase + endgameEval * (ENDGAME_MATERIAL - phase))/ENDGAME_MATERIAL;
-    eval += safety * phase / SAFETY_DIVISOR;
-
-    return eval;
-}
-
-/*
- * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
- */
-int Evaluation::getMidgamePieceValue(bitboard hitmap, int index, piece p, color c) {
-    int value = 0;
-    value += MIDGAME_PIECE_VALUES[p];
-
-    int x = index % 8;
-    int y = index / 8;
-
-    index = c == WHITE ? x + 56 - 8 * y : x + 8 * y;
-    switch (p) {
-        case PAWN:
-            value += MIDGAME_PAWN_TABLE[index];
-            break;
-        case KNIGHT:
-            value += MIDGAME_KNIGHT_TABLE[index];
-            break;
-        case BISHOP:
-            value += MIDGAME_BISHOP_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
-            break;
-        case ROOK:
-            value += MIDGAME_ROOK_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
-            break;
-        case QUEEN:
-            value += MIDGAME_QUEEN_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
-            break;
-        case KING:
-            value = MIDGAME_KING_TABLE[index];
-            break;
-        default: break;
-    }
-
-    return value;
-}
-
-
-/*
- * Returns the value of a piece p of the color c on the index square, a high score is rewarded for a high value piece/square, regardless of color
- */
-int Evaluation::getEndgamePieceValue(bitboard hitmap, int index, piece p, color c) {
-    int value = 0;
-    value += ENDGAME_PIECE_VALUES[p];
-
-    int x = index % 8;
-    int y = index / 8;
-
-    index = c == WHITE ? x + 56 - 8 * y : x + 8 * y;
-    switch (p) {
-        case PAWN:
-            value += ENDGAME_PAWN_TABLE[index];
-        break;
-        case KNIGHT:
-            value += ENDGAME_KNIGHT_TABLE[index];
-        break;
-        case BISHOP:
-            value += ENDGAME_BISHOP_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
-        break;
-        case ROOK:
-            value += ENDGAME_ROOK_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
-        break;
-        case QUEEN:
-            value += ENDGAME_QUEEN_TABLE[index];
-            value += (MOBILITY * MagicBitboards::getBishopEntry(hitmap, index)->moves->moveCount)/100;
-            value += (MOBILITY * MagicBitboards::getRookEntry(hitmap, index)->moves->moveCount)/100;
-        break;
-        case KING:
-            value = ENDGAME_KING_TABLE[index];
-        break;
-        default: break;
-    }
-
-    return value;
-}
-
-
-/*
- * Returns a vector of ints in the order that moves should be searched further
- */
-std::vector<int> Evaluation::rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves,
-                                       int historyTable[6][64]) {
-    std::vector<Order> order;
-    order.reserve(moves.moveCount);
-
-    for (int i = 0; i < moves.moveCount; i++) {
-        int value = 0;
-        if (i == prevBestIndex) {
-            value = 1000000;
+        piece p = piece_with_color & ~BLACK_PIECE;
+        color c = (piece_with_color & BLACK_PIECE) == 0 ? WHITE : BLACK;
+        int index = getIndex(i, c);
+        if (c == WHITE) {
+            midgameEval += midgameEvals[p][index];
+            endgameEval += endgameEvals[p][index];
+            midgameEval += MIDGAME_PIECE_VALUES[p];
+            endgameEval += ENDGAME_PIECE_VALUES[p];
+            phase += FAST_PIECE_VALUES[p];
         } else {
-            value = getMoveValue(moves[i], g, killerMoves, historyTable);
+            midgameEval -= midgameEvals[p][index];
+            endgameEval -= endgameEvals[p][index];
+            midgameEval -= MIDGAME_PIECE_VALUES[p];
+            endgameEval -= ENDGAME_PIECE_VALUES[p];
+            phase += FAST_PIECE_VALUES[p];
         }
-        order.push_back(Order{i, value});
     }
-
-    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
-        return a.value > b.value;
-    });
-
-    std::vector<int> result;
-    result.resize(order.size());
-    for (int i = 0; i < order.size(); i++) {
-        result[i] = order[i].index;
-    }
-    return result;
+    g.midgameEval = midgameEval;
+    g.endgameEval = endgameEval;
+    g.phase = phase;
 }
 
-/*
- * Ranks captures (and promotions)
- * Excludes all move that dont have a chance to improve the position by delta
+/**
+ * Updates the evaluation parameters of the incrementally
+ * @param g game where the update has to be done on
+ * @param m move that is done
  */
-std::vector<int> Evaluation::rankCaptures(const Game &g, const Moves &moves, int delta) {
-    std::vector<Order> order;
-    order.reserve(moves.moveCount);
-
-    for (int i = 0; i < moves.moveCount; i++) {
-        int value = 0;
-        piece capturedPiece = g.getPiece(moves.moves[i].toSquare);
-        capturedPiece &= ~BLACK_PIECE; //Removing color
-        //Captures and promotions first
-        if (capturedPiece < 6) {
-            value += 100000 + 2 * MIDGAME_PIECE_VALUES[capturedPiece];
-            value += -MIDGAME_PIECE_VALUES[moves[i].startingPiece] * g.isSquareUnderAttack(Game::getIndex(moves[i].toSquare), 1 - g.currentPlayer);
-            if (delta > MIDGAME_PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
-                continue;
-            }
-        }
-        if (moves.moves[i].startingPiece != moves.moves[i].endingPiece) {
-            value += 100000 + 2 * MIDGAME_PIECE_VALUES[moves.moves[i].endingPiece] - MIDGAME_PIECE_VALUES[moves[i].startingPiece];
-            value += - MIDGAME_PIECE_VALUES[moves[i].endingPiece] * g.isSquareUnderAttack(Game::getIndex(moves[i].toSquare), 1 - g.currentPlayer);
-            if (delta > MIDGAME_PIECE_VALUES[capturedPiece] + SAFETY_DELTA_MARGIN) {
-                continue;
-            }
-        }
-        order.push_back(Order{i, value});
+void Evaluation::updateEvaluation(Game &g, const LastMove& m) {
+    const int* midgameEvals[] = {MIDGAME_PAWN_TABLE, MIDGAME_KNIGHT_TABLE, MIDGAME_BISHOP_TABLE, MIDGAME_ROOK_TABLE, MIDGAME_QUEEN_TABLE, MIDGAME_KING_TABLE};
+    const int* endgameEvals[] = {ENDGAME_PAWN_TABLE, ENDGAME_KNIGHT_TABLE, ENDGAME_BISHOP_TABLE, ENDGAME_ROOK_TABLE, ENDGAME_QUEEN_TABLE, ENDGAME_KING_TABLE};
+    color c = 1 - g.currentPlayer; //We invert cause this function is called after the move color was updated
+    int midgameDiff = 0; //We track from the current players perspective
+    int endgameDiff = 0;
+    int phaseDiff = FAST_PIECE_VALUES[m.move.endingPiece] - FAST_PIECE_VALUES[m.move.startingPiece];
+    int fromIdx = Game::getIndex(m.move.fromSquare);
+    int toIdx = Game::getIndex(m.move.toSquare);
+    int tableFromIdx = getIndex(fromIdx, c);
+    int tableToIdx = getIndex(toIdx, c);
+    midgameDiff -= midgameEvals[m.move.startingPiece][tableFromIdx];
+    midgameDiff += midgameEvals[m.move.endingPiece][tableToIdx];
+    midgameDiff -= MIDGAME_PIECE_VALUES[m.move.startingPiece];
+    midgameDiff += MIDGAME_PIECE_VALUES[m.move.endingPiece];
+    endgameDiff -= endgameEvals[m.move.startingPiece][tableFromIdx];
+    endgameDiff += endgameEvals[m.move.endingPiece][tableToIdx];
+    endgameDiff -= ENDGAME_PIECE_VALUES[m.move.startingPiece];
+    endgameDiff += ENDGAME_PIECE_VALUES[m.move.endingPiece];
+    if (m.capturedPiece != NO_PIECE) {
+        phaseDiff -= FAST_PIECE_VALUES[m.capturedPiece];
+        int inverseTableToIdx = getIndex(toIdx, 1 - c);
+        midgameDiff += midgameEvals[m.capturedPiece][inverseTableToIdx];
+        endgameDiff += endgameEvals[m.capturedPiece][inverseTableToIdx];
+        midgameDiff += MIDGAME_PIECE_VALUES[m.capturedPiece];
+        endgameDiff += ENDGAME_PIECE_VALUES[m.capturedPiece];
     }
-
-    std::sort(order.begin(), order.end(), [](const Order &a, const Order &b) {
-        //This line is highlighted
-        return a.value > b.value;
-    });
-
-    std::vector<int> result;
-    result.resize(order.size());
-    for (int i = 0; i < order.size(); i++) {
-        result[i] = order[i].index;
+    if (m.move.startingPiece == KING && m.move.fromSquare & SHORT_CASTLE_KING && m.move.toSquare & SHORT_CASTLE_KING) {
+        midgameDiff += midgameEvals[ROOK][61] - midgameEvals[ROOK][63];
+        endgameDiff += endgameEvals[ROOK][61] - endgameEvals[ROOK][63];
     }
-    return result;
-}
-
-/*
- * returns a value that if represents how high on the priority list searching this move should be
- */
-int Evaluation::getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]) {
-    int value = 0;
-
-    piece capturedPiece = g.getPiece(move.toSquare);
-    capturedPiece &= ~BLACK_PIECE; //Removing color
-    //Captures and promotions first
-    bool captureOrPromotion = false;
-    if (capturedPiece < 6) {
-        value += 100000 + 5 * MIDGAME_PIECE_VALUES[capturedPiece];
-        value += -MIDGAME_PIECE_VALUES[move.startingPiece] * g.isSquareUnderAttack(Game::getIndex(move.toSquare), 1 - g.currentPlayer);
-        captureOrPromotion = true;
+    if (m.move.startingPiece == KING && m.move.fromSquare & LONG_CASTLE_KING && m.move.toSquare & LONG_CASTLE_KING) {
+        midgameDiff += midgameEvals[ROOK][59] - midgameEvals[ROOK][56];
+        endgameDiff += endgameEvals[ROOK][59] - endgameEvals[ROOK][56];
     }
-    if (move.startingPiece != move.endingPiece) {
-        value += 100000 + 5 * MIDGAME_PIECE_VALUES[move.endingPiece];
-        value += - MIDGAME_PIECE_VALUES[move.endingPiece] * g.isSquareUnderAttack(Game::getIndex(move.toSquare), 1 - g.currentPlayer);
-        captureOrPromotion = true;
+    //En passant
+    if (m.move.startingPiece == PAWN && m.capturedPiece == NO_PIECE && tableFromIdx%8 != tableToIdx%8) {
+        midgameDiff += midgameEvals[PAWN][tableToIdx + 16];
+        endgameDiff += endgameEvals[PAWN][tableToIdx + 16];
+        midgameDiff += MIDGAME_PIECE_VALUES[PAWN];
+        endgameDiff += ENDGAME_PIECE_VALUES[PAWN];
+        phaseDiff -= FAST_PIECE_VALUES[PAWN];
     }
-
-    //Now we check for killer moves
-    bool killer = false;
-    for (int i = 0; i < killerMoves.moveCount; i++) {
-        if (killerMoves.moves[i] == move) {
-            value += 1;
-            killer = true;
-        }
-    }
-    value += 80000 * killer * !captureOrPromotion;
-
-    if (value != 0) {
-        return value;
-    }
-
-    int index = Game::getIndex(move.toSquare);
-    value += historyTable[move.startingPiece][index];
-    return value;
-}
-
-/*
- * Returns a value for how this piece affects king safety
- */
-int Evaluation::getKingSafety(bitboard hitmap, int index, piece p, color c, bitboard ownKingSpace, bitboard enemyKingSpace, const Game &g) {
-    int safety = 0;
-    //King safety
-    if(c != g.currentPlayer) {
-        switch(p) {
-            case KNIGHT:
-                safety -= 3 * ((MagicBitboards::getKnightReachableSquares(index) & ownKingSpace) != 0);
-            break;
-            case BISHOP:
-                safety -= 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & ownKingSpace) != 0);
-            break;
-            case ROOK:
-                safety -= 5 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & ownKingSpace) != 0);
-            break;
-            case QUEEN:
-                safety -= 9 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & ownKingSpace) != 0);
-                safety -= 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & ownKingSpace) != 0);
-            break;
-            default:
-                break;
-        }
-    } else {
-        switch(p) {
-            case KNIGHT:
-                safety += 3 * ((MagicBitboards::getKnightReachableSquares(index) & enemyKingSpace) != 0);
-            break;
-            case BISHOP:
-                safety += 3 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & enemyKingSpace) != 0);
-            break;
-            case ROOK:
-                safety += 5 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & enemyKingSpace) != 0);
-            break;
-            case QUEEN:
-                safety += 9 * ((MagicBitboards::getRookReachableSquares(hitmap, index) & enemyKingSpace) != 0);
-                safety += 9 * ((MagicBitboards::getBishopReachableSquares(hitmap, index) & enemyKingSpace) != 0);
-            break;
-            default:
-                break;
-        }
-    }
-    return safety;
-}
-
-/*
- * A fast evaluation to check if a position is worth evaluating
- */
-int Evaluation::fastEvalation(const Game &g) {
-    int score = 0;
-
-    for (int i = PAWN; i < KING; i++) {
-        int count = __builtin_popcountll(g.pieceBoards[i | WHITE_PIECE]);
-        score += FAST_PIECE_VALUES[i] * count;
-    }
-
-    for (int i = PAWN; i < KING; i++) {
-        int count = __builtin_popcountll(g.pieceBoards[i | BLACK_PIECE]);
-        score += -FAST_PIECE_VALUES[i] * count;
-    }
-
-    score = g.currentPlayer == WHITE ? score : -score;
-    return score;
+    g.midgameEval += c == WHITE ? midgameDiff : -midgameDiff;
+    g.endgameEval += c == WHITE ? endgameDiff : -endgameDiff;
+    g.phase += phaseDiff;
 }

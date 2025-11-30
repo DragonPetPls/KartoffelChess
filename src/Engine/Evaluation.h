@@ -16,12 +16,6 @@ constexpr int SAFETY_EVAL_MARGIN = 200;
 
 class Evaluation {
 private:
-
-    struct Order {
-        int index;
-        int value;
-    };
-
     static const int MIDGAME_PAWN_TABLE[64];
     static const int ENDGAME_PAWN_TABLE[64];
     static const int MIDGAME_KNIGHT_TABLE[64];
@@ -35,19 +29,17 @@ private:
     static const int MIDGAME_KING_TABLE[64];
     static const int ENDGAME_KING_TABLE[64];
 
+    static int getIndex(int i, color c);
+
+public:
     static const int MIDGAME_PIECE_VALUES[6];
     static const int ENDGAME_PIECE_VALUES[6];
     static const int FAST_PIECE_VALUES[6];
 
-    static int getMidgamePieceValue(bitboard hitmap, int index, piece p, color c);
-    static int getEndgamePieceValue(bitboard hitmap, int index, piece p, color c);
-    static int getMoveValue(const Move &move, const Game &g, Moves &killerMoves, int historyTable[6][64]);
-    static int getKingSafety(bitboard hitmap, int index, piece p, color c, bitboard ownKingSpace, bitboard enemyKingSpace, const Game &g);
-    static int fastEvalation(const Game &g);
 public:
-    static int evaluate(const Game &g, int alpha);
-    static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]);
-    static std::vector<int> rankCaptures(const Game &g, const Moves &moves, int delta);
+    static int evaluate(const Game& game, int delta);
+    static void setupEvaluation(Game &g);
+    static void updateEvaluation(Game &g, const LastMove& m);
     static uint64_t evaluationCount;
 };
 

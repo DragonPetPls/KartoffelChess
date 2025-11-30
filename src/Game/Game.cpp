@@ -8,6 +8,8 @@
 #include <random>
 #include <strings.h>
 
+#include "../Engine/Evaluation.h"
+
 bool Game::isZobristInit = false;
 uint64_t Game::zobristKeys[NUMBER_OF_ZOBRIST_KEYS];
 
@@ -38,6 +40,7 @@ void Game::loadStartingPosition() {
     gameHistoryCounter = -1;
     movesWithoutProgess = 0;
     setHashValue();
+    Evaluation::setupEvaluation(*this);
 }
 
 /*
@@ -152,6 +155,9 @@ void Game::doMove(const Move &move) {
     gameHistory[gameHistoryCounter].castleRights = this->castleRights;
     gameHistory[gameHistoryCounter].movesWithoutProgress = this->movesWithoutProgess;
     gameHistory[gameHistoryCounter].move = move;
+    gameHistory[gameHistoryCounter].midgameEval = this->midgameEval;
+    gameHistory[gameHistoryCounter].endgameEval = this->endgameEval;
+    gameHistory[gameHistoryCounter].phase = this->phase;
     pastHashes[gameHistoryCounter] = hashValue;
 
     int fromIndex = getIndex(move.fromSquare);
@@ -235,6 +241,7 @@ void Game::doMove(const Move &move) {
     //Adjusting moves without progress
     movesWithoutProgess = (movesWithoutProgess + 1) * (
                               move.startingPiece != PAWN && gameHistory[gameHistoryCounter].capturedPiece == NO_PIECE);
+    Evaluation::updateEvaluation(*this, gameHistory[gameHistoryCounter]);
 }
 
 /*
@@ -247,6 +254,9 @@ void Game::doNullMove() {
     gameHistory[gameHistoryCounter].castleRights = this->castleRights;
     gameHistory[gameHistoryCounter].movesWithoutProgress = this->movesWithoutProgess;
     gameHistory[gameHistoryCounter].move = nullMove;
+    gameHistory[gameHistoryCounter].midgameEval = this->midgameEval;
+    gameHistory[gameHistoryCounter].endgameEval = this->endgameEval;
+    gameHistory[gameHistoryCounter].phase = this->phase;
     pastHashes[gameHistoryCounter] = hashValue;
 
     enPassant = 0;
@@ -296,6 +306,9 @@ void Game::undoMove() {
     this->movesWithoutProgess = gameHistory[gameHistoryCounter].movesWithoutProgress;
     this->castleRights = gameHistory[gameHistoryCounter].castleRights;
     this->enPassant = gameHistory[gameHistoryCounter].enPassant;
+    this->endgameEval = gameHistory[gameHistoryCounter].endgameEval;
+    this->midgameEval = gameHistory[gameHistoryCounter].midgameEval;
+    this->phase = gameHistory[gameHistoryCounter].phase;
     piece &capturedPiece = gameHistory[gameHistoryCounter].capturedPiece;
     Move &move = gameHistory[gameHistoryCounter].move;
     hashValue = pastHashes[gameHistoryCounter];
@@ -945,6 +958,7 @@ void Game::loadFen(const std::string &fen) {
         counter++;
     }
     setHashValue();
+    Evaluation::setupEvaluation(*this);
 }
 
 /*

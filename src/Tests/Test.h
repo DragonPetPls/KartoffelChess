@@ -39,6 +39,7 @@ public:
     static void searchTest();
     static void captureTest();
     static void evaluationTest();
+    static bool incrementalEvaluationPerft(Game g, int depth);
 };
 
 

@@ -31,7 +31,7 @@ int Tuner::playGame(int para1, int para2) {
         } else {
             Parameters::parameter = para2;
         }
-        Move m = e.getMove(g, 0, 0, TIME_PER_MOVE);
+        Move m = e.getMove(g, 6);
         g.doMove(m);
         e.clearTranspositionTable();
     }
@@ -42,7 +42,7 @@ int Tuner::playGame(int para1, int para2) {
         } else {
             Parameters::parameter = para1;
         }
-        Move m = e.getMove(g2, 0, 0, 5);
+        Move m = e.getMove(g2, 6);
         g2.doMove(m);
         e.clearTranspositionTable();
     }
@@ -60,7 +60,9 @@ int Tuner::playGame(int para1, int para2) {
 bool Tuner::isPara1BetterThanPara2(int para1, int para2) {
     int score1 = 0;
     int score2 = 0;
+    std::cout << "Testing Para1 "<< para1 << " and Para2 " << para2 << std::endl;
     for (int i = 0; i < MAX_GAMES_PER_COLOR; i++) {
+        std::cout << "\rGames played: " << i << " Para1 Score: " << score1 << " Para2 Score: " << score2 << "              " << std::flush;
         int result = playGame(para1, para2);
         if (result == 1) {
             score1++;
@@ -83,6 +85,7 @@ bool Tuner::isPara1BetterThanPara2(int para1, int para2) {
             score2++;
         }
     }
+    std::cout << std::endl;
 
     return score1 > score2;
 }
