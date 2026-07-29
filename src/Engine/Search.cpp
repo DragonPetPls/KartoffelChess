@@ -1,54 +1,114 @@
 //
-// Created by fabian on 11/19/24.
+// Search Engine Core Implementation
 //
 
 #include "Search.h"
 #include "../Communication/Writer.h"
 #include "Evaluation.h"
 
-/*
- * Ponders the given position
- */
-void Search::ponder(Game g, const std::atomic<bool> &stop) {
+Search::Search() {
+    initLMR();
+}
 
-    table.clear();
-
-    int depth = 0;
-    this->stop = &stop;
-
-    //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with consol outputs
-    while (!stop && depth < 1000) {
-        depth++;
-        Moves killer;
-        int eval = negamax(g, -INF, INF, depth, depth, killer, true);
-        if(!stop) {
-            Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
-        }
-    }
-
-    for(int i = 0; i < 6; i++) {
-        for(int j = 0; j < 64; j++) {
-            historyTable[i][j] = 0;
+void Search::initLMR() {
+    for (int depth = 1; depth < 64; depth++) {
+        for (int moveIndex = 1; moveIndex < 64; moveIndex++) {
+            LMRTable[depth][moveIndex] = static_cast<int>(0.5 + log(depth) * log(moveIndex) / 2.25);
         }
     }
 }
 
+/*
+ * Ponders the given position
+ */
+void Search::ponder(Game g, const std::atomic<bool> &stop) {
+    table.clear();
+    this->stop = &stop;
+    int depth = 0;
+    lastCompletedBestMove = nullMove;
+    bestRootMove = nullMove;
+
+    std::fill(&killerMoves[0][0], &killerMoves[0][0] + sizeof(killerMoves) / sizeof(Move), nullMove);
+    std::fill(&historyTable[0][0][0], &historyTable[0][0][0] + sizeof(historyTable) / sizeof(int), 0);
+
+    Moves pseudoMoves = g.getAllPseudoLegalMoves();
+    for (int i = 0; i < pseudoMoves.moveCount; i++) {
+        g.doMove(pseudoMoves[i]);
+        if (g.isPositionLegal()) {
+            g.undoMove();
+            lastCompletedBestMove = pseudoMoves[i];
+            bestRootMove = pseudoMoves[i];
+            break;
+        }
+        g.undoMove();
+    }
+
+    while ((this->stop == nullptr || !this->stop->load()) && depth < 100) {
+        depth++;
+        int eval = negamax(g, -INF, INF, depth, 0, true);
+        if (this->stop == nullptr || !this->stop->load()) {
+            if (bestRootMove.fromSquare != 0 || bestRootMove.toSquare != 0) {
+                lastCompletedBestMove = bestRootMove;
+            }
+            Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
+        }
+    }
+}
 
 /*
  * Performs a search until the stop variable is set to true
  */
 void Search::search(Game &g, const std::atomic<bool> &stop) {
-
-    int depth = 0;
     this->stop = &stop;
+    int depth = 0;
+    int prevEval = 0;
+    lastCompletedBestMove = nullMove;
+    bestRootMove = nullMove;
 
-    //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with consol outputs
-    while (!stop && depth < 1000) {
+    std::fill(&killerMoves[0][0], &killerMoves[0][0] + sizeof(killerMoves) / sizeof(Move), nullMove);
+    std::fill(&historyTable[0][0][0], &historyTable[0][0][0] + sizeof(historyTable) / sizeof(int), 0);
+
+    Moves pseudoMoves = g.getAllPseudoLegalMoves();
+    for (int i = 0; i < pseudoMoves.moveCount; i++) {
+        g.doMove(pseudoMoves[i]);
+        if (g.isPositionLegal()) {
+            g.undoMove();
+            lastCompletedBestMove = pseudoMoves[i];
+            bestRootMove = pseudoMoves[i];
+            break;
+        }
+        g.undoMove();
+    }
+
+    while ((this->stop == nullptr || !this->stop->load()) && depth < 100) {
         depth++;
-        Moves killer;
-        int eval = negamax(g, -INF, INF, depth, depth, killer, true);
-        if(!stop) {
-            Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
+        int alpha = -INF;
+        int beta = INF;
+        int delta = 30;
+
+        if (depth >= 4) {
+            alpha = std::max(-INF, prevEval - delta);
+            beta = std::min(INF, prevEval + delta);
+        }
+
+        while (this->stop == nullptr || !this->stop->load()) {
+            int eval = negamax(g, alpha, beta, depth, 0, true);
+            if (this->stop != nullptr && this->stop->load()) break;
+
+            if (eval <= alpha) {
+                alpha = std::max(-INF, alpha - delta);
+                delta *= 2;
+            } else if (eval >= beta) {
+                beta = std::min(INF, beta + delta);
+                delta *= 2;
+            } else {
+                prevEval = eval;
+                if (bestRootMove.fromSquare != 0 || bestRootMove.toSquare != 0) {
+                    lastCompletedBestMove = bestRootMove;
+                }
+                Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
+                break;
+            }
         }
     }
 }
@@ -62,148 +122,204 @@ void Search::searchToDepth(Game &g, int toDepth) {
     table.clear();
 
     int depth = 0;
+    int prevEval = 0;
+    lastCompletedBestMove = nullMove;
+    bestRootMove = nullMove;
 
-    //Iterative deepening, we perform 1000 cycles at max to avoid crashing the gui with console outputs
-    while (depth < toDepth) {
-        depth++;
-        Moves m;
-        int eval = negamax(g, -INF, INF, depth, depth, m, true);
-        Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
-    }
-}
+    std::fill(&killerMoves[0][0], &killerMoves[0][0] + sizeof(killerMoves) / sizeof(Move), nullMove);
+    std::fill(&historyTable[0][0][0], &historyTable[0][0][0] + sizeof(historyTable) / sizeof(int), 0);
 
-/*
- * Performs a recursive negamax search, depth is how much deeper should be searched, maxDepth is how far it should look at max
- */
-int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves &killerMoves, bool isPVNode) {
-    if(*stop) {
-        return 0;
-    }
-
-    //Checking if we entered a drawn position
-    if(depth != maxDepth && g.checkForRepetition()) {
-        return 0;
-    }
-
-    //Checking the position in the transposition table
-    int originalAlpha = alpha;
-    int prevBestIndex = INF;
-
-    bool ttExists;
-    Node ttNode = table.lookup(g, ttExists);
-
-    if(ttExists) {
-        if(ttNode.depth >= depth) {
-            if(ttNode.flag == EXACT) {
-               return ttNode.value;
-            }
-            if(ttNode.flag == LOWERBOUND) {
-                alpha = std::max(alpha, ttNode.value);
-            } else if (ttNode.flag == UPPERBOUND) {
-                beta = std::min(beta, ttNode.value);
-            }
-            if(alpha >= beta) return ttNode.value;
-        }
-        prevBestIndex = ttNode.bestMoveIndex;
-    }
-
-    if(depth <= 0) {
-        int eval = quiescence(g, alpha, beta, depth, maxDepth);
-        char flag;
-        if(eval <= originalAlpha) {
-            flag = UPPERBOUND;
-        } else if (eval >= beta) {
-            flag = LOWERBOUND;
-        } else {
-            flag = EXACT;
-        }
-        table.write(g, eval, Moves::NONE, flag, 0);
-
-        return eval;
-    }
-
-    //Null move prunning
-    if(depth < maxDepth * NULL_MOVE_FACTOR && !g.isKingInCheck(g.currentPlayer)) {
-        g.doNullMove();
-        Moves nmKillers;
-        int nm = -negamax(g, -beta, -beta + 1, depth - NULL_MOVE_DEPTH_REDUCTION, maxDepth, nmKillers, false);
-        g.undoMove();
-        if(nm >= beta) return nm;
-    }/* */
-
-    //actual search
-    int bestScore = -INF;
-    int bestIndex = 0;
-    bool legalMoveExists = false;
-    Moves next = g.getAllPseudoLegalMoves();
-    auto order = Evaluation::rankMoves(g, next, prevBestIndex, killerMoves, historyTable);
-    Moves newKillerMoves;
-    bool isCheck = g.isKingInCheck(g.currentPlayer);
-
-    for(int index = 0; index < next.moveCount; index++) {
-        int &i = order[index];
-
-        g.doMove(next[i]);
-        if(!g.isPositionLegal()) {
+    Moves pseudoMoves = g.getAllPseudoLegalMoves();
+    for (int i = 0; i < pseudoMoves.moveCount; i++) {
+        g.doMove(pseudoMoves[i]);
+        if (g.isPositionLegal()) {
             g.undoMove();
-            continue;
-        }
-        legalMoveExists = true;
-
-        //principle variation search
-        int score;
-        if(index != 0){
-            int reduction = 1;
-            reduction += 1 * (index >= (1 + 2 * isPVNode) && depth >= 3); //Late moves
-            reduction -= 1 * isCheck; //Checks may be risky to reduce
-            reduction = std::max(reduction, 1);
-
-            score = -negamax(g, -alpha - 1, -alpha, depth - reduction, maxDepth, newKillerMoves, false);
-            if(score > alpha) {
-                score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves, isPVNode);
-            }
-        } else {
-            score = -negamax(g, -beta, -alpha, depth - 1, maxDepth, newKillerMoves, isPVNode);
-        }
-
-        if(score > bestScore) {
-            bestIndex = i;
-            bestScore = score;
-            if(bestScore > alpha) {
-                alpha = bestScore;
-            }
-        }
-        if(alpha >= beta) {
-            killerMoves[killerMoves.moveCount++] = next[i];
-            if(g.getLastMove().capturedPiece != NO_PIECE) {
-                int clampedBonus = std::min(depth, MAX_HISTORY);
-                int to = Game::getIndex(next[i].toSquare);
-                historyTable[next[i].startingPiece][to] += clampedBonus - historyTable[next[i].startingPiece][to] * abs(clampedBonus) / MAX_HISTORY;
-            }
-            g.undoMove();
+            lastCompletedBestMove = pseudoMoves[i];
+            bestRootMove = pseudoMoves[i];
             break;
         }
         g.undoMove();
     }
 
-    //If we found no legal move we check if there might have been a checkmate
-    if(legalMoveExists == false) {
-        bool check = g.isKingInCheck(g.currentPlayer);
-        bestScore = check ? -WIN + g.getGameHistoryCounter(): 0; //We add the game history counter to favor quicker checkmates
-    }
+    while (depth < toDepth) {
+        depth++;
+        int alpha = -INF;
+        int beta = INF;
+        int delta = 30;
 
-    //We store stuff in the lookup table only if the time is not up
-    if(!(*stop)) {
-        char flag;
-        if(bestScore <= originalAlpha) {
-            flag = UPPERBOUND;
-        } else if (bestScore >= beta) {
-            flag = LOWERBOUND;
-        } else {
-            flag = EXACT;
+        if (depth >= 4) {
+            alpha = std::max(-INF, prevEval - delta);
+            beta = std::min(INF, prevEval + delta);
         }
 
-        table.write(g, bestScore, bestIndex, flag, depth);
+        while (true) {
+            int eval = negamax(g, alpha, beta, depth, 0, true);
+            if (eval <= alpha) {
+                alpha = std::max(-INF, alpha - delta);
+                delta *= 2;
+            } else if (eval >= beta) {
+                beta = std::min(INF, beta + delta);
+                delta *= 2;
+            } else {
+                prevEval = eval;
+                if (bestRootMove.fromSquare != 0 || bestRootMove.toSquare != 0) {
+                    lastCompletedBestMove = bestRootMove;
+                }
+                Writer::print("info depth " + std::to_string(depth) + " score cp " + std::to_string(eval), "info");
+                break;
+            }
+        }
+    }
+}
+
+/*
+ * Performs a recursive negamax search with PVS, LMR, NMP, and Transposition Table
+ */
+int Search::negamax(Game &g, int alpha, int beta, int depth, int ply, bool isPVNode) {
+    if (stop != nullptr && stop->load()) {
+        return 0;
+    }
+
+    if (ply > 0 && g.checkForRepetition()) {
+        return 0;
+    }
+
+    if (ply >= MAX_PLY - 1) {
+        return Evaluation::evaluate(g, alpha);
+    }
+
+    int originalAlpha = alpha;
+    Move ttMove = nullMove;
+    int ttScore = 0;
+
+    if (table.probe(g.hashValue, ply, depth, alpha, beta, ttScore, ttMove)) {
+        if (ply == 0 && (ttMove.fromSquare != 0 || ttMove.toSquare != 0)) {
+            bestRootMove = ttMove;
+        }
+        return ttScore;
+    }
+
+    if (depth <= 0) {
+        return quiescence(g, alpha, beta, depth, ply);
+    }
+
+    bool isCheck = g.isKingInCheck(g.currentPlayer);
+    if (isCheck) depth++;
+
+    // Null Move Pruning
+    if (depth >= 3 && !isPVNode && !isCheck && (g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | KNIGHT] |
+        g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | BISHOP] |
+        g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | ROOK] |
+        g.pieceBoards[COLOR_TO_PIECE[g.currentPlayer] | QUEEN]) != 0) {
+
+        g.doNullMove();
+        int R = 2 + (depth > 6);
+        int nmScore = -negamax(g, -beta, -beta + 1, depth - 1 - R, ply + 1, false);
+        g.undoMove();
+
+        if (stop != nullptr && stop->load()) return 0;
+
+        if (nmScore >= beta) {
+            return nmScore >= IS_MATE_SCORE ? beta : nmScore;
+        }
+    }
+
+    Moves pseudoMoves = g.getAllPseudoLegalMoves();
+    int scores[218];
+    Evaluation::scoreMoves(g, pseudoMoves, ttMove, killerMoves[ply], historyTable, scores);
+
+    int bestScore = -INF;
+    Move bestMove = nullMove;
+    int legalMoveCount = 0;
+
+    for (int i = 0; i < pseudoMoves.moveCount; i++) {
+        int bestIdx = i;
+        for (int j = i + 1; j < pseudoMoves.moveCount; j++) {
+            if (scores[j] > scores[bestIdx]) {
+                bestIdx = j;
+            }
+        }
+        std::swap(scores[i], scores[bestIdx]);
+        std::swap(pseudoMoves[i], pseudoMoves[bestIdx]);
+
+        const Move &move = pseudoMoves[i];
+        g.doMove(move);
+
+        if (!g.isPositionLegal()) {
+            g.undoMove();
+            continue;
+        }
+        legalMoveCount++;
+
+        piece capturedPiece = g.getLastMove().capturedPiece;
+        bool isQuiet = (capturedPiece == NO_PIECE) && (move.startingPiece == move.endingPiece);
+        int score = 0;
+
+        if (legalMoveCount == 1) {
+            score = -negamax(g, -beta, -alpha, depth - 1, ply + 1, isPVNode);
+        } else {
+            int reduction = 0;
+            if (depth >= 3 && legalMoveCount > 3 && isQuiet && !isCheck) {
+                int moveIndexClamped = std::min(legalMoveCount, 63);
+                int depthClamped = std::min(depth, 63);
+                reduction = LMRTable[depthClamped][moveIndexClamped];
+                if (isPVNode) reduction /= 2;
+                reduction = std::min(depth - 2, reduction);
+                reduction = std::max(0, reduction);
+            }
+
+            score = -negamax(g, -alpha - 1, -alpha, depth - 1 - reduction, ply + 1, false);
+
+            if (score > alpha && (reduction > 0 || score < beta)) {
+                score = -negamax(g, -beta, -alpha, depth - 1, ply + 1, isPVNode);
+            }
+        }
+
+        g.undoMove();
+
+        if (stop != nullptr && stop->load()) {
+            return 0;
+        }
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestMove = move;
+            if (ply == 0) {
+                bestRootMove = move;
+            }
+            if (score > alpha) {
+                alpha = score;
+            }
+        }
+
+        if (alpha >= beta) {
+            if (isQuiet) {
+                if (!(move == killerMoves[ply][0])) {
+                    killerMoves[ply][1] = killerMoves[ply][0];
+                    killerMoves[ply][0] = move;
+                }
+                int fromIdx = Game::getIndex(move.fromSquare);
+                int toIdx = Game::getIndex(move.toSquare);
+                historyTable[g.currentPlayer][fromIdx][toIdx] += depth * depth;
+                if (historyTable[g.currentPlayer][fromIdx][toIdx] > 100000) {
+                    historyTable[g.currentPlayer][fromIdx][toIdx] /= 2;
+                }
+            }
+            break;
+        }
+    }
+
+    if (legalMoveCount == 0) {
+        if (isCheck) {
+            bestScore = -WIN + ply;
+        } else {
+            bestScore = 0;
+        }
+    }
+
+    if (stop == nullptr || !stop->load()) {
+        uint8_t flag = (bestScore <= originalAlpha) ? UPPERBOUND : ((bestScore >= beta) ? LOWERBOUND : EXACT);
+        table.store(g.hashValue, bestScore, bestMove, flag, depth, ply);
     }
 
     return bestScore;
@@ -212,29 +328,65 @@ int Search::negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves
 /*
  * Performs a quiescence search to limit the horizon effect
  */
-int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
-    int standPat = Evaluation::evaluate(g, alpha);
-    if(standPat >= beta) {
-        return beta;
-    }
-    if(alpha < standPat) {
-        alpha = standPat;
+int Search::quiescence(Game &g, int alpha, int beta, int depth, int ply) {
+    if (stop != nullptr && stop->load()) return 0;
+
+    bool inCheck = g.isKingInCheck(g.currentPlayer);
+    int standPat = -INF;
+
+    if (!inCheck) {
+        standPat = Evaluation::evaluate(g, alpha);
+        if (standPat >= beta) return beta;
+        if (alpha < standPat) alpha = standPat;
     }
 
-    auto next = g.getAllPseudoLegalCaptures();
-    auto order = Evaluation::rankCaptures(g, next, alpha - standPat);
-    for(int index = 0; index < order.size(); index++) {
-        int i = order[index];
-        g.doMove(next[i]);
-        if(!g.isPositionLegal()) {
+    Moves pseudoMoves = inCheck ? g.getAllPseudoLegalMoves() : g.getAllPseudoLegalCaptures();
+    int scores[218];
+    if (inCheck) {
+        Move noTT = nullMove;
+        Move noKillers[2] = {nullMove, nullMove};
+        Evaluation::scoreMoves(g, pseudoMoves, noTT, noKillers, historyTable, scores);
+    } else {
+        Evaluation::scoreCaptures(g, pseudoMoves, alpha - standPat, scores);
+    }
+
+    int legalMoveCount = 0;
+
+    for (int i = 0; i < pseudoMoves.moveCount; i++) {
+        int bestIdx = i;
+        for (int j = i + 1; j < pseudoMoves.moveCount; j++) {
+            if (scores[j] > scores[bestIdx]) bestIdx = j;
+        }
+        std::swap(scores[i], scores[bestIdx]);
+        std::swap(pseudoMoves[i], pseudoMoves[bestIdx]);
+
+        const Move &move = pseudoMoves[i];
+
+        if (!inCheck && move.startingPiece == move.endingPiece && scores[i] < -500000) {
+            continue;
+        }
+
+        g.doMove(move);
+
+        if (!g.isPositionLegal()) {
             g.undoMove();
             continue;
         }
-        int score = -quiescence(g, -beta, -alpha, depth - 1, maxDepth);
+        legalMoveCount++;
+
+        int score = -quiescence(g, -beta, -alpha, depth - 1, ply + 1);
         g.undoMove();
-        if(score >= beta) return beta;
-        alpha = std::max(alpha, score);
+
+        if (stop != nullptr && stop->load()) return 0;
+
+        if (score >= beta) return beta;
+        if (score > alpha) alpha = score;
     }
+
+    if (inCheck && legalMoveCount == 0) {
+        return -WIN + ply;
+    }
+
     return alpha;
 }
 
@@ -242,28 +394,19 @@ int Search::quiescence(Game &g, int alpha, int beta, int depth, int maxDepth) {
  * Print the continuation the engine currently thinks is best
  */
 void Search::printPrincipleVariation(Game &g) {
-    std::string out;
-    out = "Principle Variation: ";
-    int counter = 0;
-    while(true) {
-        if(g.getStatus() != ON_GOING) {
+    std::string out = "Principle Variation: ";
+    Game copy = g;
+    int depth = 0;
+
+    while (depth < 20) {
+        Move bestMove = nullMove;
+        if (table.probeMove(copy.hashValue, bestMove) && (bestMove.fromSquare != 0 || bestMove.toSquare != 0)) {
+            out += " " + std::to_string(Game::getIndex(bestMove.fromSquare)) + "->" + std::to_string(Game::getIndex(bestMove.toSquare));
+            copy.doMove(bestMove);
+            depth++;
+        } else {
             break;
         }
-        bool exists;
-        Node n = table.lookup(g, exists);
-        if(!exists) {
-            break;
-        }
-
-        counter++;
-        auto next = g.getAllPseudoLegalMoves();
-        out += Game::moveToString(next[n.bestMoveIndex]) + " ";
-        g.doMove(next[n.bestMoveIndex]);
     }
-    Writer::print(out, "uci");
-    g.printGame();
-    for(int i = 0; i < counter; i++) {
-        g.undoMove();
-    }
-
+    Writer::print(out, "info");
 }

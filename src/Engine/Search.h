@@ -1,56 +1,63 @@
 //
-// Created by fabian on 11/19/24.
+// Search Header Definition
 //
 
 #ifndef SEARCH_H
 #define SEARCH_H
+
 #include <atomic>
-#include <unordered_map>
-
-//#define SEND_INFO
-
+#include <cmath>
+#include <algorithm>
 #include "TranspositionTable.h"
 #include "../Game/Game.h"
 
 constexpr int WIN = 100000;
-
-constexpr int EXACT = 0;
-constexpr int UPPERBOUND = 1;
-constexpr int LOWERBOUND = 2;
-
-//Parameters
-constexpr int NULL_MOVE_DEPTH_REDUCTION = 5; //How much we reduce depth when checking a null move
-constexpr double NULL_MOVE_FACTOR = 0.8; //What percentage of depths perform late move reduction
+constexpr int MAX_PLY = 128;
 
 class Search {
-
 private:
     TranspositionTable table;
     const std::atomic<bool>* stop = nullptr;
-    int historyTable[6][64] = {};
 
-    int quiescence(Game &g, int alpha, int beta, int depth, int maxDepth);
+    Move killerMoves[MAX_PLY][2] = {};
+    int historyTable[2][64][64] = {};
+    int LMRTable[64][64] = {};
+    Move bestRootMove = nullMove;
+    Move lastCompletedBestMove = nullMove;
+
+    void initLMR();
+    int quiescence(Game &g, int alpha, int beta, int depth, int ply);
+
 public:
+    Search();
+
     void ponder(Game g, const std::atomic<bool> &stop);
     void search(Game &g, const std::atomic<bool> &stop);
     void searchToDepth(Game &g, int toDepth);
-    int negamax(Game &g, int alpha, int beta, int depth, int maxDepth, Moves& killerMoves, bool isPVNode);
+    int negamax(Game &g, int alpha, int beta, int depth, int ply, bool isPVNode);
 
     void printPrincipleVariation(Game &g);
 
     void clearTranspositionTable() {
         table.clear();
+        lastCompletedBestMove = nullMove;
+        bestRootMove = nullMove;
     }
 
-    Node getNodeFromTable(Game &g) {
-        bool exists;
-        return table.lookup(g, exists);
+    Move getBestMove() const {
+        if (lastCompletedBestMove.fromSquare != 0 || lastCompletedBestMove.toSquare != 0) {
+            return lastCompletedBestMove;
+        }
+        return bestRootMove;
     }
+
+    bool probeTTMove(uint64_t key, Move &m) const {
+        return table.probeMove(key, m);
+    }
+
     uint32_t getNodeCount() const {
-        return table.nodeCount;
+        return table.getEntryCount();
     }
 };
-
-
 
 #endif //SEARCH_H

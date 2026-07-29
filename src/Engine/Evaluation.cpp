@@ -293,6 +293,70 @@ int Evaluation::getEndgamePieceValue(bitboard hitmap, int index, piece p, color 
 }
 
 
+void Evaluation::scoreMoves(const Game &g, Moves &moves, Move ttMove, const Move killerMoves[2], const int historyTable[2][64][64], int scores[218]) {
+    for (int i = 0; i < moves.moveCount; i++) {
+        const Move &m = moves[i];
+        if (m.fromSquare == ttMove.fromSquare && m.toSquare == ttMove.toSquare && m.endingPiece == ttMove.endingPiece && m.fromSquare != 0) {
+            scores[i] = 2000000;
+            continue;
+        }
+
+        piece capturedPiece = g.getPiece(m.toSquare);
+        capturedPiece &= ~BLACK_PIECE;
+
+        if (capturedPiece < 6) {
+            int victimVal = MIDGAME_PIECE_VALUES[capturedPiece];
+            int attackerVal = MIDGAME_PIECE_VALUES[m.startingPiece];
+            scores[i] = 1000000 + 10 * victimVal - attackerVal;
+            continue;
+        }
+
+        if (m.startingPiece != m.endingPiece) {
+            int promoVal = MIDGAME_PIECE_VALUES[m.endingPiece];
+            scores[i] = 1500000 + promoVal;
+            continue;
+        }
+
+        if (m == killerMoves[0]) {
+            scores[i] = 800000;
+            continue;
+        }
+        if (m == killerMoves[1]) {
+            scores[i] = 700000;
+            continue;
+        }
+
+        int fromIdx = Game::getIndex(m.fromSquare);
+        int toIdx = Game::getIndex(m.toSquare);
+        scores[i] = historyTable[g.currentPlayer][fromIdx][toIdx];
+    }
+}
+
+void Evaluation::scoreCaptures(const Game &g, Moves &moves, int delta, int scores[218]) {
+    for (int i = 0; i < moves.moveCount; i++) {
+        const Move &m = moves[i];
+        piece capturedPiece = g.getPiece(m.toSquare);
+        capturedPiece &= ~BLACK_PIECE;
+
+        if (capturedPiece < 6) {
+            int victimVal = MIDGAME_PIECE_VALUES[capturedPiece];
+            int attackerVal = MIDGAME_PIECE_VALUES[m.startingPiece];
+            scores[i] = 1000000 + 10 * victimVal - attackerVal;
+            if (delta > victimVal + SAFETY_DELTA_MARGIN) {
+                scores[i] = -1000000;
+            }
+        } else if (m.startingPiece != m.endingPiece) {
+            int promoVal = MIDGAME_PIECE_VALUES[m.endingPiece];
+            scores[i] = 1500000 + promoVal;
+            if (delta > promoVal + SAFETY_DELTA_MARGIN) {
+                scores[i] = -1000000;
+            }
+        } else {
+            scores[i] = 0;
+        }
+    }
+}
+
 /*
  * Returns a vector of ints in the order that moves should be searched further
  */

@@ -42,9 +42,12 @@ Move Engine::getMove(Game g, int timeLeft, int tineIncrement, int timePerMove) {
         searchThread.join(); // Ensures the thread completes execution
     }
 
-    //Picking the best move via whats inside the transposition table
-    auto next = g.getAllPseudoLegalMoves();
-    Move bestMove = next.moves[search.getNodeFromTable(g).bestMoveIndex];
+    // Picking the best move via search
+    Move bestMove = search.getBestMove();
+    if (bestMove.fromSquare == 0 && bestMove.toSquare == 0) {
+        auto next = g.getAllPseudoLegalMoves();
+        bestMove = next.moves[0];
+    }
     return bestMove;
 }
 
@@ -55,7 +58,7 @@ Move Engine::getMove(Game g, int depth) {
 
     stopSearch();
 
-    //Starting and stopping the search thread
+    // Starting and stopping the search thread
     std::thread searchThread(&Search::searchToDepth, &search, std::ref(g), depth);
 
     Writer::print("stopped", "info");
@@ -64,10 +67,12 @@ Move Engine::getMove(Game g, int depth) {
         searchThread.join(); // Ensures the thread completes execution
     }
 
-    //Picking the best move via whats inside the transposition table
-    auto next = g.getAllPseudoLegalMoves();
-    Node n = search.getNodeFromTable(g);
-    Move bestMove = next.moves[search.getNodeFromTable(g).bestMoveIndex];
+    // Picking the best move via search
+    Move bestMove = search.getBestMove();
+    if (bestMove.fromSquare == 0 && bestMove.toSquare == 0) {
+        auto next = g.getAllPseudoLegalMoves();
+        bestMove = next.moves[0];
+    }
     return bestMove;
 }
 

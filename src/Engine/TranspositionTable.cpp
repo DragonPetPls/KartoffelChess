@@ -1,58 +1,92 @@
 //
-// Created by fabian on 3/18/25.
+// Transposition Table Implementation
 //
 
 #include "TranspositionTable.h"
+#include <algorithm>
 
-TranspositionTable::TranspositionTable() = default;
-
-/**
- * Checks the table for an entry
- * @return a copy of the entry
- */
-Node TranspositionTable::lookup(const Game& game, bool &exists) {
-	mtx.lock();
-	if(transpositionTable.find(game.key()) == transpositionTable.end()) {
-		exists = false;
-		mtx.unlock();
-		return {};
-	} else {
-		exists = true;
-		mtx.unlock();
-		return transpositionTable.at(game.key());
-	}
+TranspositionTable::TranspositionTable(size_t sizeMB) {
+    resize(sizeMB);
 }
 
-/**
- * Writes inside the table.
- * @param game acts as the key
- * @param value new value
- * @param bestMoveIndex new bestMoveIndex
- * @param flag new flag
- * @param depth new depth
- * @return true if writing was successful, false if the table is full
- */
-bool TranspositionTable::write(const Game &game, int value, uint8_t bestMoveIndex, char flag, uint8_t depth) {
-	mtx.lock();
-	if(transpositionTable.size() >= maxTableEntries) {
-		mtx.unlock();
-		return false;
-	}
-	Node n{value, bestMoveIndex, flag, depth};
-	if(transpositionTable.find(game.key()) == transpositionTable.end()) {
-		nodeCount++;
-		transpositionTable.insert(std::make_pair(game.key(), n));
-	} else {
-		transpositionTable.at(game.key()) = n;
-	}
-	mtx.unlock();
-	return true;
+void TranspositionTable::resize(size_t sizeMB) {
+    size_t numBytes = sizeMB * 1024 * 1024;
+    size_t numEntries = numBytes / sizeof(TTEntry);
+
+    capacity = 1;
+    while ((capacity << 1) <= numEntries) {
+        capacity <<= 1;
+    }
+    mask = capacity - 1;
+    table.assign(capacity, TTEntry{});
+}
+
+int TranspositionTable::scoreToTT(int score, int ply) {
+    if (score >= IS_MATE_SCORE) return score + ply;
+    if (score <= -IS_MATE_SCORE) return score - ply;
+    return score;
+}
+
+int TranspositionTable::scoreFromTT(int score, int ply) {
+    if (score >= IS_MATE_SCORE) return score - ply;
+    if (score <= -IS_MATE_SCORE) return score + ply;
+    return score;
+}
+
+bool TranspositionTable::probe(uint64_t key, int ply, int depth, int alpha, int beta, int &score, Move &bestMove) const {
+    if (capacity == 0) return false;
+    const TTEntry &entry = table[key & mask];
+
+    if (entry.key == key) {
+        bestMove = entry.bestMove;
+        if (entry.depth >= depth) {
+            int ttScore = scoreFromTT(entry.value, ply);
+            if (entry.flag == EXACT) {
+                score = ttScore;
+                return true;
+            }
+            if (entry.flag == LOWERBOUND && ttScore >= beta) {
+                score = ttScore;
+                return true;
+            }
+            if (entry.flag == UPPERBOUND && ttScore <= alpha) {
+                score = ttScore;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool TranspositionTable::probeMove(uint64_t key, Move &bestMove) const {
+    if (capacity == 0) return false;
+    const TTEntry &entry = table[key & mask];
+    if (entry.key == key) {
+        bestMove = entry.bestMove;
+        return true;
+    }
+    return false;
+}
+
+void TranspositionTable::store(uint64_t key, int score, const Move &bestMove, uint8_t flag, uint8_t depth, int ply) {
+    if (capacity == 0) return;
+    TTEntry &entry = table[key & mask];
+
+    if (entry.key == 0 || entry.key == key || depth >= entry.depth || flag == EXACT) {
+        entry.key = key;
+        entry.value = static_cast<int16_t>(scoreToTT(score, ply));
+        if (bestMove.fromSquare != 0 || bestMove.toSquare != 0) {
+            entry.bestMove = bestMove;
+        }
+        entry.flag = flag;
+        entry.depth = depth;
+    }
 }
 
 void TranspositionTable::clear() {
-	mtx.lock();
-	transpositionTable.clear();
-	nodeCount = 0;
-	mtx.unlock();
+    std::fill(table.begin(), table.end(), TTEntry{});
 }
 
+uint32_t TranspositionTable::getEntryCount() const {
+    return static_cast<uint32_t>(capacity);
+}

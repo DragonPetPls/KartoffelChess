@@ -1,33 +1,48 @@
 //
-// Created by fabian on 3/18/25.
+// Transposition Table Implementation
 //
 
 #ifndef TRANSPOSITIONTABLE_H
 #define TRANSPOSITIONTABLE_H
-#include <mutex>
-#include <unordered_map>
+
+#include <vector>
+#include <cstdint>
 #include "../Game/Game.h"
 
-struct Node {
-	int value;
-	uint8_t bestMoveIndex;
-	char flag;
-	uint8_t depth;
+constexpr int EXACT = 0;
+constexpr int UPPERBOUND = 1;
+constexpr int LOWERBOUND = 2;
+
+constexpr int IS_MATE_SCORE = 80000;
+constexpr int MATE_VALUE = 100000;
+
+struct TTEntry {
+    uint64_t key = 0;
+    int16_t value = 0;
+    uint8_t flag = 0;
+    uint8_t depth = 0;
+    Move bestMove = nullMove;
 };
 
 class TranspositionTable {
 private:
-	std::mutex mtx;
-	int maxTableSizeInBytes = 1024 * 1024 * 1024;
-	int entrySize = sizeof(Node) + sizeof(GameKey);
-	int maxTableEntries = maxTableSizeInBytes / entrySize;
-	std::unordered_map<GameKey, Node> transpositionTable;
+    std::vector<TTEntry> table;
+    size_t capacity = 0;
+    size_t mask = 0;
+
 public:
-	TranspositionTable();
-	Node lookup(const Game& key, bool &exists);
-	bool write(const Game& game, int value, uint8_t bestMoveIndex, char flag, uint8_t depth);
-	void clear();
-	uint32_t nodeCount = 0;
+    TranspositionTable(size_t sizeMB = 32);
+    void resize(size_t sizeMB);
+
+    static int scoreToTT(int score, int ply);
+    static int scoreFromTT(int score, int ply);
+
+    bool probe(uint64_t key, int ply, int depth, int alpha, int beta, int &score, Move &bestMove) const;
+    bool probeMove(uint64_t key, Move &bestMove) const;
+    void store(uint64_t key, int score, const Move &bestMove, uint8_t flag, uint8_t depth, int ply);
+    void clear();
+
+    uint32_t getEntryCount() const;
 };
 
 #endif //TRANSPOSITIONTABLE_H

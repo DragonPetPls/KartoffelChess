@@ -46,6 +46,8 @@ private:
     static int fastEvalation(const Game &g);
 public:
     static int evaluate(const Game &g, int alpha);
+    static void scoreMoves(const Game &g, Moves &moves, Move ttMove, const Move killerMoves[2], const int historyTable[2][64][64], int scores[218]);
+    static void scoreCaptures(const Game &g, Moves &moves, int delta, int scores[218]);
     static std::vector<int> rankMoves(const Game &g, const Moves &moves, int prevBestIndex, Moves &killerMoves, int historyTable[6][64]);
     static std::vector<int> rankCaptures(const Game &g, const Moves &moves, int delta);
     static uint64_t evaluationCount;
